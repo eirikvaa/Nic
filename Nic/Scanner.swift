@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// The Scanner will do the initial lexical analysis, turning the source into a list of tokens.
 struct Scanner {
     var start: Character?
     var current: Character?
@@ -20,12 +21,14 @@ struct Scanner {
 
     mutating func scan() -> [Token] {
         var tokens: [Token] = []
-
+        
         start = source.first
-        current = source.first
+        current = start
+        
+        guard source.isEmpty == false else { return [] }
 
-        for character in source {
-            if isDigit(c: character) {
+        for _ in source {
+            if isDigit() {
                 let startIndex = source.index(of: start!)
                 let currentIndex = source.index(of: current!)
                 let substring = source[startIndex! ..< currentIndex!]
@@ -39,25 +42,23 @@ struct Scanner {
         return tokens
     }
 
-    mutating func isDigit(c: Character) -> Bool {
+    mutating func isDigit() -> Bool {
         var numberString = ""
-
-        while let current = current, let _ = Int(String(c)) {
-            numberString.append(c)
+        
+        while let _ = Int(String(current!)) {
+            numberString.append(String(current!))
             advance()
         }
 
-        return true
+        return Int(numberString) != nil
     }
 
     mutating func advance() {
         guard let current = current else { return }
-        
-        let endIndex = source.endIndex
-        let beforeEndIndex = source.index(before: endIndex)
-
-        guard let currentIndex = source.index(of: current), currentIndex < beforeEndIndex else { return }
+        guard let currentIndex = source.index(of: current) else { return }
         let nextIndex = source.index(after: currentIndex)
+        
+        guard nextIndex < source.endIndex else { return }
         self.current = source[nextIndex]
     }
 }

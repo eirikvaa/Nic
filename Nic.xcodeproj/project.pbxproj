@@ -28,7 +28,7 @@
 /* Begin PBXFileReference section */
 		E5600689200EA25D0039D9E0 /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
 		E560068C200EA25D0039D9E0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		E5600693200EA2E40039D9E0 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E5A4387B2224929200659430 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E5E95DF020BF29A100FF9AA4 /* CommandLineParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandLineParser.swift; sourceTree = "<group>"; };
 		E5E95DF220BF2D9100FF9AA4 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		E5E95DF320BF30B200FF9AA4 /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
@@ -49,6 +49,7 @@
 		E5600680200EA25D0039D9E0 = {
 			isa = PBXGroup;
 			children = (
+				E5A4387B2224929200659430 /* README.md */,
 				E560068B200EA25D0039D9E0 /* Nic */,
 				E560068A200EA25D0039D9E0 /* Products */,
 			);
@@ -67,7 +68,6 @@
 			children = (
 				E5E95DF220BF2D9100FF9AA4 /* test.txt */,
 				E560068C200EA25D0039D9E0 /* main.swift */,
-				E5600693200EA2E40039D9E0 /* README.md */,
 				E5E95DF320BF30B200FF9AA4 /* Scanner.swift */,
 				E5E95DF520BF313700FF9AA4 /* Token.swift */,
 				E5E95DF020BF29A100FF9AA4 /* CommandLineParser.swift */,

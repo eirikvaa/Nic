@@ -27,6 +27,13 @@ struct Token {
 
 extension Token: CustomStringConvertible {
     var description: String {
-        return type.description
+        switch value {
+        case let number as Int:
+            return "\(type)(\(number)))"
+        case let `operator` as String:
+            return "\(type)\(`operator`)"
+        default:
+            return "\(type)\(String(describing: value))"
+        }
     }
 }
