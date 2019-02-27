@@ -1,30 +1,22 @@
 #  Nic
+
 ## What is Nic?
-I *just* thought of building my own programming language, and I needed a short and sweet name. I looked over at my rubber duck which had the name *Nordic* on it, and i just took the first and two last letters. Nic. Short and sweet. Not really important.
 
-How should it look like?
+Since about halfway into my studies at the Norwegian University of Science and Technology (NTNU), I have been interested in programming languages and compilers. I have followed the fantastic guide by [Crafting Interpreters](http://craftinginterpreters.com/) for quite some time now, but the way to truly learn something is to do it yourself. That's why I want to create _my own_ programming language from scratch.
+
+I have zero and all plans for Nic. I just want to try to create _something_ that can work. I also want it to compile to machine code and have a strong type system. These things are way over my head right now, but I'm hoping that when I learn more and more concepts, I can incorporate it into my own language. It will be a fun exercise, and something to show for other people.
+
+## Where did the name come from?
+
+Nic is truly a random name. I have a rubber duck at home with the name "Nordic Semiconductor", and this was at the point where I wast _just_ starting to think about my new programming language, back in January 2018. I just took the first and two last letters of the word _Nordic_, and there it was. Truly underwhelming, one might say. But the name isn't important here.
+
+## How does Nic look right now?
+
+Well, it's almost nothing at all. Right now it can only parse programs as follows:
 
 ```
-var myVariable: String = "Eirik"
-const myConstant: Int = 1
-
-var a: Int = 1, b: String = "Eirik"
-
-function helloWorld() -> None {
-    print("Hello, world!")
-}
-
-
-var myUnion: String | Int = "Eirik" | 1
+12 34
+56 78
 ```
 
-## Regular definitions
-```
-<var-decl> -> <var> <id> (<:> <type>)? <=> <literal>
-<const-decl> -> <const> <id> (<:> <type>)? <=> <literal>
-<multiple-decl> -> (<var> | <const>)(<id> (<:> <type>)? <=> <literal> <,>)* <id> (<:> <type>)? <=> <literal>
-<union-decl> -> <var> <id> <:> <type> (<union-type> <type>)* <=> <literal> (<union-type> | <literal>)*
-```
-
-## What language should I write Nic in?
-The smart thing would be to do this in Swift. That would make it a lot easier to get my ideas into the language. When I have a minimal product I can do it in C. Or maybe C++? That would be awesome. Then I could understand the Swift compiler a lot better.
+In other words, it can parse text files containing zero or more multi-digit numbers. It's nothin much, but it's a start.
