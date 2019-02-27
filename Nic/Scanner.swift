@@ -17,8 +17,8 @@ struct Scanner {
     var currentIndex: String.Index
     var line = 0
     var source: String
-    var currentChar: Character {
-        return source[currentIndex]
+    var currentChar: String {
+        return String(source[currentIndex])
     }
 
     init(source: String) {
@@ -53,8 +53,8 @@ extension Scanner {
     mutating func digit() -> Int {
         var numberString = ""
         
-        while let _ = Int(String(currentChar)) {
-            numberString += String(currentChar)
+        while let _ = Int(currentChar) {
+            numberString += currentChar
             
             // Check if this was the last character in the source
             if peek() == nil {
@@ -91,7 +91,7 @@ extension Scanner {
     }
     
     func isDigit() -> Bool {
-        guard let _ = Int(String(currentChar)) else {
+        guard let _ = Int(currentChar) else {
             return false
         }
         
