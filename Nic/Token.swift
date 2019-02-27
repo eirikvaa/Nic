@@ -11,6 +11,7 @@ import Foundation
 enum TokenType: String {
     case number
     case `operator`
+    case eof
 }
 
 extension TokenType: CustomStringConvertible {
@@ -25,13 +26,21 @@ struct Token {
     var value: Any?
 }
 
+extension Token: Equatable {
+    static func ==(lhs: Token, rhs: Token) -> Bool {
+        return lhs.type == rhs.type
+    }
+}
+
 extension Token: CustomStringConvertible {
     var description: String {
-        switch value {
-        case let number as Int:
+        switch (type, value) {
+        case (_, let number as Int):
             return "\(type)(\(number)))"
-        case let `operator` as String:
+        case (_, let `operator` as String):
             return "\(type)\(`operator`)"
+        case (.eof, _):
+            return "EOF"
         default:
             return "\(type)\(String(describing: value))"
         }
