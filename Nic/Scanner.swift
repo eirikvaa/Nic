@@ -44,6 +44,8 @@ struct Scanner {
                 let _string = string()
                 let token = Token(type: .string(characters: _string), lexeme: _string)
                 tokens.append(token)
+            }  else if isForwardSlash() {
+                comment()
             } else {
                 break
             }
@@ -56,6 +58,20 @@ struct Scanner {
 // MARK: Consuming methods
 
 extension Scanner {
+    mutating func comment() {
+        // We know the current character is a forward slash, so expect the next
+        // character to be a forward slash also
+        advance()
+        
+        while currentChar != "\n" {
+            if peek() == nil {
+                break
+            }
+            
+            advance()
+        }
+    }
+    
     mutating func string() -> String {
         var foundString = ""
         
@@ -107,6 +123,9 @@ extension Scanner {
 // MARK: Analyzing methods
 
 extension Scanner {
+    func isForwardSlash() -> Bool {
+        return currentChar == "/"
+    }
     func isDoubleQuote() -> Bool {
         return currentChar == "\""
     }

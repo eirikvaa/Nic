@@ -73,7 +73,39 @@ class NicTests: XCTestCase {
         let expectedToken = [Token(type: .string(characters: "Hei på deg"), lexeme: "Hei på deg")]
         let tokens = scanner.scan()
         
-        XCTAssertEqual(expectedToken, tokens)
+        XCTAssertEqual(expectedToken, tokens, "A source consisting of a string should return a single token of that string.")
+    }
+    
+    func testComment() {
+        let source = "//"
+        var scanner = Scanner(source: source)
+        
+        let expectedToken: [Token] = []
+        let tokens = scanner.scan()
+        
+        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
+    }
+    
+    func testCommentThatIgnoresASingleToken() {
+        let source = "//123"
+        var scanner = Scanner(source: source)
+        
+        let expectedToken: [Token] = []
+        let tokens = scanner.scan()
+        
+        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
+    }
+    
+    func testCommentBetweenTwoTokensShouldReturnASingleToken() {
+        let source = "123//123"
+        var scanner = Scanner(source: source)
+        
+        let expectedToken: [Token] = [
+            Token.init(type: .number(value: 123), lexeme: "123")
+        ]
+        let tokens = scanner.scan()
+        
+        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
 
 }
