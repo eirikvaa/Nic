@@ -36,10 +36,16 @@ struct Scanner {
         repeat {
             if isDigit() {
                 let number = digit()
-                let token = Token(type: .number, lexeme: String(number), value: number)
+                let token = Token(type: .number(value: number), lexeme: String(number))
                 tokens.append(token)
             } else if isWhiteSpace() {
                 whitespace()
+            } else if isDoubleQuote() {
+                let _string = string()
+                let token = Token(type: .string(characters: _string), lexeme: _string)
+                tokens.append(token)
+            } else {
+                break
             }
         } while isFinished().isFalse
 
@@ -50,6 +56,25 @@ struct Scanner {
 // MARK: Consuming methods
 
 extension Scanner {
+    mutating func string() -> String {
+        var foundString = ""
+        
+        // We know we have found the start of the string, so advance to the first character
+        advance()
+        
+        while currentChar != "\"" {
+            foundString += currentChar
+            
+            if peek() == "\"" {
+                break
+            }
+            
+            advance()
+        }
+        
+        return foundString
+    }
+    
     mutating func digit() -> Int {
         var numberString = ""
         
@@ -82,6 +107,9 @@ extension Scanner {
 // MARK: Analyzing methods
 
 extension Scanner {
+    func isDoubleQuote() -> Bool {
+        return currentChar == "\""
+    }
     func isLineBreak() -> Bool {
         return currentChar == "\n"
     }

@@ -24,7 +24,7 @@ class NicTests: XCTestCase {
         let source = "1"
         var scanner = Scanner(source: source)
         
-        let expectedToken = Token(type: .number, lexeme: "1", value: 1)
+        let expectedToken = Token(type: .number(value: 1), lexeme: "1")
         let tokens = scanner.scan()
         
         XCTAssertTrue(tokens.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
@@ -35,7 +35,7 @@ class NicTests: XCTestCase {
         let source = "1\n"
         var scanner = Scanner(source: source)
         
-        let expectedToken = Token(type: .number, lexeme: "1", value: 1)
+        let expectedToken = Token(type: .number(value: 1), lexeme: "1")
         let tokens = scanner.scan()
         
         XCTAssertTrue(tokens.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
@@ -46,7 +46,7 @@ class NicTests: XCTestCase {
         let source = "123"
         var scanner = Scanner(source: source)
         
-        let expectedToken = Token(type: .number, lexeme: "123", value: 123)
+        let expectedToken = Token(type: .number(value: 123), lexeme: "123")
         let tokens = scanner.scan()
         
         XCTAssertEqual(expectedToken, tokens.first, "A source consisting of a single multi-digit number should resolve to a single token.")
@@ -57,13 +57,23 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokens = [
-            Token(type: .number, lexeme: "123", value: 123),
-            Token(type: .number, lexeme: "123", value: 123)
+            Token(type: .number(value: 123), lexeme: "123"),
+            Token(type: .number(value: 123), lexeme: "123")
         ]
         
         let tokens = scanner.scan()
         
         XCTAssertEqual(expectedTokens, tokens, "A source consisting of two multi-digit numbers should resolve to two tokens.")
+    }
+    
+    func testSingleString() {
+        let source = "\"Hei på deg\""
+        var scanner = Scanner(source: source)
+        
+        let expectedToken = [Token(type: .string(characters: "Hei på deg"), lexeme: "Hei på deg")]
+        let tokens = scanner.scan()
+        
+        XCTAssertEqual(expectedToken, tokens)
     }
 
 }
