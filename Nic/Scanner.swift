@@ -65,8 +65,7 @@ extension Scanner {
     mutating func multiLineComment() {
         // The first character is a forward slash, and the next is a start (*),
         // so advance beyond that
-        advance()
-        advance()
+        advance(steps: 2)
         
         while currentChar != "*" {
             if peek() == nil {
@@ -77,8 +76,7 @@ extension Scanner {
         }
         
         // The next is expected to be "/", advance beyond that
-        advance()
-        advance()
+        advance(steps: 2)
     }
     
     mutating func singleLineComment() {
@@ -185,7 +183,7 @@ extension Scanner {
         return source[nextIndex]
     }
     
-    mutating func advance() {
-        currentIndex = source.index(after: currentIndex)
+    mutating func advance(steps: Int = 1) {
+        currentIndex = source.index(currentIndex, offsetBy: steps)
     }
 }
