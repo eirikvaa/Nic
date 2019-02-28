@@ -45,7 +45,11 @@ struct Scanner {
                 let token = Token(type: .string(characters: _string), lexeme: _string)
                 tokens.append(token)
             }  else if isForwardSlash() {
-                comment()
+                switch peek() {
+                case "/": singleLineComment()
+                case "*": multiLineComment()
+                default: break
+                }
             } else {
                 break
             }
@@ -58,7 +62,26 @@ struct Scanner {
 // MARK: Consuming methods
 
 extension Scanner {
-    mutating func comment() {
+    mutating func multiLineComment() {
+        // The first character is a forward slash, and the next is a start (*),
+        // so advance beyond that
+        advance()
+        advance()
+        
+        while currentChar != "*" {
+            if peek() == nil {
+                break
+            }
+            
+            advance()
+        }
+        
+        // The next is expected to be "/", advance beyond that
+        advance()
+        advance()
+    }
+    
+    mutating func singleLineComment() {
         // We know the current character is a forward slash, so expect the next
         // character to be a forward slash also
         advance()

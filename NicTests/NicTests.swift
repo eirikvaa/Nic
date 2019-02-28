@@ -107,5 +107,17 @@ class NicTests: XCTestCase {
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
+    
+    func testMultiLineCommentHidesSecondTokenShouldReturnOneToken() {
+        let source = "123/*123*/"
+        var scanner = Scanner(source: source)
+        
+        let expectedToken: [Token] = [
+            Token.init(type: .number(value: 123), lexeme: "123")
+        ]
+        let tokens = scanner.scan()
+        
+        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of a multi-digit number and a multi-line comment consisting of number inside should return a single number token.")
+    }
 
 }
