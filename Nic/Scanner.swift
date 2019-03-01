@@ -9,6 +9,9 @@
 import Foundation
 
 enum NicError: Error {
+    case unterminatedMultiLineComment
+    case unterminatedString
+    case unexpectedCharacter
     case endOfFile
 }
 
@@ -26,7 +29,7 @@ struct Scanner {
         currentIndex = source.startIndex
     }
     
-    mutating func scan() -> [Token] {
+    mutating func scan() throws -> [Token] {
         var tokens: [Token] = []
         
         guard source.isEmpty.isFalse else {
@@ -41,13 +44,13 @@ struct Scanner {
             } else if isWhiteSpace() {
                 whitespace()
             } else if isDoubleQuote() {
-                let _string = string()
+                let _string = try string()
                 let token = Token(type: .string(characters: _string), lexeme: _string)
                 tokens.append(token)
             }  else if isForwardSlash() {
                 switch peek() {
-                case "/": singleLineComment()
-                case "*": multiLineComment()
+                case "/": try singleLineComment()
+                case "*": try multiLineComment()
                 default: break
                 }
             } else {
@@ -62,28 +65,31 @@ struct Scanner {
 // MARK: Consuming methods
 
 extension Scanner {
-    mutating func multiLineComment() {
+    mutating func multiLineComment() throws {
         // The first character is a forward slash, and the next is a start (*),
         // so advance beyond that
-        advance(steps: 2)
+        try consume(expectedString: "/", errorMessage: "Expected slash at start of multi-line comment.")
+        try consume(expectedString: "*", errorMessage: "Expected star after slash at start of multi-line comment.")
         
         while currentChar != "*" {
             if peek() == nil {
-                break
+                throw NicError.unterminatedMultiLineComment
             }
             
             advance()
         }
         
         // The next is expected to be "/", advance beyond that
-        advance(steps: 2)
+        try consume(expectedString: "*", errorMessage: "Expected star before slash at end of multi-line comment.")
+        try consume(expectedString: "/", errorMessage: "Expected slash at end of multi-line comment.")
     }
     
-    mutating func singleLineComment() {
+    mutating func singleLineComment() throws {
         // We know the current character is a forward slash, so expect the next
         // character to be a forward slash also
-        advance()
+        try consume(expectedString: "/", errorMessage: "Expect a second forward slash to complete single-line syntax.")
         
+        // Only ignore characters to the end of the line
         while currentChar != "\n" {
             if peek() == nil {
                 break
@@ -93,21 +99,23 @@ extension Scanner {
         }
     }
     
-    mutating func string() -> String {
+    mutating func string() throws -> String {
         var foundString = ""
         
         // We know we have found the start of the string, so advance to the first character
-        advance()
+        try consume(expectedString: "\"", errorMessage: "Expect double quote at start of string.")
         
         while currentChar != "\"" {
             foundString += currentChar
             
-            if peek() == "\"" {
-                break
+            if peek() == nil {
+                throw NicError.unterminatedString
             }
             
             advance()
         }
+        
+        try consume(expectedString: "\"", errorMessage: "Expect double quote at end of string.")
         
         return foundString
     }
@@ -174,6 +182,15 @@ extension Scanner {
 // MARK: Helper methods
 
 extension Scanner {
+    mutating func consume(expectedString: String, errorMessage: String) throws {
+        guard currentChar == expectedString else {
+            print(errorMessage)
+            throw NicError.unexpectedCharacter
+        }
+        
+        advance()
+    }
+    
     func peek() -> Character? {
         let nextIndex = source.index(after: currentIndex)
         guard nextIndex != source.endIndex else {

@@ -24,7 +24,14 @@ struct CommandLineParser {
         guard let data = FileManager.default.contents(atPath: path) else { return }
         guard let source = String(data: data, encoding: .utf8) else { return }
         var scanner = Scanner(source: source)
-        let tokens = scanner.scan()
+        let tokens: [Token]
+        
+        do {
+             tokens = try scanner.scan()
+        } catch {
+            print("Program ended unexpectedly with the following error: \(error)")
+            return
+        }
 
         print(tokens)
     }

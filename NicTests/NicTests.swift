@@ -15,7 +15,7 @@ class NicTests: XCTestCase {
     func testEmptySourceShouldGiveEmptyTokenList() {
         let source = ""
         var scanner = Scanner(source: source)
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
         XCTAssertEqual(tokens, [], "An empty source should give an empty token list.")
     }
@@ -25,10 +25,10 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken = Token(type: .number(value: 1), lexeme: "1")
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
-        XCTAssertTrue(tokens.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
-        XCTAssertEqual(expectedToken, tokens.first)
+        XCTAssertTrue(tokens?.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
+        XCTAssertEqual(expectedToken, tokens?.first)
     }
     
     func testSourceWithSingleDigitNumberEndingInNewline() {
@@ -36,10 +36,10 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken = Token(type: .number(value: 1), lexeme: "1")
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
-        XCTAssertTrue(tokens.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
-        XCTAssertEqual(expectedToken, tokens.first)
+        XCTAssertTrue(tokens?.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
+        XCTAssertEqual(expectedToken, tokens?.first)
     }
     
     func testSingleMultipleDigitNumber() {
@@ -47,9 +47,9 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken = Token(type: .number(value: 123), lexeme: "123")
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
-        XCTAssertEqual(expectedToken, tokens.first, "A source consisting of a single multi-digit number should resolve to a single token.")
+        XCTAssertEqual(expectedToken, tokens?.first, "A source consisting of a single multi-digit number should resolve to a single token.")
     }
     
     func testMultipleMultiDigitNumbers() {
@@ -61,7 +61,7 @@ class NicTests: XCTestCase {
             Token(type: .number(value: 123), lexeme: "123")
         ]
         
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
         XCTAssertEqual(expectedTokens, tokens, "A source consisting of two multi-digit numbers should resolve to two tokens.")
     }
@@ -71,7 +71,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken = [Token(type: .string(characters: "Hei på deg"), lexeme: "Hei på deg")]
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting of a string should return a single token of that string.")
     }
@@ -81,7 +81,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken: [Token] = []
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -91,7 +91,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken: [Token] = []
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -103,7 +103,7 @@ class NicTests: XCTestCase {
         let expectedToken: [Token] = [
             Token.init(type: .number(value: 123), lexeme: "123")
         ]
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -115,9 +115,23 @@ class NicTests: XCTestCase {
         let expectedToken: [Token] = [
             Token.init(type: .number(value: 123), lexeme: "123")
         ]
-        let tokens = scanner.scan()
+        let tokens = try? scanner.scan()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of a multi-digit number and a multi-line comment consisting of number inside should return a single number token.")
+    }
+    
+    func testUnterminatedStringLiteral() {
+        let source = "\"Hei"
+        var scanner = Scanner(source: source)
+        
+        XCTAssertThrowsError(try scanner.scan(), "Unterminated string literal should result in a crash")
+    }
+    
+    func testUnterminatedMultiLineComment() {
+        let source = "/* Hei"
+        var scanner = Scanner(source: source)
+        
+        XCTAssertThrowsError(try scanner.scan(), "Unterminated multi-line comment should result in a crash")
     }
 
 }
