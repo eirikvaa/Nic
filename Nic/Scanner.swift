@@ -53,6 +53,10 @@ struct Scanner {
                 case "*": try multiLineComment()
                 default: break
                 }
+            } else if isOperator() {
+                let token = Token(type: .operator(operator: currentChar), lexeme: currentChar)
+                tokens.append(token)
+                advance()
             } else {
                 break
             }
@@ -152,12 +156,26 @@ extension Scanner {
 // MARK: Analyzing methods
 
 extension Scanner {
+    func isOperator() -> Bool {
+        switch currentChar {
+            case "+",
+                 "-",
+                 "*",
+                 "/":
+            return true
+        default:
+            return false
+        }
+    }
+    
     func isForwardSlash() -> Bool {
         return currentChar == "/"
     }
+    
     func isDoubleQuote() -> Bool {
         return currentChar == "\""
     }
+    
     func isLineBreak() -> Bool {
         return currentChar == "\n"
     }
