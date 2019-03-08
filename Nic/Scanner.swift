@@ -17,59 +17,58 @@ enum NicError: Error {
 
 /// The Scanner will do the initial lexical analysis, turning the source into a list of tokens.
 struct Scanner {
+    var startIndex: String.Index
     var currentIndex: String.Index
     var line = 0
     var source: String
-    var currentChar: String {
-        return String(source[currentIndex])
-    }
+    var tokens: [Token] = []
+    let keyword: [String: TokenType] = [
+        "var": .var
+    ]
 
     init(source: String) {
         self.source = source
+        startIndex = source.startIndex
         currentIndex = source.startIndex
     }
     
-    mutating func scan() throws -> [Token] {
-        var tokens: [Token] = []
+    mutating func scanToken() throws {
+        let c = advance()
         
+        switch c {
+        case "+": addToken(type: .plus)
+        case "-": addToken(type: .minus)
+        case "*": addToken(type: .bang)
+        case " ": break
+        case "\n": line += 1
+        case "/":
+            switch peek() {
+            case "/": singleLineComment()
+            case "*": try multiLineComment()
+            default: addToken(type: .slash)
+            }
+        case "\"": try string()
+        case "=": addToken(type: .equal)
+        default:
+            if isDigit(character: c) {
+                digit()
+            } else {
+                identifier()
+            }
+        }
+    }
+    
+    mutating func scanTokens() throws -> [Token] {
         guard source.isEmpty.isFalse else {
             return []
         }
 
-        repeat {
-            switch currentChar {
-            case "+",
-                 "-",
-                 "*":
-                // Division operator is handled under the forward slash case.
-                let token = Token(type: .operator(operator: currentChar), lexeme: currentChar)
-                tokens.append(token)
-                advance()
-            case " ",
-                 "\n":
-                whitespace() // automatically advances
-            case "/":
-                switch peek() {
-                case "/": try singleLineComment() // automatically advances
-                case "*": try multiLineComment() // automatically advances
-                default:
-                    // Assume it's an operator.
-                    let token = Token(type: .operator(operator: currentChar), lexeme: currentChar)
-                    tokens.append(token)
-                    advance()
-                }
-            case "\"":
-                let _string = try string() // automatically advances
-                let token = Token(type: .string(characters: _string), lexeme: _string)
-                tokens.append(token)
-            default:
-                if let _ = Int(currentChar) {
-                    let number = digit() // automatically advances
-                    let token = Token(type: .number(value: number), lexeme: String(number))
-                    tokens.append(token)
-                }
-            }
-        } while isFinished().isFalse
+        while (!isAtEnd()) {
+            startIndex = currentIndex
+            try scanToken()
+        }
+        
+        tokens.append(Token(type: .eof, lexeme: "EOF", literal: nil, line: line))
 
         return tokens
     }
@@ -78,82 +77,84 @@ struct Scanner {
 // MARK: Consuming methods
 
 extension Scanner {
+    mutating func identifier() {
+        while peek() != " " && peek() != "\n" && isAtEnd().isFalse {
+            advance()
+        }
+        
+        let identifier = String(source[startIndex..<currentIndex])
+        let type = keyword[identifier] ?? .identifier
+        addToken(type: type)
+    }
+    
     mutating func multiLineComment() throws {
-        // The first character is a forward slash, and the next is a start (*),
-        // so advance beyond that
-        try consume(expectedString: "/", errorMessage: "Expected slash at start of multi-line comment.")
-        try consume(expectedString: "*", errorMessage: "Expected star after slash at start of multi-line comment.")
+        advance(steps: 2) // Must advance beyond both / and *.
         
-        while currentChar != "*" {
-            if peek() == nil {
-                throw NicError.unterminatedMultiLineComment
+        while peek() != "*" && !isAtEnd() {
+            if peek() == "\n" {
+                line += 1
             }
             
             advance()
         }
         
-        // The next is expected to be "/", advance beyond that
-        try consume(expectedString: "*", errorMessage: "Expected star before slash at end of multi-line comment.")
-        try consume(expectedString: "/", errorMessage: "Expected slash at end of multi-line comment.")
+        if isAtEnd() {
+            throw NicError.unterminatedMultiLineComment
+        }
+        
+        advance() // advance beyond "*"
+        if peek() == "/" {
+            advance() // advance past last "/"
+        } else {
+            throw NicError.unterminatedMultiLineComment
+        }
     }
     
-    mutating func singleLineComment() throws {
-        // We know the current character is a forward slash, so expect the next
-        // character to be a forward slash also
-        try consume(expectedString: "/", errorMessage: "Expect a second forward slash to complete single-line syntax.")
+    mutating func singleLineComment() {
+        advance() // advance beyond "/"
         
-        // Only ignore characters to the end of the line
-        while currentChar != "\n" {
-            if peek() == nil {
-                break
-            }
-            
+        while peek() != "\n" && !isAtEnd() {
             advance()
         }
     }
     
-    mutating func string() throws -> String {
-        var foundString = ""
+    mutating func string() throws {
+        advance() // advance beyond first "
         
-        // We know we have found the start of the string, so advance to the first character
-        try consume(expectedString: "\"", errorMessage: "Expect double quote at start of string.")
-        
-        while currentChar != "\"" {
-            foundString += currentChar
-            
-            if peek() == nil {
-                throw NicError.unterminatedString
+        while peek() != "\"" && !isAtEnd() {
+            if peek() == "\n" {
+                line += 1
             }
             
             advance()
         }
         
-        try consume(expectedString: "\"", errorMessage: "Expect double quote at end of string.")
+        if isAtEnd() {
+            throw NicError.unterminatedString
+        }
         
-        return foundString
+        advance() // advance beyond last "
+        
+        let _startIndex = source.index(after: startIndex)
+        let endIndex = source.index(before: currentIndex)
+        
+        let string = String(source[_startIndex..<endIndex])
+        addToken(type: .string, literal: string)
     }
     
-    mutating func digit() -> Int {
-        var numberString = ""
-        
-        while let _ = Int(currentChar) {
-            numberString += currentChar
-            
-            // Check if this was the last character in the source
-            if peek() == nil {
-                break
-            }
-            
+    mutating func digit() {
+        while !isAtEnd() && isDigit(character: peek()) {
             advance()
         }
         
-        return Int(numberString) ?? 0
+        let numberString = String(source[startIndex..<currentIndex])
+        let number = Int(numberString) ?? 0
+        addToken(type: .number, literal: number)
     }
     
     mutating func whitespace() {
-        
-        while currentChar == " " || currentChar == "\n" {
-            if currentChar == "\n" {
+        while peek() == " " || peek() == "\n" {
+            if peek() == "\n" {
                 line += 1
             }
             
@@ -165,33 +166,40 @@ extension Scanner {
 // MARK: Analyzing methods
 
 extension Scanner {
-    func isFinished() -> Bool {
-        return currentIndex == source.endIndex || peek() == nil
+    func isAtEnd() -> Bool {
+        let index = source.distance(from: source.startIndex, to: currentIndex)
+        return index >= source.count
+    }
+    
+    func isDigit(character: Character?) -> Bool {
+        guard let character = character else {
+            return false
+        }
+        
+        return Int(String(character)) != nil
     }
 }
 
 // MARK: Helper methods
 
 extension Scanner {
-    mutating func consume(expectedString: String, errorMessage: String) throws {
-        guard currentChar == expectedString else {
-            print(errorMessage)
-            throw NicError.unexpectedCharacter
-        }
-        
-        advance()
-    }
-    
     func peek() -> Character? {
-        let nextIndex = source.index(after: currentIndex)
-        guard nextIndex != source.endIndex else {
+        guard !isAtEnd() else {
             return nil
         }
         
-        return source[nextIndex]
+        return source[currentIndex]
     }
     
-    mutating func advance(steps: Int = 1) {
+    @discardableResult
+    mutating func advance(steps: Int = 1) -> Character {
         currentIndex = source.index(currentIndex, offsetBy: steps)
+        return source[source.index(currentIndex, offsetBy: -steps)]
+    }
+    
+    mutating func addToken(type: TokenType, literal: Any? = nil) {
+        let lexeme = String(source[startIndex..<currentIndex])
+        let token = Token(type: type, lexeme: lexeme, literal: literal, line: line)
+        tokens.append(token)
     }
 }

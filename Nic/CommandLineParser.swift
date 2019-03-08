@@ -27,7 +27,7 @@ struct CommandLineParser {
         let tokens: [Token]
         
         do {
-             tokens = try scanner.scan()
+             tokens = try scanner.scanTokens()
         } catch {
             print("Program ended unexpectedly with the following error: \(error)")
             return

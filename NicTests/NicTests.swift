@@ -15,7 +15,7 @@ class NicTests: XCTestCase {
     func testEmptySourceShouldGiveEmptyTokenList() {
         let source = ""
         var scanner = Scanner(source: source)
-        let tokens = try? scanner.scan()
+        let tokens = try? scanner.scanTokens()
         
         XCTAssertEqual(tokens, [], "An empty source should give an empty token list.")
     }
@@ -24,32 +24,39 @@ class NicTests: XCTestCase {
         let source = "1"
         var scanner = Scanner(source: source)
         
-        let expectedToken = Token(type: .number(value: 1), lexeme: "1")
-        let tokens = try? scanner.scan()
+        let expectedTokens: [Token] = [
+            Token(type: .number, lexeme: "1", literal: 1, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        let tokens = try? scanner.scanTokens()
         
-        XCTAssertTrue(tokens?.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
-        XCTAssertEqual(expectedToken, tokens?.first)
+        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a single number should return a token list with a single token of type number.")
     }
     
     func testSourceWithSingleDigitNumberEndingInNewline() {
         let source = "1\n"
         var scanner = Scanner(source: source)
         
-        let expectedToken = Token(type: .number(value: 1), lexeme: "1")
-        let tokens = try? scanner.scan()
+        let expectedTokens: [Token] = [
+            Token(type: .number, lexeme: "1", literal: 1, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        let tokens = try? scanner.scanTokens()
         
-        XCTAssertTrue(tokens?.count == 1, "A source consisting of a single number should return a token list with a single token of type number.")
-        XCTAssertEqual(expectedToken, tokens?.first)
+        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a single number should return a token list with a single token of type number.")
     }
     
     func testSingleMultipleDigitNumber() {
         let source = "123"
         var scanner = Scanner(source: source)
         
-        let expectedToken = Token(type: .number(value: 123), lexeme: "123")
-        let tokens = try? scanner.scan()
+        let expectedTokens: [Token] = [
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        let tokens = try? scanner.scanTokens()
         
-        XCTAssertEqual(expectedToken, tokens?.first, "A source consisting of a single multi-digit number should resolve to a single token.")
+        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a single multi-digit number should resolve to a single token.")
     }
     
     func testMultipleMultiDigitNumbers() {
@@ -57,11 +64,12 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokens = [
-            Token(type: .number(value: 123), lexeme: "123"),
-            Token(type: .number(value: 123), lexeme: "123")
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         
-        let tokens = try? scanner.scan()
+        let tokens = try? scanner.scanTokens()
         
         XCTAssertEqual(expectedTokens, tokens, "A source consisting of two multi-digit numbers should resolve to two tokens.")
     }
@@ -70,18 +78,23 @@ class NicTests: XCTestCase {
         let source = "\"Hei på deg\""
         var scanner = Scanner(source: source)
         
-        let expectedToken = [Token(type: .string(characters: "Hei på deg"), lexeme: "Hei på deg")]
-        let tokens = try? scanner.scan()
+        let expectedTokens = [
+            Token(type: .string, lexeme: "Hei på deg", literal: "Hei på deg", line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        let tokens = try? scanner.scanTokens()
         
-        XCTAssertEqual(expectedToken, tokens, "A source consisting of a string should return a single token of that string.")
+        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a string should return a single token of that string.")
     }
     
     func testComment() {
         let source = "//"
         var scanner = Scanner(source: source)
         
-        let expectedToken: [Token] = []
-        let tokens = try? scanner.scan()
+        let expectedToken: [Token] = [
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        let tokens = try? scanner.scanTokens()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -90,8 +103,10 @@ class NicTests: XCTestCase {
         let source = "//123"
         var scanner = Scanner(source: source)
         
-        let expectedToken: [Token] = []
-        let tokens = try? scanner.scan()
+        let expectedToken: [Token] = [
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        let tokens = try? scanner.scanTokens()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -101,9 +116,10 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken: [Token] = [
-            Token.init(type: .number(value: 123), lexeme: "123")
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
-        let tokens = try? scanner.scan()
+        let tokens = try? scanner.scanTokens()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -113,9 +129,10 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedToken: [Token] = [
-            Token.init(type: .number(value: 123), lexeme: "123")
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
-        let tokens = try? scanner.scan()
+        let tokens = try? scanner.scanTokens()
         
         XCTAssertEqual(expectedToken, tokens, "A source consisting solely of a multi-digit number and a multi-line comment consisting of number inside should return a single number token.")
     }
@@ -124,27 +141,28 @@ class NicTests: XCTestCase {
         let source = "\"Hei"
         var scanner = Scanner(source: source)
         
-        XCTAssertThrowsError(try scanner.scan(), "Unterminated string literal should result in a crash")
+        XCTAssertThrowsError(try scanner.scanTokens(), "Unterminated string literal should result in a crash")
     }
     
     func testUnterminatedMultiLineComment() {
         let source = "/* Hei"
         var scanner = Scanner(source: source)
         
-        XCTAssertThrowsError(try scanner.scan(), "Unterminated multi-line comment should result in a crash")
+        XCTAssertThrowsError(try scanner.scanTokens(), "Unterminated multi-line comment should result in a crash")
     }
     
     func testNumberPlusNumber() {
         let source = "123+123"
         var scanner = Scanner(source: source)
         
-        let expectedTokens = [
-            Token(type: .number(value: 123), lexeme: "123"),
-            Token(type: .operator(operator: "+"), lexeme: "+"),
-            Token(type: .number(value: 123), lexeme: "123")
+        let expectedTokens: [Token] = [
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .plus, lexeme: "+", literal: nil, line: 0),
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         
-        let tokens = try? scanner.scan()
+        let tokens = try? scanner.scanTokens()
         XCTAssertEqual(expectedTokens, tokens, "A number, an operator and a number should result in three tokens.")
     }
     
@@ -152,14 +170,30 @@ class NicTests: XCTestCase {
         let source = "123/123"
         var scanner = Scanner(source: source)
         
-        let expectedTokens = [
-            Token(type: .number(value: 123), lexeme: "123"),
-            Token(type: .operator(operator: "/"), lexeme: "/"),
-            Token(type: .number(value: 123), lexeme: "123")
+        let expectedTokens: [Token] = [
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .slash, lexeme: "/", literal: nil, line: 0),
+            Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         
-        let tokens = try? scanner.scan()
+        let tokens = try? scanner.scanTokens()
         XCTAssertEqual(expectedTokens, tokens, "A number, an operator and a number should result in three tokens.")
+    }
+    
+    func testVariableDeclarationWithInitialization() {
+        let source = "var = 3"
+        var scanner = Scanner(source: source)
+        
+        let expectedTokens = [
+            Token(type: .var, lexeme: "var", literal: nil, line: 0),
+            Token(type: .equal, lexeme: "=", literal: nil, line: 0),
+            Token(type: .number, lexeme: "3", literal: 3, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        
+        let tokens = try? scanner.scanTokens()
+        XCTAssertEqual(expectedTokens, tokens, "A var keyword, an equals sign and a number should result in three tokens.")
     }
 
 }

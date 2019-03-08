@@ -8,46 +8,28 @@
 
 import Foundation
 
-enum TokenType {
-    case string(characters: String)
-    case number(value: Int)
-    case `operator`(operator: String)
-    case eof
-}
-
 struct Token {
-    var type: TokenType
-    var lexeme: String
+    let type: TokenType
+    let lexeme: String
+    let literal: Any?
+    let line: Int
 }
 
 extension Token: Equatable {
     static func ==(lhs: Token, rhs: Token) -> Bool {
         switch (lhs.type, rhs.type) {
-        case (.string(let leftChars), .string(let rightChars)):
-            return leftChars == rightChars
-        case (.number(let leftNum), .number(let rightNum)):
-            return leftNum == rightNum
-        case (.operator(let opA), .operator(let opB)):
-            return opA == opB
-        case (.eof, .eof):
-            return true
+        case (.string, .string):
+            return lhs.literal as? String == rhs.literal as? String
+        case (.number, .number):
+            return lhs.literal as? Int == rhs.literal as? Int
         default:
-            return false
+            return lhs.lexeme == rhs.lexeme
         }
     }
 }
 
 extension Token: CustomStringConvertible {
     var description: String {
-        switch type {
-        case .string(let characters):
-            return "String[\"\(characters)\"]"
-        case .number(let value):
-            return "Number[\(value)]"
-        case .operator(let `operator`):
-            return "Operator[\(`operator`)]"
-        case .eof:
-            return "EOF"
-        }
+        return self.type.rawValue.uppercased()
     }
 }
