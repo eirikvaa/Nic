@@ -134,13 +134,27 @@ class NicTests: XCTestCase {
         XCTAssertThrowsError(try scanner.scan(), "Unterminated multi-line comment should result in a crash")
     }
     
-    func testNumberOperatorNumber() {
+    func testNumberPlusNumber() {
         let source = "123+123"
         var scanner = Scanner(source: source)
         
         let expectedTokens = [
             Token(type: .number(value: 123), lexeme: "123"),
             Token(type: .operator(operator: "+"), lexeme: "+"),
+            Token(type: .number(value: 123), lexeme: "123")
+        ]
+        
+        let tokens = try? scanner.scan()
+        XCTAssertEqual(expectedTokens, tokens, "A number, an operator and a number should result in three tokens.")
+    }
+    
+    func testNumberDivideNumber() {
+        let source = "123/123"
+        var scanner = Scanner(source: source)
+        
+        let expectedTokens = [
+            Token(type: .number(value: 123), lexeme: "123"),
+            Token(type: .operator(operator: "/"), lexeme: "/"),
             Token(type: .number(value: 123), lexeme: "123")
         ]
         

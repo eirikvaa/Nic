@@ -37,28 +37,37 @@ struct Scanner {
         }
 
         repeat {
-            if isDigit() {
-                let number = digit()
-                let token = Token(type: .number(value: number), lexeme: String(number))
-                tokens.append(token)
-            } else if isWhiteSpace() {
-                whitespace()
-            } else if isDoubleQuote() {
-                let _string = try string()
-                let token = Token(type: .string(characters: _string), lexeme: _string)
-                tokens.append(token)
-            }  else if isForwardSlash() {
-                switch peek() {
-                case "/": try singleLineComment()
-                case "*": try multiLineComment()
-                default: break
-                }
-            } else if isOperator() {
+            switch currentChar {
+            case "+",
+                 "-",
+                 "*":
+                // Division operator is handled under the forward slash case.
                 let token = Token(type: .operator(operator: currentChar), lexeme: currentChar)
                 tokens.append(token)
                 advance()
-            } else {
-                break
+            case " ",
+                 "\n":
+                whitespace() // automatically advances
+            case "/":
+                switch peek() {
+                case "/": try singleLineComment() // automatically advances
+                case "*": try multiLineComment() // automatically advances
+                default:
+                    // Assume it's an operator.
+                    let token = Token(type: .operator(operator: currentChar), lexeme: currentChar)
+                    tokens.append(token)
+                    advance()
+                }
+            case "\"":
+                let _string = try string() // automatically advances
+                let token = Token(type: .string(characters: _string), lexeme: _string)
+                tokens.append(token)
+            default:
+                if let _ = Int(currentChar) {
+                    let number = digit() // automatically advances
+                    let token = Token(type: .number(value: number), lexeme: String(number))
+                    tokens.append(token)
+                }
             }
         } while isFinished().isFalse
 
@@ -143,8 +152,8 @@ extension Scanner {
     
     mutating func whitespace() {
         
-        while isWhiteSpace() {
-            if isLineBreak() {
+        while currentChar == " " || currentChar == "\n" {
+            if currentChar == "\n" {
                 line += 1
             }
             
@@ -156,42 +165,6 @@ extension Scanner {
 // MARK: Analyzing methods
 
 extension Scanner {
-    func isOperator() -> Bool {
-        switch currentChar {
-            case "+",
-                 "-",
-                 "*",
-                 "/":
-            return true
-        default:
-            return false
-        }
-    }
-    
-    func isForwardSlash() -> Bool {
-        return currentChar == "/"
-    }
-    
-    func isDoubleQuote() -> Bool {
-        return currentChar == "\""
-    }
-    
-    func isLineBreak() -> Bool {
-        return currentChar == "\n"
-    }
-    
-    func isWhiteSpace() -> Bool {
-        return currentChar == " " || currentChar == "\n"
-    }
-    
-    func isDigit() -> Bool {
-        guard let _ = Int(currentChar) else {
-            return false
-        }
-        
-        return true
-    }
-    
     func isFinished() -> Bool {
         return currentIndex == source.endIndex || peek() == nil
     }
