@@ -12,11 +12,12 @@ Nic is truly a random name. I have a rubber duck at home with the name "Nordic S
 
 ## How does Nic look right now?
 
-Well, it's almost nothing at all. Right now it can only parse programs as follows:
+Right now Nic can parse a few things, like integers, mathematical operators, strings and comments.
+A program could look like this:
 
 ```
-12 34
-56 78
+123 + 123
+"Hei på deg"
+344 / 443
+// Yo
 ```
-
-In other words, it can parse text files containing zero or more multi-digit numbers. It's nothin much, but it's a start.
