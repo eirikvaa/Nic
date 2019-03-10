@@ -17,7 +17,8 @@ A program could look like this:
 
 ```
 123 + 123
-"Hei på deg"
-344 / 443
-// Yo
+"Hello, world!"
+// A single-line comment
+/* A multi-line comment */
+var hello = 3
 ```
