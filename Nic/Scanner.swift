@@ -42,6 +42,7 @@ struct Scanner {
             }
         case "\"": try string()
         case "=": addToken(type: .equal)
+        case ";": addToken(type: .semicolon)
         default:
             if isDigit(character: c) {
                 digit()

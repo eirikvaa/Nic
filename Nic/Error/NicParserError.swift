@@ -10,4 +10,5 @@ import Foundation
 
 enum NicParserError: Error {
     case unexpectedToken
+    case unterminatedStatement
 }

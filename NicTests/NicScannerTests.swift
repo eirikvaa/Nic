@@ -24,11 +24,12 @@ class NicTests: XCTestCase {
     }
     
     func testSingleDigitNumber() {
-        let source = "1"
+        let source = "1;"
         var scanner = Scanner(source: source)
         
         let expectedTokens: [Token] = [
             Token(type: .number, lexeme: "1", literal: 1, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         let tokens = try? scanner.scanTokens()
@@ -37,11 +38,12 @@ class NicTests: XCTestCase {
     }
     
     func testSourceWithSingleDigitNumberEndingInNewline() {
-        let source = "1\n"
+        let source = "1;\n"
         var scanner = Scanner(source: source)
         
         let expectedTokens: [Token] = [
             Token(type: .number, lexeme: "1", literal: 1, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         let tokens = try? scanner.scanTokens()
@@ -50,11 +52,12 @@ class NicTests: XCTestCase {
     }
     
     func testSingleMultipleDigitNumber() {
-        let source = "123"
+        let source = "123;"
         var scanner = Scanner(source: source)
         
         let expectedTokens: [Token] = [
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         let tokens = try? scanner.scanTokens()
@@ -63,12 +66,14 @@ class NicTests: XCTestCase {
     }
     
     func testMultipleMultiDigitNumbers() {
-        let source = "123 123"
+        let source = "123; 123;"
         var scanner = Scanner(source: source)
         
         let expectedTokens = [
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         
@@ -78,11 +83,12 @@ class NicTests: XCTestCase {
     }
     
     func testSingleString() {
-        let source = "\"Hei på deg\""
+        let source = "\"Hei på deg\";"
         var scanner = Scanner(source: source)
         
         let expectedTokens = [
             Token(type: .string, lexeme: "Hei på deg", literal: "Hei på deg", line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         let tokens = try? scanner.scanTokens()
@@ -115,11 +121,12 @@ class NicTests: XCTestCase {
     }
     
     func testCommentBetweenTwoTokensShouldReturnASingleToken() {
-        let source = "123//123"
+        let source = "123;//123"
         var scanner = Scanner(source: source)
         
         let expectedToken: [Token] = [
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         let tokens = try? scanner.scanTokens()
@@ -128,11 +135,12 @@ class NicTests: XCTestCase {
     }
     
     func testMultiLineCommentHidesSecondTokenShouldReturnOneToken() {
-        let source = "123/*123*/"
+        let source = "123;/*123*/"
         var scanner = Scanner(source: source)
         
         let expectedToken: [Token] = [
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         let tokens = try? scanner.scanTokens()
@@ -155,13 +163,14 @@ class NicTests: XCTestCase {
     }
     
     func testNumberPlusNumber() {
-        let source = "123+123"
+        let source = "123+123;"
         var scanner = Scanner(source: source)
         
         let expectedTokens: [Token] = [
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
             Token(type: .plus, lexeme: "+", literal: nil, line: 0),
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         
@@ -170,13 +179,14 @@ class NicTests: XCTestCase {
     }
     
     func testNumberDivideNumber() {
-        let source = "123/123"
+        let source = "123/123;"
         var scanner = Scanner(source: source)
         
         let expectedTokens: [Token] = [
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
             Token(type: .slash, lexeme: "/", literal: nil, line: 0),
             Token(type: .number, lexeme: "123", literal: 123, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         
@@ -185,7 +195,7 @@ class NicTests: XCTestCase {
     }
     
     func testVariableDeclarationWithInitialization() {
-        let source = "var number = 3"
+        let source = "var number = 3;"
         var scanner = Scanner(source: source)
         
         let expectedTokens = [
@@ -193,6 +203,7 @@ class NicTests: XCTestCase {
             Token(type: .identifier, lexeme: "number", literal: "number", line: 0),
             Token(type: .equal, lexeme: "=", literal: nil, line: 0),
             Token(type: .number, lexeme: "3", literal: 3, line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         

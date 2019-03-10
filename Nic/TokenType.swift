@@ -18,5 +18,6 @@ enum TokenType: String {
     case equal
     case plus
     case minus
+    case semicolon
     case eof
 }
