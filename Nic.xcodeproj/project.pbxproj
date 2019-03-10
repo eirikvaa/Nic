@@ -54,6 +54,7 @@
 		E5A4387B2224929200659430 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E5B4A88C22357BA500ED5EBF /* TokenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenType.swift; sourceTree = "<group>"; };
 		E5B4A8902235891000ED5EBF /* String+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Ext.swift"; sourceTree = "<group>"; };
+		E5B4A893223595DF00ED5EBF /* grammar.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = grammar.md; sourceTree = "<group>"; };
 		E5E95DF020BF29A100FF9AA4 /* CommandLineParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandLineParser.swift; sourceTree = "<group>"; };
 		E5E95DF220BF2D9100FF9AA4 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		E5E95DF320BF30B200FF9AA4 /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
@@ -99,6 +100,7 @@
 		E5600680200EA25D0039D9E0 = {
 			isa = PBXGroup;
 			children = (
+				E5B4A893223595DF00ED5EBF /* grammar.md */,
 				E5A4387B2224929200659430 /* README.md */,
 				E560068B200EA25D0039D9E0 /* Nic */,
 				E53747632227372F00705FFE /* NicTests */,
