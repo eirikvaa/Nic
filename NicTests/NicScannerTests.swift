@@ -185,11 +185,12 @@ class NicTests: XCTestCase {
     }
     
     func testVariableDeclarationWithInitialization() {
-        let source = "var = 3"
+        let source = "var number = 3"
         var scanner = Scanner(source: source)
         
         let expectedTokens = [
             Token(type: .var, lexeme: "var", literal: nil, line: 0),
+            Token(type: .identifier, lexeme: "number", literal: "number", line: 0),
             Token(type: .equal, lexeme: "=", literal: nil, line: 0),
             Token(type: .number, lexeme: "3", literal: 3, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)

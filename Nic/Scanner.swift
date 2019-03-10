@@ -8,13 +8,6 @@
 
 import Foundation
 
-enum NicError: Error {
-    case unterminatedMultiLineComment
-    case unterminatedString
-    case unexpectedCharacter
-    case endOfFile
-}
-
 /// The Scanner will do the initial lexical analysis, turning the source into a list of tokens.
 struct Scanner {
     var startIndex: String.Index
@@ -22,7 +15,7 @@ struct Scanner {
     var line = 0
     var source: String
     var tokens: [Token] = []
-    let keyword: [String: TokenType] = [
+    let keywords: [String: TokenType] = [
         "var": .var
     ]
 
@@ -74,12 +67,12 @@ struct Scanner {
 
 extension Scanner {
     mutating func identifier() {
-        while peek() != " " && peek() != "\n" && isAtEnd().isFalse {
+        while peek() != " " && peek() != "\n" && !isAtEnd() {
             advance()
         }
         
         let identifier = String(source[startIndex..<currentIndex])
-        let type = keyword[identifier] ?? .identifier
+        let type = keywords[identifier] ?? .identifier
         addToken(type: type)
     }
     
@@ -95,14 +88,14 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            throw NicError.unterminatedMultiLineComment
+            throw NicScannerError.unterminatedMultiLineComment
         }
         
         advance() // advance beyond "*"
         if peek() == "/" {
             advance() // advance past last "/"
         } else {
-            throw NicError.unterminatedMultiLineComment
+            throw NicScannerError.unterminatedMultiLineComment
         }
     }
     
@@ -126,7 +119,7 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            throw NicError.unterminatedString
+            throw NicScannerError.unterminatedString
         }
         
         advance() // advance beyond last "
@@ -146,16 +139,6 @@ extension Scanner {
         let numberString = String(source[startIndex..<currentIndex])
         let number = Int(numberString) ?? 0
         addToken(type: .number, literal: number)
-    }
-    
-    mutating func whitespace() {
-        while peek() == " " || peek() == "\n" {
-            if peek() == "\n" {
-                line += 1
-            }
-            
-            advance()
-        }
     }
 }
 
