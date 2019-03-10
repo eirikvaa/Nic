@@ -100,8 +100,7 @@
 		E5600680200EA25D0039D9E0 = {
 			isa = PBXGroup;
 			children = (
-				E5B4A893223595DF00ED5EBF /* grammar.md */,
-				E5A4387B2224929200659430 /* README.md */,
+				E5B4A894223595FD00ED5EBF /* Notes */,
 				E560068B200EA25D0039D9E0 /* Nic */,
 				E53747632227372F00705FFE /* NicTests */,
 				E560068A200EA25D0039D9E0 /* Products */,
@@ -129,6 +128,15 @@
 				E53747762227431A00705FFE /* Helpers */,
 			);
 			path = Nic;
+			sourceTree = "<group>";
+		};
+		E5B4A894223595FD00ED5EBF /* Notes */ = {
+			isa = PBXGroup;
+			children = (
+				E5B4A893223595DF00ED5EBF /* grammar.md */,
+				E5A4387B2224929200659430 /* README.md */,
+			);
+			path = Notes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
