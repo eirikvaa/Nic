@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E537476B222737A000705FFE /* NicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E537476A222737A000705FFE /* NicTests.swift */; };
+		E537476B222737A000705FFE /* NicScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E537476A222737A000705FFE /* NicScannerTests.swift */; };
 		E53747702227390600705FFE /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E95DF320BF30B200FF9AA4 /* Scanner.swift */; };
 		E53747752227431500705FFE /* Bool+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53747742227431500705FFE /* Bool+Ext.swift */; };
 		E53747772227447D00705FFE /* Bool+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E53747742227431500705FFE /* Bool+Ext.swift */; };
@@ -47,7 +47,7 @@
 /* Begin PBXFileReference section */
 		E53747622227372F00705FFE /* NicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E53747662227372F00705FFE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		E537476A222737A000705FFE /* NicTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NicTests.swift; sourceTree = "<group>"; };
+		E537476A222737A000705FFE /* NicScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NicScannerTests.swift; sourceTree = "<group>"; };
 		E53747742227431500705FFE /* Bool+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bool+Ext.swift"; sourceTree = "<group>"; };
 		E5600689200EA25D0039D9E0 /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
 		E560068C200EA25D0039D9E0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -82,7 +82,7 @@
 		E53747632227372F00705FFE /* NicTests */ = {
 			isa = PBXGroup;
 			children = (
-				E537476A222737A000705FFE /* NicTests.swift */,
+				E537476A222737A000705FFE /* NicScannerTests.swift */,
 				E53747662227372F00705FFE /* Info.plist */,
 			);
 			path = NicTests;
@@ -234,7 +234,7 @@
 				E5B4A8922235891500ED5EBF /* String+Ext.swift in Sources */,
 				E53747772227447D00705FFE /* Bool+Ext.swift in Sources */,
 				E53747702227390600705FFE /* Scanner.swift in Sources */,
-				E537476B222737A000705FFE /* NicTests.swift in Sources */,
+				E537476B222737A000705FFE /* NicScannerTests.swift in Sources */,
 				E5B4A88E22357F8200ED5EBF /* Token.swift in Sources */,
 				E5B4A88F22357F9200ED5EBF /* TokenType.swift in Sources */,
 			);

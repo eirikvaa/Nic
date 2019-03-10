@@ -15,9 +15,12 @@ class NicTests: XCTestCase {
     func testEmptySourceShouldGiveEmptyTokenList() {
         let source = ""
         var scanner = Scanner(source: source)
+        let expectedTokens: [Token] = [
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
         let tokens = try? scanner.scanTokens()
         
-        XCTAssertEqual(tokens, [], "An empty source should give an empty token list.")
+        XCTAssertEqual(expectedTokens, tokens, "An empty source should give an empty token list.")
     }
     
     func testSingleDigitNumber() {

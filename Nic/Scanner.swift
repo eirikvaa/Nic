@@ -59,10 +59,6 @@ struct Scanner {
     }
     
     mutating func scanTokens() throws -> [Token] {
-        guard source.isEmpty.isFalse else {
-            return []
-        }
-
         while (!isAtEnd()) {
             startIndex = currentIndex
             try scanToken()
