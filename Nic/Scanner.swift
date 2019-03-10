@@ -64,7 +64,7 @@ struct Scanner {
             try scanToken()
         }
         
-        tokens.append(Token(type: .eof, lexeme: "EOF", literal: nil, line: line))
+        addToken(type: .eof)
 
         return tokens
     }
@@ -194,7 +194,9 @@ extension Scanner {
     }
     
     mutating func addToken(type: TokenType, literal: Any? = nil) {
-        let lexeme = String(source[startIndex..<currentIndex])
+        // The EOF token is the only token that should be included in the token list,
+        // but which have an empty lexeme string, so handle that.
+        let lexeme = type == .eof ? "EOF" : String(source[startIndex..<currentIndex])
         let token = Token(type: type, lexeme: lexeme, literal: literal, line: line)
         tokens.append(token)
     }
