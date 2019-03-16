@@ -19,6 +19,7 @@
 		E5B4A89A2235986B00ED5EBF /* NicScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B4A8982235986B00ED5EBF /* NicScannerError.swift */; };
 		E5B4A89D2235989000ED5EBF /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B4A89C2235989000ED5EBF /* NicParserError.swift */; };
 		E5B4A89E2235989000ED5EBF /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B4A89C2235989000ED5EBF /* NicParserError.swift */; };
+		E5B4A8A42235AC3D00ED5EBF /* NicParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B4A8A22235AC3D00ED5EBF /* NicParserTests.swift */; };
 		E5E95DF120BF29A100FF9AA4 /* CommandLineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E95DF020BF29A100FF9AA4 /* CommandLineParser.swift */; };
 		E5E95DF420BF30B200FF9AA4 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E95DF320BF30B200FF9AA4 /* Scanner.swift */; };
 		E5E95DF620BF313700FF9AA4 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E95DF520BF313700FF9AA4 /* Token.swift */; };
@@ -58,6 +59,7 @@
 		E5B4A8952235982C00ED5EBF /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		E5B4A8982235986B00ED5EBF /* NicScannerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicScannerError.swift; sourceTree = "<group>"; };
 		E5B4A89C2235989000ED5EBF /* NicParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicParserError.swift; sourceTree = "<group>"; };
+		E5B4A8A22235AC3D00ED5EBF /* NicParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicParserTests.swift; sourceTree = "<group>"; };
 		E5E95DF020BF29A100FF9AA4 /* CommandLineParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandLineParser.swift; sourceTree = "<group>"; };
 		E5E95DF220BF2D9100FF9AA4 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
 		E5E95DF320BF30B200FF9AA4 /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				E537476A222737A000705FFE /* NicScannerTests.swift */,
+				E5B4A8A22235AC3D00ED5EBF /* NicParserTests.swift */,
 				E53747662227372F00705FFE /* Info.plist */,
 			);
 			path = NicTests;
@@ -236,6 +239,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E53747702227390600705FFE /* Scanner.swift in Sources */,
+				E5B4A8A42235AC3D00ED5EBF /* NicParserTests.swift in Sources */,
 				E537476B222737A000705FFE /* NicScannerTests.swift in Sources */,
 				E5B4A88E22357F8200ED5EBF /* Token.swift in Sources */,
 				E5B4A88F22357F9200ED5EBF /* TokenType.swift in Sources */,

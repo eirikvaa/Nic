@@ -32,7 +32,22 @@ struct CommandLineParser {
             print("Program ended unexpectedly with the following error: \(error)")
             return
         }
-
+        
         print(tokens)
+        
+        var parser = Parser(tokens: tokens)
+        
+        do {
+            try parser.parseTokens()
+        } catch let error as NicParserError {
+            switch error {
+            case .unexpectedToken(let token):
+                print("Unexpected token: \(token.lexeme)")
+            default:
+                print("Program ended unexpectedly with the following error: \(error)")
+            }
+        } catch {
+            print("Program ended unexpectedly with the following error: \(error)")
+        }
     }
 }
