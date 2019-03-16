@@ -53,7 +53,7 @@
 		E537476A222737A000705FFE /* NicScannerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NicScannerTests.swift; sourceTree = "<group>"; };
 		E5600689200EA25D0039D9E0 /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
 		E560068C200EA25D0039D9E0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
-		E5A4387B2224929200659430 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		E59A3136223D48A40056CED7 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E5B4A88C22357BA500ED5EBF /* TokenType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TokenType.swift; sourceTree = "<group>"; };
 		E5B4A893223595DF00ED5EBF /* grammar.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = grammar.md; sourceTree = "<group>"; };
 		E5B4A8952235982C00ED5EBF /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -97,6 +97,7 @@
 		E5600680200EA25D0039D9E0 = {
 			isa = PBXGroup;
 			children = (
+				E59A3136223D48A40056CED7 /* README.md */,
 				E5B4A894223595FD00ED5EBF /* Notes */,
 				E560068B200EA25D0039D9E0 /* Nic */,
 				E53747632227372F00705FFE /* NicTests */,
@@ -132,7 +133,6 @@
 			isa = PBXGroup;
 			children = (
 				E5B4A893223595DF00ED5EBF /* grammar.md */,
-				E5A4387B2224929200659430 /* README.md */,
 			);
 			path = Notes;
 			sourceTree = "<group>";
