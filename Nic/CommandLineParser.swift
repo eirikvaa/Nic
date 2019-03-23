@@ -36,9 +36,10 @@ struct CommandLineParser {
         print(tokens)
         
         var parser = Parser(tokens: tokens)
+        var statements: [Stmt] = []
         
         do {
-            try parser.parseTokens()
+            statements = try parser.parseTokens()
         } catch let error as NicParserError {
             switch error {
             case .unexpectedToken(let token):
@@ -52,6 +53,14 @@ struct CommandLineParser {
             }
         } catch {
             print("Program ended unexpectedly with the following error: \(error)")
+        }
+        
+        let resolver = Resolver()
+        
+        do {
+            try resolver.resolve(statements)
+        } catch {
+            print(error.localizedDescription)
         }
     }
 }

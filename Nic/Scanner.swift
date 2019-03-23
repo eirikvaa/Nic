@@ -57,8 +57,6 @@ struct Scanner {
             startIndex = currentIndex
             try scanToken()
         }
-        
-        addToken(type: .eof)
 
         return tokens
     }

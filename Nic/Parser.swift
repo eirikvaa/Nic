@@ -18,27 +18,65 @@ struct Parser {
         self.tokens = tokens
     }
     
-    mutating func parseTokens() throws {
-        let startToken = advance()
+    mutating func parseTokens() throws -> [Stmt] {
+        var statements: [Stmt] = []
         
         while !isAtEnd() {
-            try parseToken(startToken)
+            // Only declarations can be found in the global level.
+            // TODO: Should also allow expressions in the global level.
+            if let declaration = declaration() {
+                statements.append(declaration)
+            }
+        }
+        
+        return statements
+    }
+    
+    mutating private func declaration() -> Stmt? {
+        do {
+            if match(types: .var) {
+                return try variableDeclaration()
+            }
+            
+            fatalError("Not supported declaration.")
+        } catch {
+            print(error.localizedDescription)
+            return nil
         }
     }
     
-    mutating private func parseToken(_ token: Token) throws {
-        switch token.type {
-        case .var: try variableDeclaration()
-        default: throw NicParserError.unexpectedToken(token: token)
+    mutating private func variableDeclaration() throws -> Stmt {
+        let name = try consume(tokenType: .identifier, errorMessage: "Expect variable name.")
+        
+        var initializer: Expr?
+        if match(types: .equal) {
+            initializer = try expression()
         }
+        
+        try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
+        return Stmt.Var(name: name, initializer: initializer)
     }
     
-    mutating private func variableDeclaration() throws {
-        try consume(tokenType: .var, errorMessage: "A variable declaration must start with the var keyword.")
-        try consume(tokenType: .identifier, errorMessage: "A variable declaration needs an identifier.")
-        try consume(tokenType: .equal, errorMessage: "Must bind an identifier to a value with an equals sign.")
-        try value()
-        try consume(tokenType: .semicolon, errorMessage: "Statement must be terminated with a semicolon.")
+    mutating private func expression() throws -> Expr {
+        return try assignment()
+    }
+    
+    mutating private func assignment() throws -> Expr {
+        let expr = try primary()
+        
+        if match(types: .equal) {
+            // Implement something here
+        }
+        
+        return expr
+    }
+    
+    mutating private func primary() throws -> Expr {
+        if match(types: .number, .string) {
+            return Expr.Literal(value: previous().literal)
+        }
+        
+        throw NicParserError.missingRValue // TODO: Shold be "Expected expression or something"
     }
     
     mutating private func value() throws {
@@ -54,13 +92,13 @@ struct Parser {
         }
     }
     
-    mutating private func consume(tokenType: TokenType, errorMessage: String) throws {
-        guard previous().type == tokenType else {
-            print(errorMessage)
-            throw NicParserError.unexpectedToken(token: previous())
+    @discardableResult
+    mutating private func consume(tokenType: TokenType, errorMessage: String) throws -> Token {
+        guard check(tokenType: tokenType) else {
+            throw NicParserError.unexpectedToken(token: peek())
         }
         
-        advance()
+        return advance()
     }
     
     @discardableResult
@@ -69,8 +107,31 @@ struct Parser {
         return tokens[currentIndex - steps]
     }
     
+    mutating private func match(types: TokenType...) -> Bool {
+        for type in types {
+            if check(tokenType: type) {
+                advance()
+                return true
+            }
+        }
+        
+        return false
+    }
+    
+    private func check(tokenType: TokenType) -> Bool {
+        guard isAtEnd() == false else {
+            return false
+        }
+        
+        return tokens[currentIndex].type == tokenType
+    }
+    
     private func previous(steps: Int = 1) -> Token {
         return tokens[currentIndex - steps]
+    }
+    
+    private func peek() -> Token {
+        return tokens[currentIndex]
     }
     
     private func isAtEnd() -> Bool {
