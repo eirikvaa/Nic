@@ -10,6 +10,7 @@ import Foundation
 
 enum NicParserError: Error {
     case unexpectedToken(token: Token)
-    case unterminatedStatement
-    case illegalRightValue
+    case unterminatedStatement(line: Int)
+    case illegalRightValue(token: Token)
+    case missingRValue
 }

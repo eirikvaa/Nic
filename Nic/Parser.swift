@@ -42,12 +42,15 @@ struct Parser {
     }
     
     mutating private func value() throws {
-        switch previous().type {
+        let _previous = previous()
+        switch _previous.type {
             case .string,
                  .number:
             advance()
+        case .semicolon:
+            throw NicParserError.missingRValue
         default:
-            throw NicParserError.illegalRightValue
+            throw NicParserError.illegalRightValue(token: _previous)
         }
     }
     
@@ -66,8 +69,8 @@ struct Parser {
         return tokens[currentIndex - steps]
     }
     
-    private func previous() -> Token {
-        return tokens[currentIndex - 1]
+    private func previous(steps: Int = 1) -> Token {
+        return tokens[currentIndex - steps]
     }
     
     private func isAtEnd() -> Bool {

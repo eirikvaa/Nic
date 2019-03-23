@@ -43,8 +43,12 @@ struct CommandLineParser {
             switch error {
             case .unexpectedToken(let token):
                 print("Unexpected token: \(token.lexeme)")
-            default:
-                print("Program ended unexpectedly with the following error: \(error)")
+            case .missingRValue:
+                print("Missing a value after '=' in variable declaration.")
+            case .illegalRightValue(let token):
+                print("Expected a valid value after '=' in variable declaration, but found a \(token) instead.")
+            case .unterminatedStatement(let line):
+                print("Unterminated statement on line \(line).")
             }
         } catch {
             print("Program ended unexpectedly with the following error: \(error)")
