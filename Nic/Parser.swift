@@ -135,6 +135,6 @@ struct Parser {
     }
     
     private func isAtEnd() -> Bool {
-        return currentIndex >= tokens.count
+        return tokens[currentIndex].type == .eof
     }
 }
