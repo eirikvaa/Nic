@@ -21,7 +21,7 @@ extension Resolver: StmtVisitor {
         print(stmt.name.lexeme, terminator: " ")
         switch stmt.initializer {
         case let value as Expr.Literal:
-            print(value.value)
+            print(value.value ?? "")
         default:
             break
         }
