@@ -20,8 +20,6 @@ extension Resolver: ExprVisitor {
     func visitLiteralExpr(expr: Expr.Literal) throws {}
     
     func visitBinaryExpr(expr: Expr.Binary) throws {
-        
-        
         try resolve(expr.leftValue)
         try resolve(expr.rightValue)
     }
@@ -30,13 +28,6 @@ extension Resolver: ExprVisitor {
 extension Resolver: StmtVisitor {
     func visitVarStmt(_ stmt: Stmt.Var) throws {
         irGenerator.addGlobalVariable(declaration: stmt)
-        
-        switch stmt.initializer {
-        case _ as Expr.Literal:
-            break
-        default:
-            break
-        }
     }
 }
 

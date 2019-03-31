@@ -26,14 +26,16 @@ struct IRGenerator {
     }
     
     func addGlobalVariable(declaration: Stmt.Var) {
+        let stmtName = declaration.name.lexeme
+        
         switch declaration.initializer {
         case let literal as Expr.Literal:
             switch literal.value {
             case let number as Int:
                 let irValue = IntType.int64.constant(number)
-                let _ = builder.addGlobal(declaration.name.lexeme, initializer: irValue)
+                let _ = builder.addGlobal(stmtName, initializer: irValue)
             case let string as String:
-                let _ = builder.addGlobalString(name: declaration.name.lexeme, value: string)
+                let _ = builder.addGlobalString(name: stmtName, value: string)
             default:
                 break
             }
@@ -43,7 +45,10 @@ struct IRGenerator {
                 switch (lhs.value, binary.operator.lexeme, rhs.value) {
                 case (let lhsNumber as Int, "+", let rhsNumber as Int):
                     let add = builder.buildAdd(lhsNumber, rhsNumber)
-                    let _ = builder.addGlobal(declaration.name.lexeme, initializer: add)
+                    let _ = builder.addGlobal(stmtName, initializer: add)
+                case (let lhsString as String, "+", let rhsString as String):
+                    let resultingString = lhsString + rhsString
+                    let _ = builder.addGlobalString(name: stmtName, value: resultingString)
                 default:
                     break
                 }
