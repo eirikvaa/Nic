@@ -396,10 +396,10 @@
 		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
-				E55C03122250BF9200E6D176 /* Notes */,
 				OBJ_6 /* Package.swift */,
 				OBJ_7 /* Sources */,
 				OBJ_23 /* Tests */,
+				E55C03122250BF9200E6D176 /* Notes */,
 				OBJ_29 /* Dependencies */,
 				OBJ_91 /* Products */,
 				OBJ_97 /* README.md */,
