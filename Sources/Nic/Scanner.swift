@@ -68,7 +68,7 @@ struct Scanner {
 
 extension Scanner {
     mutating func identifier() {
-        while peek() != " " && peek() != "\n" && !isAtEnd() {
+        while ![" ", "\n", ";"].contains(peek()) && !isAtEnd() {
             advance()
         }
         
