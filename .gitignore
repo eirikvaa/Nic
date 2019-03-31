@@ -66,3 +66,5 @@ DerivedData/
 
 Nic/main
 .idea
+.build/
+.build/**
