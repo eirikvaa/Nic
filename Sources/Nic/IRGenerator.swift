@@ -1,5 +1,5 @@
 //
-//  LLVMGenerator.swift
+//  IRGenerator.swift
 //  Nic
 //
 //  Created by Eirik Vale Aase on 23/03/2019.
