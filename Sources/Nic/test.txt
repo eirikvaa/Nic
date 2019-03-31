@@ -1,2 +1,1 @@
-var hei = 3;
-var test = "Test";
+var hei = 1 + 1;

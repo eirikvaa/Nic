@@ -26,6 +26,8 @@ struct CommandLineParser {
         var scanner = Scanner(source: source)
         let tokens: [Token]
         
+        print(source)
+        
         do {
              tokens = try scanner.scanTokens()
         } catch {

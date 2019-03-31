@@ -8,8 +8,12 @@
 
 import Foundation
 
-class Resolver {
+struct Resolver {
+    let irGenerator: IRGenerator
     
+    init() {
+        irGenerator = IRGenerator()
+    }
 }
 
 extension Resolver: ExprVisitor {
@@ -19,9 +23,10 @@ extension Resolver: ExprVisitor {
 extension Resolver: StmtVisitor {
     func visitVarStmt(_ stmt: Stmt.Var) throws {
         print(stmt.name.lexeme, terminator: " ")
+        irGenerator.addGlobalVariable(declaration: stmt)
         switch stmt.initializer {
-        case let value as Expr.Literal:
-            print(value.value ?? "")
+        case _ as Expr.Literal:
+            break
         default:
             break
         }
