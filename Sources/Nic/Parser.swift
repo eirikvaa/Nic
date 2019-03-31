@@ -24,7 +24,7 @@ struct Parser {
         while !isAtEnd() {
             // Only declarations can be found in the global level.
             // TODO: Should also allow expressions in the global level.
-            if let declaration = declaration() {
+            if let declaration = try declaration() {
                 statements.append(declaration)
             }
         }
@@ -32,17 +32,12 @@ struct Parser {
         return statements
     }
     
-    mutating private func declaration() -> Stmt? {
-        do {
-            if match(types: .var) {
-                return try variableDeclaration()
-            }
-            
-            fatalError("Not supported declaration.")
-        } catch {
-            print(error.localizedDescription)
-            return nil
+    mutating private func declaration() throws -> Stmt? {
+        if match(types: .var) {
+            return try variableDeclaration()
         }
+        
+        fatalError("Not supported declaration.")
     }
     
     mutating private func variableDeclaration() throws -> Stmt {
