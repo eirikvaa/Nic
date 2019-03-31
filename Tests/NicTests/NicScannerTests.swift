@@ -256,5 +256,22 @@ class NicTests: XCTestCase {
         let tokens = try? scanner.scanTokens()
         XCTAssertEqual(expectedTokens, tokens, "Print statement that prints a string was not tokenized correctly.")
     }
+    
+    func testBooleanVariableDeclaration() {
+        let source = "var test = true;"
+        var scanner = Scanner(source: source)
+        
+        let expectedTokens: [Token] = [
+            Token(type: .var, lexeme: "var", literal: nil, line: 0),
+            Token(type: .identifier, lexeme: "test", literal: "test", line: 0),
+            Token(type: .equal, lexeme: "=", literal: nil, line: 0),
+            Token(type: .true, lexeme: "true", literal: "true", line: 0),
+            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        
+        let tokens = try? scanner.scanTokens()
+        XCTAssertEqual(expectedTokens, tokens, "Tokenizing of a boolean variable declaration failed.")
+    }
 
 }

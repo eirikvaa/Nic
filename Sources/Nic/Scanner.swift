@@ -19,7 +19,9 @@ struct Scanner {
         "var": .var,
         "const": .const,
         "function": .function,
-        "print": .print
+        "print": .print,
+        "true": .true,
+        "false": .false
     ]
 
     init(source: String) {

@@ -91,14 +91,16 @@ struct Parser {
     }
     
     mutating private func assignment() throws -> Expr {
-        let expr = try primary()
-        
-        return expr
+        return try primary()
     }
     
     mutating private func primary() throws -> Expr {
         if match(types: .number, .string) {
             return Expr.Literal(value: previous().literal)
+        }
+        
+        if match(types: .true, .false) {
+            return Expr.Boolean(value: previous().literal as? Bool)
         }
         
         throw NicParserError.missingRValue // TODO: Shold be "Expected expression or something"

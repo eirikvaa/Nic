@@ -20,6 +20,10 @@ enum TokenType: String {
     case slash
     case bang
     
+    // boolean
+    case `true`
+    case `false`
+    
     // keywords
     case `var`
     case const
