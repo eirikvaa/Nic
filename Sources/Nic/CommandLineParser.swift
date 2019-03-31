@@ -61,6 +61,7 @@ struct CommandLineParser {
         
         do {
             try resolver.resolve(statements)
+            resolver.irGenerator.module.dump()
         } catch {
             print(error.localizedDescription)
         }

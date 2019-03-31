@@ -37,10 +37,21 @@ struct IRGenerator {
             default:
                 break
             }
+        case let binary as Expr.Binary:
+            switch (binary.leftValue, binary.operator, binary.rightValue) {
+            case (let lhs as Expr.Literal, _, let rhs as Expr.Literal):
+                switch (lhs.value, binary.operator.lexeme, rhs.value) {
+                case (let lhsNumber as Int, "+", let rhsNumber as Int):
+                    let add = builder.buildAdd(lhsNumber, rhsNumber)
+                    let _ = builder.addGlobal(declaration.name.lexeme, initializer: add)
+                default:
+                    break
+                }
+            default:
+                break
+            }
         default:
             break
         }
-        
-        module.dump()
     }
 }

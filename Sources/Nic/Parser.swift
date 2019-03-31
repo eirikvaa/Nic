@@ -58,15 +58,23 @@ struct Parser {
     }
     
     mutating private func expression() throws -> Expr {
-        return try assignment()
+        return try addition()
+    }
+    
+    mutating private func addition() throws -> Expr {
+        let expr = try assignment()
+        
+        while match(types: .plus, .minus) {
+            let `operator` = previous()
+            let right = try primary()
+            return Expr.Binary(leftValue: expr, operator: `operator`, rightValue: right)
+        }
+        
+        return expr
     }
     
     mutating private func assignment() throws -> Expr {
         let expr = try primary()
-        
-        if match(types: .equal) {
-            // Implement something here
-        }
         
         return expr
     }

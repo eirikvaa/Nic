@@ -18,12 +18,19 @@ struct Resolver {
 
 extension Resolver: ExprVisitor {
     func visitLiteralExpr(expr: Expr.Literal) throws {}
+    
+    func visitBinaryExpr(expr: Expr.Binary) throws {
+        
+        
+        try resolve(expr.leftValue)
+        try resolve(expr.rightValue)
+    }
 }
 
 extension Resolver: StmtVisitor {
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        print(stmt.name.lexeme, terminator: " ")
         irGenerator.addGlobalVariable(declaration: stmt)
+        
         switch stmt.initializer {
         case _ as Expr.Literal:
             break

@@ -12,13 +12,24 @@ Nic is truly a random name. I have a rubber duck at home with the name "Nordic S
 
 ## How does Nic look right now?
 
-Right now Nic can parse a few things, like integers, mathematical operators, strings and comments.
-A program could look like this:
+Exciting things are happening now. LLVM has been incoporated in the form of [LLVM](https://github.com/llvm-swift/LLVMSwift). Only variable declarations are permitted as of now. Below is an example of the current pipeline.
 
 ```
-123 + 123
-"Hello, world!"
-// A single-line comment
-/* A multi-line comment */
-var hello = 3
+// Source code
+var helloWorld = "Hello, world!";
+var hei = 1 + 1;
+
+// After tokenization
+[VAR, IDENTIFIER, EQUAL, STRING, SEMICOLON, VAR, IDENTIFIER, EQUAL, NUMBER, PLUS, NUMBER, SEMICOLON, EOF]
+
+// Generated LLVM IR
+; ModuleID = 'main'
+source_filename = "main"
+
+@helloWorld = global [14 x i8] c"Hello, world!\00", align 1
+@hei = global i64 2
+
+define void @main() {
+entry:
+}
 ```
