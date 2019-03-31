@@ -9,15 +9,29 @@
 import Foundation
 
 enum TokenType: String {
+    // primary values
     case string
     case number
-    case bang
-    case slash
-    case identifier
-    case `var`
+    
+    // operators
     case equal
     case plus
     case minus
+    case slash
+    case bang
+    
+    // keywords
+    case `var`
+    case const
+    case function
+    
+    // other
+    case identifier
     case semicolon
     case eof
+    
+    case leftParen
+    case rightParen
+    case leftBrace
+    case rightBrace
 }

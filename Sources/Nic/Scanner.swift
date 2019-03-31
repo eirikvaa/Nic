@@ -16,7 +16,9 @@ struct Scanner {
     var source: String
     var tokens: [Token] = []
     let keywords: [String: TokenType] = [
-        "var": .var
+        "var": .var,
+        "const": .const,
+        "function": .function
     ]
 
     init(source: String) {
@@ -29,6 +31,10 @@ struct Scanner {
         let c = advance()
         
         switch c {
+        case "(": addToken(type: .leftParen)
+        case ")": addToken(type: .rightParen)
+        case "{": addToken(type: .leftBrace)
+        case "}": addToken(type: .rightBrace)
         case "+": addToken(type: .plus)
         case "-": addToken(type: .minus)
         case "*": addToken(type: .bang)

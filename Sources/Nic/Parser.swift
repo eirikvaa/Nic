@@ -33,7 +33,7 @@ struct Parser {
     }
     
     mutating private func declaration() throws -> Stmt? {
-        if match(types: .var) {
+        if match(types: .var, .const) {
             return try variableDeclaration()
         }
         
