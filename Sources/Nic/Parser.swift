@@ -22,14 +22,25 @@ struct Parser {
         var statements: [Stmt] = []
         
         while !isAtEnd() {
-            // Only declarations can be found in the global level.
-            // TODO: Should also allow expressions in the global level.
-            if let declaration = try declaration() {
-                statements.append(declaration)
+            // Only statements at top-level.
+            if let statement = try statement() {
+                statements.append(statement)
             }
         }
         
         return statements
+    }
+    
+    mutating func statement() throws -> Stmt? {
+        switch peek().type {
+            case .var,
+                 .const:
+            return try declaration()
+        case .print:
+            return try printStatement()
+        default:
+            return nil
+        }
     }
     
     mutating private func declaration() throws -> Stmt? {
@@ -38,6 +49,17 @@ struct Parser {
         }
         
         fatalError("Not supported declaration.")
+    }
+    
+    mutating private func printStatement() throws -> Stmt {
+        try consume(tokenType: .print, errorMessage: "Expected print keyword.")
+        
+        let printExpr: Expr? = match(types: .semicolon) ? nil : try primary()
+        let printStmt = Stmt.Print(value: printExpr)
+        
+        try consume(tokenType: .semicolon, errorMessage: "Expected semicolon.")
+        
+        return printStmt
     }
     
     mutating private func variableDeclaration() throws -> Stmt {
@@ -126,7 +148,7 @@ struct Parser {
             return false
         }
         
-        return tokens[currentIndex].type == tokenType
+        return peek().type == tokenType
     }
     
     private func previous(steps: Int = 1) -> Token {

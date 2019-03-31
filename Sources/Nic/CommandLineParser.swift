@@ -26,6 +26,7 @@ struct CommandLineParser {
         var scanner = Scanner(source: source)
         let tokens: [Token]
         
+        print("Source:")
         print(source)
         
         do {
@@ -35,6 +36,7 @@ struct CommandLineParser {
             return
         }
         
+        print("Tokens:")
         print(tokens)
         
         var parser = Parser(tokens: tokens)
@@ -60,8 +62,13 @@ struct CommandLineParser {
         let resolver = Resolver()
         
         do {
+            print("\nSystem output:")
             try resolver.resolve(statements)
+            
+            print("\nLLVM IR dump:")
+            print("==========================")
             resolver.irGenerator.module.dump()
+            print("==========================")
         } catch {
             print(error.localizedDescription)
         }

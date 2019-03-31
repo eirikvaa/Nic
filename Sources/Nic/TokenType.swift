@@ -24,6 +24,7 @@ enum TokenType: String {
     case `var`
     case const
     case function
+    case print
     
     // other
     case identifier

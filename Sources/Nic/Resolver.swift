@@ -29,6 +29,15 @@ extension Resolver: StmtVisitor {
     func visitVarStmt(_ stmt: Stmt.Var) throws {
         irGenerator.addGlobalVariable(declaration: stmt)
     }
+    
+    func visitPrintStmt(_ stmt: Stmt.Print) throws {
+        switch stmt.value {
+        case let literal as Expr.Literal:
+            print(literal.value ?? "")
+        default:
+            print()
+        }
+    }
 }
 
 extension Resolver {

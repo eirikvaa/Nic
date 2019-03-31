@@ -12,6 +12,7 @@ protocol StmtVisitor {
     associatedtype StmtVisitorReturn
     
     func visitVarStmt(_ stmt: Stmt.Var) throws -> StmtVisitorReturn
+    func visitPrintStmt(_ stmt: Stmt.Print) throws -> StmtVisitorReturn
 }
 
 class Stmt {
@@ -30,6 +31,18 @@ class Stmt {
         
         override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitVarStmt(self)
+        }
+    }
+    
+    class Print: Stmt {
+        let value: Expr?
+        
+        init(value: Expr?) {
+            self.value = value
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+            return try visitor.visitPrintStmt(self)
         }
     }
 }

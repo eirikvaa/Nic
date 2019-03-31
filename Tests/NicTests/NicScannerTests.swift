@@ -242,5 +242,19 @@ class NicTests: XCTestCase {
         let tokens = try? scanner.scanTokens()
         XCTAssertEqual(expectedTokens, tokens, "A const declaration without initializer is legal and produces four tokens.")
     }
+    
+    func testPrintStatementWithValue() {
+        let source = #"print "Hello, world!""#
+        var scanner = Scanner(source: source)
+        
+        let expectedTokens: [Token] = [
+            Token(type: .print, lexeme: "print", literal: nil, line: 0),
+            Token(type: .string, lexeme: "Hello, world!", literal: "Hello, world!", line: 0),
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+        ]
+        
+        let tokens = try? scanner.scanTokens()
+        XCTAssertEqual(expectedTokens, tokens, "Print statement that prints a string was not tokenized correctly.")
+    }
 
 }
