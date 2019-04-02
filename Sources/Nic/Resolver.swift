@@ -23,8 +23,6 @@ extension Resolver: ExprVisitor {
         try resolve(expr.leftValue)
         try resolve(expr.rightValue)
     }
-    
-    func visitBooleanExpr(expr: Expr.Boolean) throws -> () {}
 }
 
 extension Resolver: StmtVisitor {

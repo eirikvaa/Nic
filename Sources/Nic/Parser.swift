@@ -99,8 +99,12 @@ struct Parser {
             return Expr.Literal(value: previous().literal)
         }
         
-        if match(types: .true, .false) {
-            return Expr.Boolean(value: previous().literal as? Bool)
+        if match(types: .true) {
+            return Expr.Literal(value: true)
+        }
+        
+        if match(types: .false) {
+            return Expr.Literal(value: false)
         }
         
         throw NicParserError.missingRValue // TODO: Shold be "Expected expression or something"
