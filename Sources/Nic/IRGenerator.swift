@@ -46,6 +46,9 @@ struct IRGenerator {
                 case (let lhsNumber as Int, "+", let rhsNumber as Int):
                     let add = builder.buildAdd(lhsNumber, rhsNumber)
                     let _ = builder.addGlobal(stmtName, initializer: add)
+                case (let lhsNumber as Int, "*", let rhsNumber as Int):
+                    let mult = builder.buildMul(lhsNumber, rhsNumber)
+                    let _ = builder.addGlobal(stmtName, initializer: mult)
                 case (let lhsString as String, "+", let rhsString as String):
                     let resultingString = lhsString + rhsString
                     let _ = builder.addGlobalString(name: stmtName, value: resultingString)

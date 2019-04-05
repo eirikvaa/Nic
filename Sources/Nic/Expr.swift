@@ -13,6 +13,7 @@ protocol ExprVisitor {
     
     func visitLiteralExpr(expr: Expr.Literal) throws -> ExprVisitorReturn
     func visitBinaryExpr(expr: Expr.Binary) throws -> ExprVisitorReturn
+    func visitVariableExpr(expr: Expr.Variable) throws -> ExprVisitorReturn
 }
 
 class Expr {
@@ -45,6 +46,18 @@ class Expr {
         
         override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitBinaryExpr(expr: self)
+        }
+    }
+    
+    class Variable: Expr {
+        let name: Token?
+        
+        init(name: Token?) {
+            self.name = name
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+            return try visitor.visitVariableExpr(expr: self)
         }
     }
 }

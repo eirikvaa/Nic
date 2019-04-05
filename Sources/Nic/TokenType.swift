@@ -18,7 +18,7 @@ enum TokenType: String {
     case plus
     case minus
     case slash
-    case bang
+    case star
     
     // boolean
     case `true`

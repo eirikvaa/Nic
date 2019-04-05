@@ -1,1 +1,2 @@
-var test = true;
+var hei = 3;
+var test = 1 + 2 * hei;

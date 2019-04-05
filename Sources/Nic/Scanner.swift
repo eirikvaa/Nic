@@ -40,7 +40,7 @@ struct Scanner {
         case "}": addToken(type: .rightBrace)
         case "+": addToken(type: .plus)
         case "-": addToken(type: .minus)
-        case "*": addToken(type: .bang)
+        case "*": addToken(type: .star)
         case " ": break
         case "\n": line += 1
         case "/":

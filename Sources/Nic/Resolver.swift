@@ -23,17 +23,33 @@ extension Resolver: ExprVisitor {
         try resolve(expr.leftValue)
         try resolve(expr.rightValue)
     }
+    
+    func visitVariableExpr(expr: Expr.Variable) throws -> () {
+        
+    }
 }
 
 extension Resolver: StmtVisitor {
     func visitVarStmt(_ stmt: Stmt.Var) throws {
         irGenerator.addGlobalVariable(declaration: stmt)
+        
+        if let initializer = stmt.initializer {
+            try resolve(initializer)
+        }
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
+        if let value = stmt.value {
+            try resolve(value)
+        }
+        
         switch stmt.value {
         case let literal as Expr.Literal:
             print(literal.value ?? "")
+        case let variable as Expr.Variable:
+            print(variable.name?.lexeme ?? "")
+        case let addition as Expr.Binary:
+            print(addition.leftValue, addition.operator.lexeme, addition.rightValue)
         default:
             print()
         }

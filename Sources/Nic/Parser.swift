@@ -54,7 +54,7 @@ struct Parser {
     mutating private func printStatement() throws -> Stmt {
         try consume(tokenType: .print, errorMessage: "Expected print keyword.")
         
-        let printExpr: Expr? = match(types: .semicolon) ? nil : try primary()
+        let printExpr: Expr? = match(types: .semicolon) ? nil : try expression()
         let printStmt = Stmt.Print(value: printExpr)
         
         try consume(tokenType: .semicolon, errorMessage: "Expected semicolon.")
@@ -79,9 +79,21 @@ struct Parser {
     }
     
     mutating private func addition() throws -> Expr {
-        let expr = try assignment()
+        let expr = try multiplication()
         
         while match(types: .plus, .minus) {
+            let `operator` = previous()
+            let right = try multiplication()
+            return Expr.Binary(leftValue: expr, operator: `operator`, rightValue: right)
+        }
+        
+        return expr
+    }
+    
+    mutating private func multiplication() throws -> Expr {
+        let expr = try assignment()
+        
+        while match(types: .star, .slash) {
             let `operator` = previous()
             let right = try primary()
             return Expr.Binary(leftValue: expr, operator: `operator`, rightValue: right)
@@ -105,6 +117,10 @@ struct Parser {
         
         if match(types: .false) {
             return Expr.Literal(value: false)
+        }
+        
+        if match(types: .identifier) {
+            return Expr.Variable(name: previous())
         }
         
         throw NicParserError.missingRValue // TODO: Shold be "Expected expression or something"
