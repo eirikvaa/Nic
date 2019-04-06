@@ -10,6 +10,8 @@ import Foundation
 
 /// The parser will make sure that the list of tokens created during the lexical analysis will adhere to the
 /// correct syntax of the language, or report syntax errors.
+/// Methods like `expression`, `multiplication` and so forth matches an expression of the respective type
+/// or anything of _higher_ precedense.
 struct Parser {
     var currentIndex = 0
     let tokens: [Token]
@@ -52,9 +54,10 @@ struct Parser {
     }
     
     mutating private func printStatement() throws -> Stmt {
-        try consume(tokenType: .print, errorMessage: "Expected print keyword.")
+        // Advance beyond 'print' token
+        advance()
         
-        let printExpr: Expr? = match(types: .semicolon) ? nil : try expression()
+        let printExpr = match(types: .semicolon) ? nil : try expression()
         let printStmt = Stmt.Print(value: printExpr)
         
         try consume(tokenType: .semicolon, errorMessage: "Expected semicolon.")
@@ -173,10 +176,12 @@ struct Parser {
         return peek().type == tokenType
     }
     
+    // Returns the most recently consumed token
     private func previous(steps: Int = 1) -> Token {
         return tokens[currentIndex - steps]
     }
     
+    // Returns the token we have _yet_ to consume
     private func peek() -> Token {
         return tokens[currentIndex]
     }
