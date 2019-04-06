@@ -9,27 +9,3 @@ I have zero and all plans for Nic. I just want to try to create _something_ that
 ## Where did the name come from?
 
 Nic is truly a random name. I have a rubber duck at home with the name "Nordic Semiconductor", and this was at the point where I wast _just_ starting to think about my new programming language, back in January 2018. I just took the first and two last letters of the word _Nordic_, and there it was. Truly underwhelming, one might say. But the name isn't important here.
-
-## How does Nic look right now?
-
-Exciting things are happening now. LLVM has been incoporated in the form of [LLVM](https://github.com/llvm-swift/LLVMSwift). Only variable declarations are permitted as of now. Below is an example of the current pipeline.
-
-```
-// Source code
-var helloWorld = "Hello, world!";
-var hei = 1 + 1;
-
-// After tokenization
-[VAR, IDENTIFIER, EQUAL, STRING, SEMICOLON, VAR, IDENTIFIER, EQUAL, NUMBER, PLUS, NUMBER, SEMICOLON, EOF]
-
-// Generated LLVM IR
-; ModuleID = 'main'
-source_filename = "main"
-
-@helloWorld = global [14 x i8] c"Hello, world!\00", align 1
-@hei = global i64 2
-
-define void @main() {
-entry:
-}
-```
