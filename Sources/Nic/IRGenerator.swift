@@ -9,6 +9,7 @@
 import Foundation
 import LLVM
 
+/// The `IRGenerator` will do a single pass over the tree and generate the LLVM IR.
 struct IRGenerator {
     let module: Module
     let builder: IRBuilder
@@ -61,5 +62,54 @@ struct IRGenerator {
         default:
             break
         }
+    }
+}
+
+extension IRGenerator: ExprVisitor {
+    func visitVariableExpr(expr: Expr.Variable) throws {
+        return
+    }
+    
+    func visitBinaryExpr(expr: Expr.Binary) throws {
+        return
+    }
+    
+    func visitLiteralExpr(expr: Expr.Literal) throws {
+        return
+    }
+}
+
+extension IRGenerator: StmtVisitor {
+    func visitVarStmt(_ stmt: Stmt.Var) throws {
+        addGlobalVariable(declaration: stmt)
+    }
+    
+    func visitPrintStmt(_ stmt: Stmt.Print) throws {
+        switch stmt.value {
+        case let literal as Expr.Literal:
+            print(literal.value ?? "")
+        case let variable as Expr.Variable:
+            print(variable.name?.lexeme ?? "")
+        case let addition as Expr.Binary:
+            print(addition.leftValue, addition.operator.lexeme, addition.rightValue)
+        default:
+            print()
+        }
+    }
+}
+
+extension IRGenerator {
+    func generate(_ statements: [Stmt]) throws {
+        for stmt in statements {
+            try generate(stmt)
+        }
+    }
+    
+    func generate(_ stmt: Stmt) throws {
+        try stmt.accept(visitor: self)
+    }
+    
+    func generate(_ expr: Expr) throws {
+        try expr.accept(visitor: self)
     }
 }

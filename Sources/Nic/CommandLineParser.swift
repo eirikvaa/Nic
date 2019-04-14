@@ -62,13 +62,18 @@ struct CommandLineParser {
         let resolver = Resolver()
         
         do {
-            print("\nSystem output:")
+            print("\nResolving:")
             try resolver.resolve(statements)
-            
-            print("\nLLVM IR dump:")
-            print("==========================")
-            resolver.irGenerator.module.dump()
-            print("==========================")
+        } catch {
+            print(error.localizedDescription)
+        }
+        
+        let codeGenerator = IRGenerator()
+        
+        do {
+            print("\nCode generation")
+            try codeGenerator.generate(statements)
+            codeGenerator.builder.module.dump()
         } catch {
             print(error.localizedDescription)
         }

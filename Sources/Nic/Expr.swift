@@ -16,6 +16,8 @@ protocol ExprVisitor {
     func visitVariableExpr(expr: Expr.Variable) throws -> ExprVisitorReturn
 }
 
+/// `Expr`defines a fair share of implementable classes, like `Literal` and the like, because it implements
+/// the `accept` methods in the Visitor Pattern.
 class Expr {
     func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturn {
         fatalError("Don't call this directly, must be implemented.")
