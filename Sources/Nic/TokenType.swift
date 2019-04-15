@@ -33,7 +33,13 @@ enum TokenType: String {
     // other
     case identifier
     case semicolon
+    case colon
     case eof
+    
+    // built-in types
+    case booleanType = "Bool"
+    case stringType = "String"
+    case numberType = "Number"
     
     case leftParen
     case rightParen

@@ -25,6 +25,7 @@ class Expr {
     
     class Literal: Expr {
         let value: Any?
+        var type: TokenType?
         
         init(value: Any?) {
             self.value = value
@@ -53,6 +54,7 @@ class Expr {
     
     class Variable: Expr {
         let name: Token?
+        var type: TokenType?
         
         init(name: Token?) {
             self.name = name
@@ -61,5 +63,37 @@ class Expr {
         override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitVariableExpr(expr: self)
         }
+    }
+}
+
+extension Expr {
+    func exprType() -> TokenType? {
+        switch self {
+        case let literal as Literal:
+            return literal.type
+        case let variable as Variable:
+            return variable.type
+        default:
+            return nil
+        }
+    }
+    
+    func value() -> Any? {
+        switch self {
+        case let literal as Literal:
+            return literal.value
+        default:
+            return nil
+        }
+    }
+}
+
+extension Expr.Binary {
+    func leftExprType() -> TokenType? {
+        return leftValue.exprType()
+    }
+    
+    func rightExprType() -> TokenType? {
+        return rightValue.exprType()
     }
 }

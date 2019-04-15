@@ -10,7 +10,11 @@ import Foundation
 
 /// In the Visitor Pattern the `Resolver` acts as the visitor, because it implements all the `visit`
 /// methods. The resolver will do a single pass over the tree and resolve any variables.
-struct Resolver {}
+/// TODO: Identifiers must here be resolved. Use scopes.
+class Resolver {
+    var environment: [String: Any?] = [:]
+    var scope: [String: Bool] = [:]
+}
 
 extension Resolver: ExprVisitor {
     func visitLiteralExpr(expr: Expr.Literal) throws {}
@@ -21,19 +25,31 @@ extension Resolver: ExprVisitor {
     }
     
     func visitVariableExpr(expr: Expr.Variable) throws {
-        // TODO: Resolve the variable expression
+        let value = environment[expr.name!.lexeme] ?? nil
+        
+        switch value {
+        case is Int:
+            expr.type = .numberType
+        case is String:
+            expr.type = .stringType
+        case is Bool:
+            expr.type = .booleanType
+        default:
+            break
+        }
     }
 }
 
 extension Resolver: StmtVisitor {
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        // TODO: Declare the variable
+        define(stmt.name)
         
         if let initializer = stmt.initializer {
+            environment[stmt.name.lexeme] = initializer.value()
             try resolve(initializer)
         }
         
-        // TODO: Define the variable
+        declare(stmt.name)
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
@@ -56,5 +72,13 @@ extension Resolver {
     
     func resolve(_ expr: Expr) throws {
         try expr.accept(visitor: self)
+    }
+    
+    func define(_ name: Token) {
+        scope[name.lexeme] = false
+    }
+    
+    func declare(_ name: Token) {
+        scope[name.lexeme] = true
     }
 }

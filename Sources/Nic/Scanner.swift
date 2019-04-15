@@ -52,6 +52,7 @@ struct Scanner {
         case "\"": try string()
         case "=": addToken(type: .equal)
         case ";": addToken(type: .semicolon)
+        case ":": addToken(type: .colon)
         default:
             if isDigit(character: c) {
                 digit()
@@ -77,7 +78,7 @@ struct Scanner {
 
 extension Scanner {
     mutating func identifier() {
-        while ![" ", "\n", ";"].contains(peek()) && !isAtEnd() {
+        while ![" ", "\n", ";", ":"].contains(peek()) && !isAtEnd() {
             advance()
         }
         

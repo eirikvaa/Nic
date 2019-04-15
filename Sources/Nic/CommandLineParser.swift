@@ -60,17 +60,17 @@ struct CommandLineParser {
         }
         
         let resolver = Resolver()
+        let typeChecker = TypeChecker()
         
         do {
             print("\nResolving:")
             try resolver.resolve(statements)
-        } catch {
-            print(error.localizedDescription)
-        }
-        
-        let codeGenerator = IRGenerator()
-        
-        do {
+            
+            let codeGenerator = IRGenerator(environment: resolver.environment)
+            
+            print("\nType checking:")
+            try typeChecker.typecheck(statements)
+            
             print("\nCode generation")
             try codeGenerator.generate(statements)
             codeGenerator.builder.module.dump()

@@ -20,6 +20,12 @@ struct Parser {
         self.tokens = tokens
     }
     
+    let types: [String: TokenType] = [
+        "Number": .numberType,
+        "String": .stringType,
+        "Bool": .booleanType
+    ]
+    
     mutating func parseTokens() throws -> [Stmt] {
         var statements: [Stmt] = []
         
@@ -68,13 +74,24 @@ struct Parser {
     mutating private func variableDeclaration() throws -> Stmt {
         let name = try consume(tokenType: .identifier, errorMessage: "Expect variable name.")
         
+        var variableType: TokenType?
+        if match(types: .colon) {
+            let type = try consume(tokenType: .identifier, errorMessage: "Expect a type after colon in variable declaration.")
+            variableType = types[type.lexeme]
+        }
+        
         var initializer: Expr?
         if match(types: .equal) {
             initializer = try expression()
+            
+            // Don't let the type of the rvalue override a potential type annotation.
+            if variableType == nil {
+                variableType = initializer?.exprType()
+            }
         }
         
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
-        return Stmt.Var(name: name, initializer: initializer)
+        return Stmt.Var(name: name, type: variableType, initializer: initializer)
     }
     
     mutating private func expression() throws -> Expr {
@@ -110,16 +127,28 @@ struct Parser {
     }
     
     mutating private func primary() throws -> Expr {
-        if match(types: .number, .string) {
-            return Expr.Literal(value: previous().literal)
+        if match(types: .number) {
+            let expr = Expr.Literal(value: previous().literal)
+            expr.type = .numberType
+            return expr
+        }
+        
+        if match(types: .string) {
+            let expr = Expr.Literal(value: previous().literal)
+            expr.type = .stringType
+            return expr
         }
         
         if match(types: .true) {
-            return Expr.Literal(value: true)
+            let expr = Expr.Literal(value: true)
+            expr.type = .booleanType
+            return expr
         }
         
         if match(types: .false) {
-            return Expr.Literal(value: false)
+            let expr = Expr.Literal(value: false)
+            expr.type = .booleanType
+            return expr
         }
         
         if match(types: .identifier) {

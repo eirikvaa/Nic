@@ -14,8 +14,11 @@ struct IRGenerator {
     let module: Module
     let builder: IRBuilder
     let mainFunction: Function
+    let environment: [String: Any?]
     
-    init() {
+    init(environment: [String: Any?] = [:]) {
+        self.environment = environment
+        
         module = Module(name: "main")
         builder = IRBuilder(module: module)
         
@@ -33,10 +36,9 @@ struct IRGenerator {
         case let literal as Expr.Literal:
             switch literal.value {
             case let number as Int:
-                let irValue = IntType.int64.constant(number)
-                let _ = builder.addGlobal(stmtName, initializer: irValue)
+                buildGlobal(name: stmtName, value: number)
             case let string as String:
-                let _ = builder.addGlobalString(name: stmtName, value: string)
+                buildGlobal(name: stmtName, value: string)
             default:
                 break
             }
@@ -45,14 +47,30 @@ struct IRGenerator {
             case (let lhs as Expr.Literal, _, let rhs as Expr.Literal):
                 switch (lhs.value, binary.operator.lexeme, rhs.value) {
                 case (let lhsNumber as Int, "+", let rhsNumber as Int):
-                    let add = builder.buildAdd(lhsNumber, rhsNumber)
-                    let _ = builder.addGlobal(stmtName, initializer: add)
+                    buildAddOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
                 case (let lhsNumber as Int, "*", let rhsNumber as Int):
-                    let mult = builder.buildMul(lhsNumber, rhsNumber)
-                    let _ = builder.addGlobal(stmtName, initializer: mult)
+                    buildMulOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
                 case (let lhsString as String, "+", let rhsString as String):
-                    let resultingString = lhsString + rhsString
-                    let _ = builder.addGlobalString(name: stmtName, value: resultingString)
+                    buildAddOperation(name: stmtName, lhsValue: lhsString, rhsValue: rhsString)
+                default:
+                    break
+                }
+            case (let lhs as Expr.Variable, _, let rhs as Expr.Literal):
+                let lhsValue = environment[lhs.name!.lexeme] ?? nil
+                switch (lhsValue, binary.operator.lexeme, rhs.value) {
+                case (let lhsNumber as Int, "+", let rhsNumber as Int):
+                    buildAddOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
+                default:
+                    break
+                }
+            case (let lhs as Expr.Variable, _, let rhs as Expr.Variable):
+                let lhsValue = environment[lhs.name!.lexeme] ?? nil
+                let rhsValue = environment[rhs.name!.lexeme] ?? nil
+                switch (lhsValue, binary.operator.lexeme, rhsValue) {
+                case (let lhsNumber as Int, "+", let rhsNumber as Int):
+                    buildAddOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
+                case (let lhsString as String, "+", let rhsString as String):
+                    buildAddOperation(name: stmtName, lhsValue: lhsString, rhsValue: rhsString)
                 default:
                     break
                 }
@@ -62,6 +80,38 @@ struct IRGenerator {
         default:
             break
         }
+    }
+    
+    func buildGlobal(name: String, value: IRValue) {
+        switch value {
+        case let str as String:
+            let _ = builder.addGlobalString(name: name, value: str)
+        case let num as Int:
+            let irValue = IntType.int64.constant(num)
+            let _ = builder.addGlobal(name, initializer: irValue)
+        default:
+            fatalError()
+        }
+    }
+    
+    func buildAddOperation(name: String, lhsValue: IRValue, rhsValue: IRValue) {
+        let add: IRValue
+        
+        switch (lhsValue, rhsValue) {
+        case (let lhsStr as String, let rhsStr as String):
+            add = builder.addGlobalString(name: name, value: lhsStr + rhsStr)
+        case (is Int, is Int):
+            add = builder.buildAdd(lhsValue, rhsValue)
+        default:
+            fatalError()
+        }
+        
+        let _ = builder.addGlobal(name, initializer: add)
+    }
+    
+    func buildMulOperation(name: String, lhsValue: IRValue, rhsValue: IRValue) {
+        let mult = builder.buildMul(lhsValue, rhsValue)
+        let _ = builder.addGlobal(name, initializer: mult)
     }
 }
 
@@ -89,7 +139,7 @@ extension IRGenerator: StmtVisitor {
         case let literal as Expr.Literal:
             print(literal.value ?? "")
         case let variable as Expr.Variable:
-            print(variable.name?.lexeme ?? "")
+            print(variable.value() ?? "")
         case let addition as Expr.Binary:
             print(addition.leftValue, addition.operator.lexeme, addition.rightValue)
         default:
