@@ -211,38 +211,6 @@ class NicTests: XCTestCase {
         XCTAssertEqual(expectedTokens, tokens, "A var keyword, an identifier, an equals sign and a number should result in four tokens (including EOF).")
     }
     
-    func testConstDeclarationWithInitialization() {
-        let source = "const number = 3;"
-        var scanner = Scanner(source: source)
-        
-        let expectedTokens = [
-            Token(type: .const, lexeme: "const", literal: nil, line: 0),
-            Token(type: .identifier, lexeme: "number", literal: "number", line: 0),
-            Token(type: .equal, lexeme: "=", literal: nil, line: 0),
-            Token(type: .number, lexeme: "3", literal: 3, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        
-        let tokens = try? scanner.scanTokens()
-        XCTAssertEqual(expectedTokens, tokens, "A const keyword, an identifier, an equals sign and a number should result in three five (including EOF).")
-    }
-    
-    func testConstDeclarationWithoutInitializer() {
-        let source = "const test;"
-        var scanner = Scanner(source: source)
-        
-        let expectedTokens: [Token] = [
-            Token(type: .const, lexeme: "const", literal: nil, line: 0),
-            Token(type: .identifier, lexeme: "test", literal: "test", line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        
-        let tokens = try? scanner.scanTokens()
-        XCTAssertEqual(expectedTokens, tokens, "A const declaration without initializer is legal and produces four tokens.")
-    }
-    
     func testPrintStatementWithValue() {
         let source = #"print "Hello, world!""#
         var scanner = Scanner(source: source)

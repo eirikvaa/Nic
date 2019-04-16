@@ -41,18 +41,20 @@ struct Parser {
     
     mutating func statement() throws -> Stmt? {
         switch peek().type {
-            case .var,
-                 .const:
+        case .var:
             return try declaration()
         case .print:
             return try printStatement()
         default:
-            return nil
+            // Right now we're only supporting variable declarations and print statements
+            // at top-level, so quit if something else appears. This restriction will
+            // be relaxed at later points.
+            fatalError("Statement is not supported.")
         }
     }
     
     mutating private func declaration() throws -> Stmt? {
-        if match(types: .var, .const) {
+        if match(types: .var) {
             return try variableDeclaration()
         }
         

@@ -39,16 +39,4 @@ class NicParserTests: XCTestCase {
         
         XCTAssertThrowsError(try parser.parseTokens(), "Missing semicolon at the end of a variable declaration should throw an error.")
     }
-    
-    func testWellFormedConstDeclaration() {
-        let tokens: [Token] = [
-            Token(type: .const, lexeme: "const", literal: nil, line: 0),
-            Token(type: .identifier, lexeme: "test", literal: "test", line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        
-        var parser = Parser(tokens: tokens)
-        XCTAssertNoThrow(try parser.parseTokens())
-    }
 }

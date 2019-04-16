@@ -17,7 +17,6 @@ struct Scanner {
     var tokens: [Token] = []
     let keywords: [String: TokenType] = [
         "var": .var,
-        "const": .const,
         "function": .function,
         "print": .print,
         "true": .true,
