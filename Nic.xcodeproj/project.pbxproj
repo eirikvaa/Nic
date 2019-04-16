@@ -21,6 +21,9 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
+		E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */; };
+		E5035F8922669DE300FD1A0F /* NicTypeCheckerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */; };
+		E5035F8A22669DE400FD1A0F /* NicTypeCheckerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */; };
 		E5714B632250C2B40057F751 /* CommandLineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* CommandLineParser.swift */; };
 		E5714B642250C2B40057F751 /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicParserError.swift */; };
 		E5714B652250C2B40057F751 /* NicScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* NicScannerError.swift */; };
@@ -166,6 +169,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerTests.swift; sourceTree = "<group>"; };
+		E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerError.swift; sourceTree = "<group>"; };
 		E5714B722250C40C0057F751 /* grammar.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = grammar.md; sourceTree = "<group>"; };
 		E59D32912263FDD0004AF443 /* TypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeChecker.swift; sourceTree = "<group>"; };
 		E59D3294226409A1004AF443 /* NicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicError.swift; sourceTree = "<group>"; };
@@ -296,8 +301,9 @@
 		OBJ_11 /* Error */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_12 /* NicParserError.swift */,
 				OBJ_13 /* NicScannerError.swift */,
+				OBJ_12 /* NicParserError.swift */,
+				E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */,
 				E59D3294226409A1004AF443 /* NicError.swift */,
 			);
 			path = Error;
@@ -314,8 +320,9 @@
 		OBJ_24 /* NicTests */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_25 /* NicParserTests.swift */,
 				OBJ_26 /* NicScannerTests.swift */,
+				OBJ_25 /* NicParserTests.swift */,
+				E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */,
 				OBJ_27 /* XCTestManifests.swift */,
 			);
 			name = NicTests;
@@ -704,6 +711,7 @@
 				OBJ_176 /* Stmt.swift in Sources */,
 				E59D3295226409A1004AF443 /* NicError.swift in Sources */,
 				OBJ_177 /* Token.swift in Sources */,
+				E5035F8922669DE300FD1A0F /* NicTypeCheckerError.swift in Sources */,
 				E59D32922263FDD0004AF443 /* TypeChecker.swift in Sources */,
 				OBJ_178 /* TokenType.swift in Sources */,
 				OBJ_179 /* main.swift in Sources */,
@@ -723,6 +731,7 @@
 			buildActionMask = 0;
 			files = (
 				E59D3296226409A1004AF443 /* NicError.swift in Sources */,
+				E5035F8A22669DE400FD1A0F /* NicTypeCheckerError.swift in Sources */,
 				E5714B6A2250C2B40057F751 /* Scanner.swift in Sources */,
 				OBJ_201 /* NicParserTests.swift in Sources */,
 				OBJ_202 /* NicScannerTests.swift in Sources */,
@@ -732,6 +741,7 @@
 				E5714B6B2250C2B40057F751 /* Stmt.swift in Sources */,
 				E5714B642250C2B40057F751 /* NicParserError.swift in Sources */,
 				E5714B692250C2B40057F751 /* Resolver.swift in Sources */,
+				E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */,
 				E5714B682250C2B40057F751 /* Parser.swift in Sources */,
 				E5714B6D2250C2B40057F751 /* TokenType.swift in Sources */,
 				E5714B632250C2B40057F751 /* CommandLineParser.swift in Sources */,

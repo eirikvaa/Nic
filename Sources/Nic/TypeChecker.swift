@@ -32,6 +32,7 @@ extension TypeChecker: StmtVisitor {
                     if let stmtType = stmt.type, let literalType = literal.type {
                         let msg = "'\(stmt.name.lexeme)' was initialized with a value of type '\(literalType.rawValue)', but expected a value of type '\(stmtType.rawValue)' instead."
                         NicError.error(stmt.name.line, message: msg)
+                        throw NicTypeCheckerError.typeAnnotationMismatch(stmt: stmt)
                     }
                 }
             case let binary as Expr.Binary:

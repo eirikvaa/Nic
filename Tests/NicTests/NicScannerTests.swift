@@ -12,147 +12,98 @@ import XCTest
 
 class NicTests: XCTestCase {
 
+    // MARK: Empty source
     func testEmptySourceShouldGiveEmptyTokenList() {
         let source = ""
         var scanner = Scanner(source: source)
-        let expectedTokens: [Token] = [
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
         
-        XCTAssertEqual(expectedTokens, tokens, "An empty source should give an empty token list.")
+        let expectedTokenTypes: [TokenType] = [.eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
+        
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "An empty source should give an empty token list.")
     }
     
+    // MARK: Numbers
     func testSingleDigitNumber() {
         let source = "1;"
         var scanner = Scanner(source: source)
         
-        let expectedTokens: [Token] = [
-            Token(type: .number, lexeme: "1", literal: 1, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
+        let expectedTokenTypes: [TokenType] = [.number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a single number should return a token list with a single token of type number.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a single number should return a token list with a single token of type number.")
     }
     
     func testSourceWithSingleDigitNumberEndingInNewline() {
         let source = "1;\n"
         var scanner = Scanner(source: source)
         
-        let expectedTokens: [Token] = [
-            Token(type: .number, lexeme: "1", literal: 1, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
+        let expectedTokenTypes: [TokenType] = [.number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a single number should return a token list with a single token of type number.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a single number should return a token list with a single token of type number.")
     }
     
     func testSingleMultipleDigitNumber() {
         let source = "123;"
         var scanner = Scanner(source: source)
         
-        let expectedTokens: [Token] = [
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
+        let expectedTokenTypes: [TokenType] = [.number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a single multi-digit number should resolve to a single token.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a single multi-digit number should resolve to a single token.")
     }
     
     func testMultipleMultiDigitNumbers() {
         let source = "123; 123;"
         var scanner = Scanner(source: source)
         
-        let expectedTokens = [
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
+        let expectedTokenTypes: [TokenType] = [.number, .semicolon, .number, .semicolon, .eof]
         
-        let tokens = try? scanner.scanTokens()
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedTokens, tokens, "A source consisting of two multi-digit numbers should resolve to two tokens.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of two multi-digit numbers should resolve to two tokens.")
     }
     
-    func testSingleString() {
-        let source = "\"Hei på deg\";"
-        var scanner = Scanner(source: source)
-        
-        let expectedTokens = [
-            Token(type: .string, lexeme: "Hei på deg", literal: "Hei på deg", line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
-        
-        XCTAssertEqual(expectedTokens, tokens, "A source consisting of a string should return a single token of that string.")
-    }
-    
+    // MARK: Comments
     func testComment() {
         let source = "//"
         var scanner = Scanner(source: source)
         
-        let expectedToken: [Token] = [
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
+        let expectedTokenTypes: [TokenType] = [.eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
     
     func testCommentThatIgnoresASingleToken() {
         let source = "//123"
         var scanner = Scanner(source: source)
         
-        let expectedToken: [Token] = [
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
+        let expectedTokenTypes: [TokenType] = [.eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
     
     func testCommentBetweenTwoTokensShouldReturnASingleToken() {
         let source = "123;//123"
         var scanner = Scanner(source: source)
         
-        let expectedToken: [Token] = [
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
+        let expectedTokenTypes: [TokenType] = [.number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
     
     func testMultiLineCommentHidesSecondTokenShouldReturnOneToken() {
         let source = "123;/*123*/"
         var scanner = Scanner(source: source)
         
-        let expectedToken: [Token] = [
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        let tokens = try? scanner.scanTokens()
+        let expectedTokenTypes: [TokenType] = [.number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        XCTAssertEqual(expectedToken, tokens, "A source consisting solely of a multi-digit number and a multi-line comment consisting of number inside should return a single number token.")
-    }
-    
-    func testUnterminatedStringLiteral() {
-        let source = "\"Hei"
-        var scanner = Scanner(source: source)
-        
-        XCTAssertThrowsError(try scanner.scanTokens(), "Unterminated string literal should result in a crash")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of a multi-digit number and a multi-line comment consisting of number inside should return a single number token.")
     }
     
     func testUnterminatedMultiLineComment() {
@@ -162,84 +113,104 @@ class NicTests: XCTestCase {
         XCTAssertThrowsError(try scanner.scanTokens(), "Unterminated multi-line comment should result in a crash")
     }
     
+    // MARK: Strings
+    func testUnterminatedStringLiteral() {
+        let source = ##""Hei"##
+        var scanner = Scanner(source: source)
+        
+        XCTAssertThrowsError(try scanner.scanTokens(), "Unterminated string literal should result in a crash")
+    }
+    
+    func testSingleString() {
+        let source = "\"Hei på deg\";"
+        var scanner = Scanner(source: source)
+        
+        let expectedTokenTypes: [TokenType] = [.string, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
+        
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a string should return a single token of that string.")
+    }
+    
+    // MARK: Mathematical expressions
     func testNumberPlusNumber() {
         let source = "123+123;"
         var scanner = Scanner(source: source)
         
-        let expectedTokens: [Token] = [
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .plus, lexeme: "+", literal: nil, line: 0),
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
+        let expectedTokenTypes: [TokenType] = [.number, .plus, .number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        let tokens = try? scanner.scanTokens()
-        XCTAssertEqual(expectedTokens, tokens, "A number, an operator and a number should result in three tokens.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A number, an operator and a number should result in three tokens.")
     }
     
     func testNumberDivideNumber() {
         let source = "123/123;"
         var scanner = Scanner(source: source)
         
-        let expectedTokens: [Token] = [
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .slash, lexeme: "/", literal: nil, line: 0),
-            Token(type: .number, lexeme: "123", literal: 123, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
+        let expectedTokenTypes: [TokenType] = [.number, .slash, .number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        let tokens = try? scanner.scanTokens()
-        XCTAssertEqual(expectedTokens, tokens, "A number, an operator and a number should result in three tokens (including EOF).")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A number, an operator and a number should result in three tokens (including EOF).")
     }
     
+    // MARK: Print
+    func testPrintStatementWithValue() {
+        let source = #"print "Hello, world!";"#
+        var scanner = Scanner(source: source)
+        
+        let expectedTokenTypes: [TokenType] = [.print, .string, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
+        
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "Print statement that prints a string was not tokenized correctly.")
+    }
+    
+    func testPrintStatementWithBinaryNumberLiteralExpression() {
+        let source = "print 1 + 1;"
+        var scanner = Scanner(source: source)
+        
+        let expectedTokenTypes: [TokenType] = [.print, .number, .plus, .number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
+        
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "Print statements that prints the result of adding two literal numbers not tokenized correctly.")
+    }
+    
+    // MARK: Variable declarations
     func testVariableDeclarationWithInitialization() {
         let source = "var number = 3;"
         var scanner = Scanner(source: source)
         
-        let expectedTokens = [
-            Token(type: .var, lexeme: "var", literal: nil, line: 0),
-            Token(type: .identifier, lexeme: "number", literal: "number", line: 0),
-            Token(type: .equal, lexeme: "=", literal: nil, line: 0),
-            Token(type: .number, lexeme: "3", literal: 3, line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
+        let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        let tokens = try? scanner.scanTokens()
-        XCTAssertEqual(expectedTokens, tokens, "A var keyword, an identifier, an equals sign and a number should result in four tokens (including EOF).")
-    }
-    
-    func testPrintStatementWithValue() {
-        let source = #"print "Hello, world!""#
-        var scanner = Scanner(source: source)
-        
-        let expectedTokens: [Token] = [
-            Token(type: .print, lexeme: "print", literal: nil, line: 0),
-            Token(type: .string, lexeme: "Hello, world!", literal: "Hello, world!", line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
-        
-        let tokens = try? scanner.scanTokens()
-        XCTAssertEqual(expectedTokens, tokens, "Print statement that prints a string was not tokenized correctly.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "A var keyword, an identifier, an equals sign and a number should result in four tokens (including EOF).")
     }
     
     func testBooleanVariableDeclaration() {
         let source = "var test = true;"
         var scanner = Scanner(source: source)
         
-        let expectedTokens: [Token] = [
-            Token(type: .var, lexeme: "var", literal: nil, line: 0),
-            Token(type: .identifier, lexeme: "test", literal: "test", line: 0),
-            Token(type: .equal, lexeme: "=", literal: nil, line: 0),
-            Token(type: .true, lexeme: "true", literal: "true", line: 0),
-            Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
-        ]
+        let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .true, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
         
-        let tokens = try? scanner.scanTokens()
-        XCTAssertEqual(expectedTokens, tokens, "Tokenizing of a boolean variable declaration failed.")
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "Tokenizing of a boolean variable declaration failed.")
+    }
+    
+    func testBooleanVariableDeclarationWithTypeAnnotation() {
+        let source = "var test: Bool = false;";
+        var scanner = Scanner(source: source)
+        
+        let expectedTokenTypes: [TokenType] = [.var, .identifier, .colon, .identifier, .equal, .false, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "Tokenizing of a boolean variable declaration failed.")
+    }
+    
+    func testBinayNumberLiteralExpression() {
+        let source = "var test = 1 + 1;"
+        var scanner = Scanner(source: source)
+        
+        let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .number, .plus, .number, .semicolon, .eof]
+        let tokenTypes = try? scanner.scanTokens().map { $0.type }
+        
+        XCTAssertEqual(expectedTokenTypes, tokenTypes, "Variable declaration for binary expression with number literal operands failed.")
     }
 
 }
