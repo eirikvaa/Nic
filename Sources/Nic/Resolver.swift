@@ -24,20 +24,7 @@ extension Resolver: ExprVisitor {
         try resolve(expr.rightValue)
     }
     
-    func visitVariableExpr(expr: Expr.Variable) throws {
-        let value = environment[expr.name!.lexeme] ?? nil
-        
-        switch value {
-        case is Int:
-            expr.type = .numberType
-        case is String:
-            expr.type = .stringType
-        case is Bool:
-            expr.type = .booleanType
-        default:
-            break
-        }
-    }
+    func visitVariableExpr(expr: Expr.Variable) throws {}
 }
 
 extension Resolver: StmtVisitor {
