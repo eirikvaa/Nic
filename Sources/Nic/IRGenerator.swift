@@ -116,6 +116,10 @@ struct IRGenerator {
 }
 
 extension IRGenerator: ExprVisitor {
+    func visitAssignExpr(expr: Expr.Assign) throws {
+        return
+    }
+    
     func visitVariableExpr(expr: Expr.Variable) throws {
         return
     }

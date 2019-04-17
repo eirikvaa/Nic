@@ -12,11 +12,15 @@ import Foundation
 /// methods. The resolver will do a single pass over the tree and resolve any variables.
 /// TODO: Identifiers must here be resolved. Use scopes.
 class Resolver {
-    var environment: [String: Any?] = [:]
-    var scope: [String: Bool] = [:]
+    var scopes: Stack<[String: Bool]> = []
 }
 
 extension Resolver: ExprVisitor {
+    func visitAssignExpr(expr: Expr.Assign) throws {
+        try resolve(expr.value)
+        resolveLocal(expr: expr, name: expr.name)
+    }
+    
     func visitLiteralExpr(expr: Expr.Literal) throws {}
     
     func visitBinaryExpr(expr: Expr.Binary) throws {
@@ -24,7 +28,22 @@ extension Resolver: ExprVisitor {
         try resolve(expr.rightValue)
     }
     
-    func visitVariableExpr(expr: Expr.Variable) throws {}
+    func visitVariableExpr(expr: Expr.Variable) throws {
+        guard let name = expr.name else {
+            return
+        }
+        
+        guard let currentScope = scopes.peek() else {
+            return
+        }
+        
+        guard currentScope[name.lexeme] == true else {
+            NicError.error(name.line, message: "Can't use a variable before it's initialized.")
+            return // Maybe throw?
+        }
+        
+        
+    }
 }
 
 extension Resolver: StmtVisitor {
@@ -32,7 +51,6 @@ extension Resolver: StmtVisitor {
         define(stmt.name)
         
         if let initializer = stmt.initializer {
-            environment[stmt.name.lexeme] = initializer.value()
             try resolve(initializer)
         }
         
@@ -61,11 +79,38 @@ extension Resolver {
         try expr.accept(visitor: self)
     }
     
+    func resolveLocal(expr: Expr, name: Token) {
+        for i in stride(from: scopes.count - 1, through: 0, by: -1) {
+            if scopes[i].keys.contains(name.lexeme) {
+                // TODO: Right now we have no scopes other than the global scope.
+                return
+            }
+        }
+        
+        // Not found. Assume it is global.
+    }
+    
     func define(_ name: Token) {
-        scope[name.lexeme] = false
+        guard var currentScope = scopes.peek() else {
+            return
+        }
+        
+        currentScope[name.lexeme] = false
     }
     
     func declare(_ name: Token) {
-        scope[name.lexeme] = true
+        guard var currentScope = scopes.peek() else {
+            return
+        }
+        
+        currentScope[name.lexeme] = true
+    }
+    
+    func beginScope() {
+        scopes.push([:])
+    }
+    
+    func endScope() {
+        scopes.pop()
     }
 }

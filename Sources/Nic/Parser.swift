@@ -117,7 +117,7 @@ struct Parser {
         
         while match(types: .star, .slash) {
             let `operator` = previous()
-            let right = try primary()
+            let right = try assignment()
             return Expr.Binary(leftValue: expr, operator: `operator`, rightValue: right)
         }
         
@@ -125,7 +125,21 @@ struct Parser {
     }
     
     mutating private func assignment() throws -> Expr {
-        return try primary()
+        let expr = try primary()
+        
+        if match(types: .equal) {
+            let equals = previous()
+            let value = try assignment()
+            
+            if let variable = expr as? Expr.Variable,
+                let name = variable.name {
+                return Expr.Assign(name: name, value: value)
+            }
+            
+            NicError.error(equals.line, message: "Illegal assignment target!")
+        }
+        
+        return expr
     }
     
     mutating private func primary() throws -> Expr {

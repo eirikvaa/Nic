@@ -51,6 +51,8 @@ extension TypeChecker: StmtVisitor {
 }
 
 extension TypeChecker: ExprVisitor {
+    func visitAssignExpr(expr: Expr.Assign) throws {}
+    
     func visitLiteralExpr(expr: Expr.Literal) throws {}
     
     func visitBinaryExpr(expr: Expr.Binary) throws {

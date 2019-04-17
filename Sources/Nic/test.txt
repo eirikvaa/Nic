@@ -1,3 +1,2 @@
 var test = 10;
-var hei = 15;
-var test2 = test + hei;
+var test2 = test;
