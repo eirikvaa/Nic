@@ -6,10 +6,7 @@ The structure and some rules are stolen shamelessly from Swift's [grammar](https
 ### Grammar for whitespace
 ```
 whitespace                  ->  <whitespace_item> (whitespace)?
-whitespace_item             ->  <linebreak>
-whitespace_item             ->  <comment>
-whitespace_item             ->  <multiline_comment>
-whitespace_item             ->  U+0020 (space)
+whitespace_item             ->  <linebreak> | <comment> | <multiline_comment> | U+0020 (space)
 
 line_break                  ->  U+000A (newline, \n)
 
@@ -30,9 +27,7 @@ identifier                  ->  [_a-zA-Z][_a-zA-Z0-9]*
 
 ### Grammar for literals
 ```
-literal                     ->  <numeric_literal>
-literal                     ->  <string_literal>
-literal                     ->  <boolean_literal>
+literal                     ->  <numeric_literal> | <string_literal> | <boolean_literal>
 numeric_literal             ->  (1-9)(0-9)*
 string_literal              ->  "(<a-zA-Z0-9>)*"
 boolean_literal             ->  true | false
@@ -49,22 +44,17 @@ operator                    ->  + | - | * | / | =
 ```
 expression                  ->  assignment
 assignment                  ->  addition
-addition                    ->  multiplication
-multiplication              ->  primary
-```
-
-### Grammar of a binary expression
-```
-binary_expressions          ->  <binary_expression> <binary_expressions>
-binary_expression           ->  <operator> <expression>
+addition                    ->  multiplication ( ( "-" | "+" ) multiplication )*
+multiplication              ->  unary ( ( "/" | "*" ) unary )*
+unary                       ->  ( "!" | "-" ) unary
+primary                     ->  literal | identifier
 ```
 
 ## Statements
 
 ### Grammar of a statement
 ```
-statement                   ->  <print_statement>;
-statement                   ->  <declaration>;
+statement                   ->  <print_statement> | <declaration>;
 ```
 
 ### Grammar of a print statement

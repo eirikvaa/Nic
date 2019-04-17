@@ -100,18 +100,16 @@ struct Parser {
     }
     
     mutating private func assignment() throws -> Expr {
-        let expr = try addition()
-        
-        return expr
+        return try addition()
     }
     
     mutating private func addition() throws -> Expr {
         let expr = try multiplication()
         
         while match(types: .plus, .minus) {
-            let `operator` = previous()
+            let op = previous()
             let right = try multiplication()
-            return Expr.Binary(leftValue: expr, operator: `operator`, rightValue: right)
+            return Expr.Binary(leftValue: expr, operator: op, rightValue: right)
         }
         
         return expr
@@ -121,9 +119,9 @@ struct Parser {
         let expr = try unary()
         
         while match(types: .star, .slash) {
-            let `operator` = previous()
+            let op = previous()
             let right = try unary()
-            return Expr.Binary(leftValue: expr, operator: `operator`, rightValue: right)
+            return Expr.Binary(leftValue: expr, operator: op, rightValue: right)
         }
         
         return expr
