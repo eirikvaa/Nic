@@ -174,19 +174,6 @@ struct Parser {
         throw NicParserError.missingRValue // TODO: Shold be "Expected expression or something"
     }
     
-    mutating private func value() throws {
-        let _previous = previous()
-        switch _previous.type {
-            case .string,
-                 .number:
-            advance()
-        case .semicolon:
-            throw NicParserError.missingRValue
-        default:
-            throw NicParserError.illegalRightValue(token: _previous)
-        }
-    }
-    
     @discardableResult
     mutating private func consume(tokenType: TokenType, errorMessage: String) throws -> Token {
         guard check(tokenType: tokenType) else {
