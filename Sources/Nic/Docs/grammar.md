@@ -1,5 +1,6 @@
 # Grammar for Nic
 The structure and some rules are stolen shamelessly from Swift's [grammar](https://docs.swift.org/swift-book/ReferenceManual/zzSummaryOfTheGrammar.html), but obviously simplified.
+There is also quite a bit of [Crafting Interpreters](http://craftinginterpreters.com/) in there.
 
 ## Lexical Structure
 

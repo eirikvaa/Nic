@@ -58,7 +58,7 @@ struct Scanner {
                 addToken(type: .slash)
             }
         default:
-            if isDigit(character: character) {
+            if character.isNumber {
                 digit()
             } else {
                 identifier()
@@ -93,7 +93,7 @@ extension Scanner {
     
     mutating func multiLineComment() {
         while peek() != "*" && !isAtEnd() {
-            if peek() == "\n" {
+            if peek()?.isNewline == true {
                 line += 1
             }
             
@@ -115,7 +115,7 @@ extension Scanner {
     }
     
     mutating func singleLineComment() {
-        while peek() != "\n" && !isAtEnd() {
+        while peek()?.isNewline == false && !isAtEnd() {
             advance()
         }
     }
@@ -124,7 +124,7 @@ extension Scanner {
         advance() // advance beyond first "
         
         while peek() != "\"" && !isAtEnd() {
-            if peek() == "\n" {
+            if peek()?.isNewline == true {
                 line += 1
             }
             
@@ -146,7 +146,7 @@ extension Scanner {
     }
     
     mutating func digit() {
-        while !isAtEnd() && isDigit(character: peek()) {
+        while !isAtEnd() && peek()?.isNumber == true {
             advance()
         }
         
@@ -162,14 +162,6 @@ extension Scanner {
     func isAtEnd() -> Bool {
         let index = source.distance(from: source.startIndex, to: currentIndex)
         return index >= source.count
-    }
-    
-    func isDigit(character: Character?) -> Bool {
-        guard let character = character else {
-            return false
-        }
-        
-        return Int(String(character)) != nil
     }
 }
 
