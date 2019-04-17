@@ -39,6 +39,8 @@ struct IRGenerator {
                 buildGlobal(name: stmtName, value: number)
             case let string as String:
                 buildGlobal(name: stmtName, value: string)
+            case let bool as Bool:
+                buildGlobal(name: stmtName, value: bool)
             default:
                 break
             }
@@ -89,6 +91,8 @@ struct IRGenerator {
         case let num as Int:
             let irValue = IntType.int64.constant(num)
             let _ = builder.addGlobal(name, initializer: irValue)
+        case let bool as Bool:
+            let _ = builder.addGlobal(name, initializer: bool)
         default:
             fatalError()
         }
