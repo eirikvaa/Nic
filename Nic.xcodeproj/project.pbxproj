@@ -180,6 +180,8 @@
 		E548C55422673B08002E7779 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
 		E548C55722674B5A002E7779 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		E548C55A22674C96002E7779 /* NicRuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicRuntimeError.swift; sourceTree = "<group>"; };
+		E548C55E2267AF21002E7779 /* Parsing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Parsing.md; sourceTree = "<group>"; };
+		E548C55F2267B043002E7779 /* TypeSystem.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TypeSystem.md; sourceTree = "<group>"; };
 		E5714B722250C40C0057F751 /* grammar.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = grammar.md; sourceTree = "<group>"; };
 		E59D32912263FDD0004AF443 /* TypeChecker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TypeChecker.swift; sourceTree = "<group>"; };
 		E59D3294226409A1004AF443 /* NicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicError.swift; sourceTree = "<group>"; };
@@ -299,12 +301,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		E5714B712250C40C0057F751 /* Notes */ = {
+		E548C55D2267AEFF002E7779 /* Docs */ = {
 			isa = PBXGroup;
 			children = (
 				E5714B722250C40C0057F751 /* grammar.md */,
+				E548C55E2267AF21002E7779 /* Parsing.md */,
+				E548C55F2267B043002E7779 /* TypeSystem.md */,
 			);
-			path = Notes;
+			path = Docs;
+			sourceTree = "<group>";
+		};
+		E548C5602267B14F002E7779 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E548C55422673B08002E7779 /* Stack.swift */,
+			);
+			path = Helpers;
 			sourceTree = "<group>";
 		};
 		OBJ_11 /* Error */ = {
@@ -425,7 +437,6 @@
 				OBJ_23 /* Tests */,
 				OBJ_28 /* Dependencies */,
 				OBJ_90 /* Products */,
-				E5714B712250C40C0057F751 /* Notes */,
 				OBJ_96 /* README.md */,
 			);
 			sourceTree = "<group>";
@@ -453,9 +464,10 @@
 				OBJ_21 /* TokenType.swift */,
 				OBJ_14 /* Expr.swift */,
 				OBJ_19 /* Stmt.swift */,
-				OBJ_11 /* Error */,
-				E548C55422673B08002E7779 /* Stack.swift */,
 				E548C55722674B5A002E7779 /* Environment.swift */,
+				E548C5602267B14F002E7779 /* Helpers */,
+				OBJ_11 /* Error */,
+				E548C55D2267AEFF002E7779 /* Docs */,
 			);
 			name = Nic;
 			path = Sources/Nic;

@@ -76,7 +76,6 @@ print_statement             ->  print <expression>
 ### Grammar for a declaration
 ```
 declaration                 ->  <variable_declaration>
-declaration                 ->  <constant_declaration>
 ```
 
 ### Grammar for top-level declarations
@@ -87,9 +86,4 @@ top_level_declarations      ->  (<statement>)*
 ### Grammar for a variable declaration
 ```
 variable_declaration        ->  var <identifier> = <expression>
-```
-
-### Grammar for a constant declaration
-```
-constant_declaration        ->  const <identifier> = <expression>
 ```
