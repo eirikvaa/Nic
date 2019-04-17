@@ -32,7 +32,7 @@
 		E548C55C22674C96002E7779 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55A22674C96002E7779 /* NicRuntimeError.swift */; };
 		E548C5652267B213002E7779 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C5642267B213002E7779 /* TypeSystem.swift */; };
 		E548C5662267B213002E7779 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C5642267B213002E7779 /* TypeSystem.swift */; };
-		E5714B632250C2B40057F751 /* CommandLineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* CommandLineParser.swift */; };
+		E5714B632250C2B40057F751 /* Nic.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Nic.swift */; };
 		E5714B642250C2B40057F751 /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicParserError.swift */; };
 		E5714B652250C2B40057F751 /* NicScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* NicScannerError.swift */; };
 		E5714B662250C2B40057F751 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Expr.swift */; };
@@ -101,7 +101,7 @@
 		OBJ_152 /* X86MMXType.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_81 /* X86MMXType.swift */; };
 		OBJ_154 /* llvmshims.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "LLVM::llvmshims::Product" /* llvmshims.framework */; };
 		OBJ_162 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_89 /* Package.swift */; };
-		OBJ_168 /* CommandLineParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* CommandLineParser.swift */; };
+		OBJ_168 /* Nic.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Nic.swift */; };
 		OBJ_169 /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicParserError.swift */; };
 		OBJ_170 /* NicScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* NicScannerError.swift */; };
 		OBJ_171 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Expr.swift */; };
@@ -192,7 +192,7 @@
 		"LLVM::llvmshims::Product" /* llvmshims.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = llvmshims.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Nic::Nic::Product" /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Nic::NicTests::Product" /* NicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = NicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		OBJ_10 /* CommandLineParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandLineParser.swift; sourceTree = "<group>"; };
+		OBJ_10 /* Nic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nic.swift; sourceTree = "<group>"; };
 		OBJ_12 /* NicParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicParserError.swift; sourceTree = "<group>"; };
 		OBJ_13 /* NicScannerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicScannerError.swift; sourceTree = "<group>"; };
 		OBJ_14 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
@@ -457,7 +457,7 @@
 			children = (
 				OBJ_9 /* test.txt */,
 				OBJ_22 /* main.swift */,
-				OBJ_10 /* CommandLineParser.swift */,
+				OBJ_10 /* Nic.swift */,
 				OBJ_18 /* Scanner.swift */,
 				OBJ_16 /* Parser.swift */,
 				OBJ_17 /* Resolver.swift */,
@@ -728,7 +728,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_168 /* CommandLineParser.swift in Sources */,
+				OBJ_168 /* Nic.swift in Sources */,
 				OBJ_169 /* NicParserError.swift in Sources */,
 				OBJ_170 /* NicScannerError.swift in Sources */,
 				OBJ_171 /* Expr.swift in Sources */,
@@ -780,7 +780,7 @@
 				E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */,
 				E5714B682250C2B40057F751 /* Parser.swift in Sources */,
 				E5714B6D2250C2B40057F751 /* TokenType.swift in Sources */,
-				E5714B632250C2B40057F751 /* CommandLineParser.swift in Sources */,
+				E5714B632250C2B40057F751 /* Nic.swift in Sources */,
 				E5714B6E2250C2B40057F751 /* main.swift in Sources */,
 				E5714B672250C2B40057F751 /* IRGenerator.swift in Sources */,
 				E5714B6C2250C2B40057F751 /* Token.swift in Sources */,

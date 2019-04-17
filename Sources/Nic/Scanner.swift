@@ -101,7 +101,7 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            CommandLineParser.error(at: line, message: "Undeterminated multi-line comment, missing '*'.")
+            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '*'.")
             return
         }
         
@@ -109,7 +109,7 @@ extension Scanner {
         if peek() == "/" {
             advance() // advance past last "/"
         } else {
-            CommandLineParser.error(at: line, message: "Undeterminated multi-line comment, missing '/'.")
+            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '/'.")
             return
         }
     }
@@ -132,7 +132,7 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            CommandLineParser.error(at: line, message: "Unterminated string")
+            Nic.error(at: line, message: "Unterminated string")
             return
         }
         

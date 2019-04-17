@@ -8,4 +8,4 @@
 
 import Foundation
 
-CommandLineParser.parse(CommandLine.arguments)
+Nic.parse(CommandLine.arguments)

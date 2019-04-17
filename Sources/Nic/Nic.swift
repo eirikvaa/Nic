@@ -1,5 +1,5 @@
 //
-//  CommandLineArgumentParser.swift
+//  Nic.swift
 //  Nic
 //
 //  Created by Eirik Vale Aase on 30.05.2018.
@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct CommandLineParser {
+struct Nic {
     static var hadError = false
     
     static func parse(_ arguments: [String]) {
