@@ -16,11 +16,6 @@ class Resolver {
 }
 
 extension Resolver: ExprVisitor {
-    func visitAssignExpr(expr: Expr.Assign) throws {
-        try resolve(expr.value)
-        resolveLocal(expr: expr, name: expr.name)
-    }
-    
     func visitLiteralExpr(expr: Expr.Literal) throws {}
     
     func visitBinaryExpr(expr: Expr.Binary) throws {

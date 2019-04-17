@@ -126,18 +126,6 @@ struct Parser {
     mutating private func assignment() throws -> Expr {
         let expr = try primary()
         
-        if match(types: .equal) {
-            let equals = previous()
-            let value = try assignment()
-            
-            if let variable = expr as? Expr.Variable,
-                let name = variable.name {
-                return Expr.Assign(name: name, value: value)
-            }
-            
-            NicError.error(equals.line, message: "Illegal assignment target!")
-        }
-        
         return expr
     }
     
