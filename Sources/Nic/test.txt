@@ -11,3 +11,5 @@ var mittTall: Number = 35;
 
 // Og den rapporterer feil
 var minBoolean: Bool = true;
+
+var test2 = 1 - 5;

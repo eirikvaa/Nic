@@ -54,6 +54,8 @@ struct IRGenerator {
                     buildMulOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
                 case (let lhsString as String, "+", let rhsString as String):
                     buildAddOperation(name: stmtName, lhsValue: lhsString, rhsValue: rhsString)
+                case (let lhsNumber as Int, "-", let rhsNumber as Int):
+                    buildSubOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
                 default:
                     break
                 }
@@ -116,6 +118,11 @@ struct IRGenerator {
     func buildMulOperation(name: String, lhsValue: IRValue, rhsValue: IRValue) {
         let mult = builder.buildMul(lhsValue, rhsValue)
         let _ = builder.addGlobal(name, initializer: mult)
+    }
+    
+    func buildSubOperation(name: String, lhsValue: IRValue, rhsValue: IRValue) {
+        let sub = builder.buildSub(lhsValue, rhsValue)
+        let _ = builder.addGlobal(name, initializer: sub)
     }
 }
 
