@@ -12,36 +12,34 @@ enum TokenType: String {
     // primary values
     case string
     case number
+    case identifier
     
     // operators
-    case equal
-    case plus
-    case minus
-    case slash
-    case star
+    case equal          = "="
+    case plus           = "+"
+    case minus          = "-"
+    case slash          = "/"
+    case star           = "*"
     
     // boolean
-    case `true`
-    case `false`
+    case `true`         = "true"
+    case `false`        = "false"
     
     // keywords
-    case `var`
-    case function
-    case print
-    
-    // other
-    case identifier
-    case semicolon
-    case colon
-    case eof
+    case `var`          = "var"
+    case print          = "print"
     
     // built-in types
-    case booleanType = "Bool"
-    case stringType = "String"
-    case numberType = "Number"
+    case stringType     = "String"
+    case numberType     = "Number"
+    case booleanType    = "Bool"
     
-    case leftParen
-    case rightParen
-    case leftBrace
-    case rightBrace
+    // other
+    case semicolon      = ";"
+    case colon          = ":"
+    case leftParen      = "("
+    case rightParen     = ")"
+    case leftBrace      = "{"
+    case rightBrace     = "}"
+    case eof
 }

@@ -9,6 +9,8 @@
 import Foundation
 
 struct CommandLineParser {
+    static var hadError = false
+    
     static func parse(_ arguments: [String]) {
         switch arguments.count {
         case 0:
@@ -24,39 +26,18 @@ struct CommandLineParser {
         guard let data = FileManager.default.contents(atPath: path) else { return }
         guard let source = String(data: data, encoding: .utf8) else { return }
         var scanner = Scanner(source: source)
-        let tokens: [Token]
         
-        print("Source:")
-        print(source)
+        let tokens = scanner.scanTokens()
         
-        do {
-             tokens = try scanner.scanTokens()
-        } catch {
-            print("Program ended unexpectedly with the following error: \(error)")
+        if hadError {
             return
         }
         
-        print("Tokens:")
-        print(tokens)
-        
         var parser = Parser(tokens: tokens)
-        var statements: [Stmt] = []
+        let statements = parser.parseTokens()
         
-        do {
-            statements = try parser.parseTokens()
-        } catch let error as NicParserError {
-            switch error {
-            case .unexpectedToken(let token):
-                print("Unexpected token: \(token.lexeme)")
-            case .missingRValue:
-                print("Missing a value after '=' in variable declaration.")
-            case .illegalRightValue(let token):
-                print("Expected a valid value after '=' in variable declaration, but found a \(token) instead.")
-            case .unterminatedStatement(let line):
-                print("Unterminated statement on line \(line).")
-            }
-        } catch {
-            print("Program ended unexpectedly with the following error: \(error)")
+        if hadError {
+            return
         }
         
         let resolver = Resolver()
@@ -64,17 +45,23 @@ struct CommandLineParser {
         let typeChecker = TypeChecker()
         
         do {
-            print("\nResolving:")
             try resolver.resolve(statements)
             
-            print("\nType checking:")
             try typeChecker.typecheck(statements)
             
-            print("\nCode generation")
+            if hadError {
+                return
+            }
+            
             try codeGenerator.generate(statements)
             codeGenerator.builder.module.dump()
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    static func error(at line: Int, message: String) {
+        hadError = true
+        print("[Line \(line + 1)] \(message)")
     }
 }

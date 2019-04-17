@@ -1,2 +1,13 @@
-var test = 10;
-var test2 = ;
+/* Dette er et Nic program */
+// Du kan skrive kommentarer på flere måter
+// Du kan lage variabler
+var test = "Hei";
+
+// ... som kan være både tall og strenger
+var mittTall = 35 + 35;
+
+// Du kan type-annotere variabler
+var mittTall: Number = 35;
+
+// Og den rapporterer feil
+// var minBoolean: Bool = 10;

@@ -31,8 +31,7 @@ extension TypeChecker: StmtVisitor {
                 if stmt.type != literal.type {
                     if let stmtType = stmt.type, let literalType = literal.type {
                         let msg = "'\(stmt.name.lexeme)' was initialized with a value of type '\(literalType.rawValue)', but expected a value of type '\(stmtType.rawValue)' instead."
-                        NicError.error(stmt.name.line, message: msg)
-                        throw NicTypeCheckerError.typeAnnotationMismatch(stmt: stmt)
+                        CommandLineParser.error(at: stmt.name.line, message: msg)
                     }
                 }
             case let binary as Expr.Binary:
@@ -66,7 +65,7 @@ extension TypeChecker: ExprVisitor {
                 case (.numberType?, .numberType?):
                     break
                 default:
-                    NicError.error(expr.operator.line, message: "Trying to perform mathematical operations on a value of type '\(lhsType!.rawValue)' and a value of type '\(rhsType!.rawValue)'")
+                    CommandLineParser.error(at: expr.operator.line, message: "Trying to perform mathematical operations on a value of type '\(lhsType!.rawValue)' and a value of type '\(rhsType!.rawValue)'")
                 }
             case .plus:
             switch (lhsType, rhsType) {
@@ -74,7 +73,7 @@ extension TypeChecker: ExprVisitor {
                      (.stringType?, .stringType?):
                     break
             default:
-                NicError.error(expr.operator.line, message: "Trying to add a value of type '\(lhsType!.rawValue)' with a value of type '\(rhsType!.rawValue)'")
+                CommandLineParser.error(at: expr.operator.line, message: "Trying to add a value of type '\(lhsType!.rawValue)' with a value of type '\(rhsType!.rawValue)'")
             }
         default:
             break

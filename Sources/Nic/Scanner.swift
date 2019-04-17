@@ -17,7 +17,6 @@ struct Scanner {
     var tokens: [Token] = []
     let keywords: [String: TokenType] = [
         "var": .var,
-        "function": .function,
         "print": .print,
         "true": .true,
         "false": .false
@@ -29,7 +28,7 @@ struct Scanner {
         currentIndex = source.startIndex
     }
     
-    mutating func scanToken() throws {
+    mutating func scanToken() {
         let c = advance()
         
         switch c {
@@ -40,18 +39,20 @@ struct Scanner {
         case "+": addToken(type: .plus)
         case "-": addToken(type: .minus)
         case "*": addToken(type: .star)
-        case " ": break
-        case "\n": line += 1
-        case "/":
-            switch peek() {
-            case "/": singleLineComment()
-            case "*": try multiLineComment()
-            default: addToken(type: .slash)
-            }
-        case "\"": try string()
+        case "\"": string()
         case "=": addToken(type: .equal)
         case ";": addToken(type: .semicolon)
         case ":": addToken(type: .colon)
+        case " ": break
+        case "\n": line += 1
+        case "/":
+            if match(Character("/")) {
+                singleLineComment()
+            } else if match(Character("*")) {
+                multiLineComment()
+            } else {
+                addToken(type: .slash)
+            }
         default:
             if isDigit(character: c) {
                 digit()
@@ -61,10 +62,10 @@ struct Scanner {
         }
     }
     
-    mutating func scanTokens() throws -> [Token] {
+    mutating func scanTokens() -> [Token] {
         while (!isAtEnd()) {
             startIndex = currentIndex
-            try scanToken()
+            scanToken()
         }
         
         addToken(type: .eof)
@@ -86,9 +87,7 @@ extension Scanner {
         addToken(type: type)
     }
     
-    mutating func multiLineComment() throws {
-        advance(steps: 2) // Must advance beyond both / and *.
-        
+    mutating func multiLineComment() {
         while peek() != "*" && !isAtEnd() {
             if peek() == "\n" {
                 line += 1
@@ -98,26 +97,26 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            throw NicScannerError.unterminatedMultiLineComment
+            CommandLineParser.error(at: line, message: "Undeterminated multi-line comment, missing '*'.")
+            return
         }
         
         advance() // advance beyond "*"
         if peek() == "/" {
             advance() // advance past last "/"
         } else {
-            throw NicScannerError.unterminatedMultiLineComment
+            CommandLineParser.error(at: line, message: "Undeterminated multi-line comment, missing '/'.")
+            return
         }
     }
     
     mutating func singleLineComment() {
-        advance() // advance beyond "/"
-        
         while peek() != "\n" && !isAtEnd() {
             advance()
         }
     }
     
-    mutating func string() throws {
+    mutating func string() {
         advance() // advance beyond first "
         
         while peek() != "\"" && !isAtEnd() {
@@ -129,7 +128,8 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            throw NicScannerError.unterminatedString
+            CommandLineParser.error(at: line, message: "Unterminated string")
+            return
         }
         
         advance() // advance beyond last "
@@ -172,6 +172,19 @@ extension Scanner {
 // MARK: Helper methods
 
 extension Scanner {
+    mutating func match(_ character: Character) -> Bool {
+        guard isAtEnd() == false else {
+            return false
+        }
+        
+        guard peek() == character else {
+            return false
+        }
+        
+        advance()
+        return true
+    }
+    
     func peek() -> Character? {
         guard !isAtEnd() else {
             return nil

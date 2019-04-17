@@ -26,39 +26,38 @@ struct Parser {
         "Bool": .booleanType
     ]
     
-    mutating func parseTokens() throws -> [Stmt] {
+    mutating func parseTokens() -> [Stmt] {
         var statements: [Stmt] = []
         
         while !isAtEnd() {
             // Only statements at top-level.
-            if let statement = try statement() {
-                statements.append(statement)
+            if let declaration = try? declaration() {
+                statements.append(declaration)
             }
         }
         
         return statements
     }
     
-    mutating func statement() throws -> Stmt? {
-        switch peek().type {
-        case .var:
-            return try declaration()
-        case .print:
-            return try printStatement()
-        default:
-            // Right now we're only supporting variable declarations and print statements
-            // at top-level, so quit if something else appears. This restriction will
-            // be relaxed at later points.
-            fatalError("Statement is not supported.")
+    mutating private func declaration() throws -> Stmt? {
+        do {
+            if match(types: .var) {
+                return try variableDeclaration()
+            }
+            
+            return try statement()
+        } catch {
+            // TODO: Synchronize
+            return nil
         }
     }
     
-    mutating private func declaration() throws -> Stmt? {
-        if match(types: .var) {
-            return try variableDeclaration()
+    mutating func statement() throws -> Stmt? {
+        if match(types: .print) {
+            return try printStatement()
         }
         
-        fatalError("Not supported declaration.")
+        return nil
     }
     
     mutating private func printStatement() throws -> Stmt {
