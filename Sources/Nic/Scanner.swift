@@ -8,7 +8,8 @@
 
 import Foundation
 
-/// The Scanner will do the initial lexical analysis, turning the source into a list of tokens.
+/// The `Scanner` will take as input a string of characters, split it on whitespace and turn
+/// it into a list of tokens.
 struct Scanner {
     var startIndex: String.Index
     var currentIndex: String.Index
@@ -29,20 +30,23 @@ struct Scanner {
     }
     
     mutating func scanToken() {
-        let c = advance()
+        // `advance` will increment `currentIndex` and return the character before
+        // the character `currentIndex` corresponds to. That way, we never index
+        // into the string with an invalid index.
+        let character = advance()
         
-        switch c {
+        switch character {
         case "(": addToken(type: .leftParen)
         case ")": addToken(type: .rightParen)
         case "{": addToken(type: .leftBrace)
         case "}": addToken(type: .rightBrace)
+        case ";": addToken(type: .semicolon)
+        case ":": addToken(type: .colon)
         case "+": addToken(type: .plus)
         case "-": addToken(type: .minus)
         case "*": addToken(type: .star)
-        case "\"": string()
         case "=": addToken(type: .equal)
-        case ";": addToken(type: .semicolon)
-        case ":": addToken(type: .colon)
+        case "\"": string()
         case " ": break
         case "\n": line += 1
         case "/":
@@ -54,7 +58,7 @@ struct Scanner {
                 addToken(type: .slash)
             }
         default:
-            if isDigit(character: c) {
+            if isDigit(character: character) {
                 digit()
             } else {
                 identifier()
