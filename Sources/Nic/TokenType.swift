@@ -29,11 +29,6 @@ enum TokenType: String {
     case `var`          = "var"
     case print          = "print"
     
-    // built-in types
-    case stringType     = "String"
-    case numberType     = "Number"
-    case booleanType    = "Bool"
-    
     // other
     case semicolon      = ";"
     case colon          = ":"
@@ -41,5 +36,5 @@ enum TokenType: String {
     case rightParen     = ")"
     case leftBrace      = "{"
     case rightBrace     = "}"
-    case eof
+    case eof            = "EOF"
 }

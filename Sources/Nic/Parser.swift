@@ -20,10 +20,10 @@ struct Parser {
         self.tokens = tokens
     }
     
-    let types: [String: TokenType] = [
-        "Number": .numberType,
-        "String": .stringType,
-        "Bool": .booleanType
+    let types: [String: NicType] = [
+        "Number": .number,
+        "String": .string,
+        "Bool": .boolean
     ]
     
     mutating func parseTokens() -> [Stmt] {
@@ -75,7 +75,7 @@ struct Parser {
     mutating private func variableDeclaration() throws -> Stmt {
         let name = try consume(tokenType: .identifier, errorMessage: "Expect variable name.")
         
-        var variableType: TokenType?
+        var variableType: NicType?
         if match(types: .colon) {
             let type = try consume(tokenType: .identifier, errorMessage: "Expect a type after colon in variable declaration.")
             variableType = types[type.lexeme]
@@ -144,25 +144,25 @@ struct Parser {
     mutating private func primary() throws -> Expr {
         if match(types: .number) {
             let expr = Expr.Literal(value: previous().literal)
-            expr.type = .numberType
+            expr.type = .number
             return expr
         }
         
         if match(types: .string) {
             let expr = Expr.Literal(value: previous().literal)
-            expr.type = .stringType
+            expr.type = .string
             return expr
         }
         
         if match(types: .true) {
             let expr = Expr.Literal(value: true)
-            expr.type = .booleanType
+            expr.type = .boolean
             return expr
         }
         
         if match(types: .false) {
             let expr = Expr.Literal(value: false)
-            expr.type = .booleanType
+            expr.type = .boolean
             return expr
         }
         

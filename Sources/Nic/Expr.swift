@@ -26,7 +26,7 @@ class Expr {
     
     class Literal: Expr {
         let value: Any?
-        var type: TokenType?
+        var type: NicType?
         
         init(value: Any?) {
             self.value = value
@@ -55,7 +55,7 @@ class Expr {
     
     class Variable: Expr {
         let name: Token?
-        var type: TokenType?
+        var type: NicType?
         
         init(name: Token?) {
             self.name = name
@@ -69,7 +69,7 @@ class Expr {
     class Assign: Expr {
         let name: Token
         let value: Expr
-        var type: TokenType?
+        var type: NicType?
         
         init(name: Token, value: Expr) {
             self.name = name
@@ -83,7 +83,7 @@ class Expr {
 }
 
 extension Expr {
-    func exprType() -> TokenType? {
+    func exprType() -> NicType? {
         switch self {
         case let literal as Literal:
             return literal.type
@@ -105,11 +105,11 @@ extension Expr {
 }
 
 extension Expr.Binary {
-    func leftExprType() -> TokenType? {
+    func leftExprType() -> NicType? {
         return leftValue.exprType()
     }
     
-    func rightExprType() -> TokenType? {
+    func rightExprType() -> NicType? {
         return rightValue.exprType()
     }
 }

@@ -10,4 +10,4 @@ var mittTall = 35 + 35;
 var mittTall: Number = 35;
 
 // Og den rapporterer feil
-// var minBoolean: Bool = 10;
+var minBoolean: Bool = true;

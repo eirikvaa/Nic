@@ -22,10 +22,10 @@ class Stmt {
     
     class Var: Stmt {
         let name: Token
-        let type: TokenType?
+        let type: NicType?
         let initializer: Expr?
         
-        init(name: Token, type: TokenType?, initializer: Expr?) {
+        init(name: Token, type: NicType?, initializer: Expr?) {
             self.name = name
             self.type = type
             self.initializer = initializer

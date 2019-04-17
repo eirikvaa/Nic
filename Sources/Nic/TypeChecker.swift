@@ -62,18 +62,22 @@ extension TypeChecker: ExprVisitor {
                  .minus,
                  .slash:
             switch (lhsType, rhsType) {
-                case (.numberType?, .numberType?):
+                case (.number?, .number?):
                     break
                 default:
-                    CommandLineParser.error(at: expr.operator.line, message: "Trying to perform mathematical operations on a value of type '\(lhsType!.rawValue)' and a value of type '\(rhsType!.rawValue)'")
+                    let lhsString = lhsType?.rawValue ?? ""
+                    let rhsString = lhsType?.rawValue ?? ""
+                    CommandLineParser.error(at: expr.operator.line, message: "Trying to perform mathematical operations on a value of type '\(lhsString)' and a value of type '\(rhsString)'")
                 }
             case .plus:
             switch (lhsType, rhsType) {
-                case (.numberType?, .numberType?),
-                     (.stringType?, .stringType?):
+                case (.number?, .number?),
+                     (.string?, .string?):
                     break
             default:
-                CommandLineParser.error(at: expr.operator.line, message: "Trying to add a value of type '\(lhsType!.rawValue)' with a value of type '\(rhsType!.rawValue)'")
+                let lhsString = lhsType?.rawValue ?? ""
+                let rhsString = lhsType?.rawValue ?? ""
+                CommandLineParser.error(at: expr.operator.line, message: "Trying to add a value of type '\(lhsString)' with a value of type '\(rhsString)'")
             }
         default:
             break
