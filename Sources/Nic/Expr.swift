@@ -14,6 +14,7 @@ protocol ExprVisitor {
     func visitLiteralExpr(expr: Expr.Literal) throws -> ExprVisitorReturn
     func visitBinaryExpr(expr: Expr.Binary) throws -> ExprVisitorReturn
     func visitVariableExpr(expr: Expr.Variable) throws -> ExprVisitorReturn
+    func visitUnaryExpr(expr: Expr.Unary) throws -> ExprVisitorReturn
 }
 
 /// `Expr`defines a fair share of implementable classes, like `Literal` and the like, because it implements
@@ -62,6 +63,20 @@ class Expr {
         
         override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitVariableExpr(expr: self)
+        }
+    }
+    
+    class Unary: Expr {
+        let `operator`: Token
+        let value: Expr
+        
+        init(`operator`: Token, value: Expr) {
+            self.operator = `operator`
+            self.value = value
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+            return try visitor.visitUnaryExpr(expr: self)
         }
     }
 }

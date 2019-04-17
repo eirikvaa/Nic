@@ -47,9 +47,10 @@ operator                    ->  + | - | * | / | =
 
 ### Grammar of an expression
 ```
-expression                  ->  <literal>
-expression                  ->  <binary_expressions>
-expression                  ->  <identifier>
+expression                  ->  assignment
+assignment                  ->  addition
+addition                    ->  multiplication
+multiplication              ->  primary
 ```
 
 ### Grammar of a binary expression

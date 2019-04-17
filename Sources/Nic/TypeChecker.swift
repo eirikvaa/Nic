@@ -50,6 +50,10 @@ extension TypeChecker: StmtVisitor {
 }
 
 extension TypeChecker: ExprVisitor {
+    func visitUnaryExpr(expr: Expr.Unary) throws {
+        try typecheck(expr.value)
+    }
+    
     func visitLiteralExpr(expr: Expr.Literal) throws {}
     
     func visitBinaryExpr(expr: Expr.Binary) throws {

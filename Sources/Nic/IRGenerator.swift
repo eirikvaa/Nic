@@ -44,6 +44,18 @@ struct IRGenerator {
             default:
                 break
             }
+        case let unary as Expr.Unary:
+            switch (unary.value, unary.operator) {
+            case (let lhs as Expr.Literal, _):
+                switch (lhs.value, unary.operator.lexeme) {
+                case (let num as Int, "-"):
+                    buildNegOperation(name: stmtName, value: num)
+                default:
+                    break
+                }
+            default:
+                break
+            }
         case let binary as Expr.Binary:
             switch (binary.leftValue, binary.operator, binary.rightValue) {
             case (let lhs as Expr.Literal, _, let rhs as Expr.Literal):
@@ -124,9 +136,18 @@ struct IRGenerator {
         let sub = builder.buildSub(lhsValue, rhsValue)
         let _ = builder.addGlobal(name, initializer: sub)
     }
+    
+    func buildNegOperation(name: String, value: IRValue) {
+        let neg = builder.buildNeg(value)
+        let _ = builder.addGlobal(name, initializer: neg)
+    }
 }
 
 extension IRGenerator: ExprVisitor {
+    func visitUnaryExpr(expr: Expr.Unary) throws {
+        return
+    }
+    
     func visitVariableExpr(expr: Expr.Variable) throws {
         return
     }

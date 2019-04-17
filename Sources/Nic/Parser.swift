@@ -96,7 +96,13 @@ struct Parser {
     }
     
     mutating private func expression() throws -> Expr {
-        return try addition()
+        return try assignment()
+    }
+    
+    mutating private func assignment() throws -> Expr {
+        let expr = try addition()
+        
+        return expr
     }
     
     mutating private func addition() throws -> Expr {
@@ -112,21 +118,25 @@ struct Parser {
     }
     
     mutating private func multiplication() throws -> Expr {
-        let expr = try assignment()
+        let expr = try unary()
         
         while match(types: .star, .slash) {
             let `operator` = previous()
-            let right = try assignment()
+            let right = try unary()
             return Expr.Binary(leftValue: expr, operator: `operator`, rightValue: right)
         }
         
         return expr
     }
     
-    mutating private func assignment() throws -> Expr {
-        let expr = try primary()
+    mutating private func unary() throws -> Expr {
+        if match(types: .minus) {
+            let op = previous()
+            let right = try unary()
+            return Expr.Unary(operator: op, value: right)
+        }
         
-        return expr
+        return try primary()
     }
     
     mutating private func primary() throws -> Expr {

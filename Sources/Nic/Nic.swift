@@ -28,6 +28,7 @@ struct Nic {
         var scanner = Scanner(source: source)
         
         let tokens = scanner.scanTokens()
+        print(tokens)
         
         if hadError {
             return
