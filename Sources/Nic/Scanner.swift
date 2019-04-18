@@ -6,8 +6,6 @@
 //  Copyright © 2018 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
 /// The `Scanner` will take as input a string of characters, split it on whitespace and turn
 /// it into a list of tokens.
 struct Scanner {

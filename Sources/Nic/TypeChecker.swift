@@ -5,8 +5,6 @@
 //  Created by Eirik Vale Aase on 15/04/2019.
 //
 
-import Foundation
-
 struct TypeChecker {
     func typecheck(_ statements: [Stmt]) throws {
         for stmt in statements {

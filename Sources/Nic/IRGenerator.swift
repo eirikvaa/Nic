@@ -6,7 +6,6 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
 import LLVM
 
 /// `IRGenerator` will traverse the abstract syntax tree and generate LLVM IR, which stands for

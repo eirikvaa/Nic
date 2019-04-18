@@ -6,6 +6,4 @@
 //  Copyright © 2018 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
 Nic.parse(CommandLine.arguments)

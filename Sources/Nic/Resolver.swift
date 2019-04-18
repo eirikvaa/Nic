@@ -6,8 +6,6 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
     var scopes: Stack<[String: Bool]> = []

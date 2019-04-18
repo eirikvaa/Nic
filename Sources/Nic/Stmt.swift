@@ -6,8 +6,6 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
 protocol StmtVisitor {
     associatedtype StmtVisitorReturn
     

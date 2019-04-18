@@ -6,8 +6,6 @@
 //  Copyright © 2018 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
 struct Token {
     let type: TokenType
     let lexeme: String

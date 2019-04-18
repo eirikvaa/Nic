@@ -6,8 +6,6 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-import Foundation
-
 /// The parser will make sure that the list of tokens created during the lexical analysis will adhere to the
 /// correct syntax of the language, or report syntax errors.
 /// Methods like `expression`, `multiplication` and so forth matches an expression of the respective type
