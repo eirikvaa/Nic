@@ -121,19 +121,6 @@ extension IRGenerator: ExprVisitor {
 
 extension IRGenerator: StmtVisitor {
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
-        /*let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
-        let bb = mainFunction.appendBasicBlock(named: "block_\(blockCount)")
-        builder.positionAtEnd(of: bb)
-        blocks.push(bb)
-        
-        try generate(stmt.statements)
-        
-        if let firstBlock = mainFunction.firstBlock {
-            builder.positionAtEnd(of: firstBlock)
-        }
-        
-        blocks.pop()
-        */
         // Start generating code for the block we're about to visit.
         // We create a new environment which has the current environment as its enclosing environment.
         try generateBlock(stmt.statements, environment: Environment(environment: environment))
@@ -181,7 +168,18 @@ extension IRGenerator {
         
         self.environment = environment
         
+        let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
+        let bb = mainFunction.appendBasicBlock(named: "block_\(blockCount)")
+        builder.positionAtEnd(of: bb)
+        blocks.push(bb)
+        
         try generate(statements)
+        
+        if let firstBlock = mainFunction.firstBlock {
+            builder.positionAtEnd(of: firstBlock)
+        }
+        
+        blocks.pop()
     }
     
     func resolve(expr: Expr, depth: Int) {

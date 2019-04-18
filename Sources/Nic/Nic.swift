@@ -28,7 +28,6 @@ struct Nic {
         var scanner = Scanner(source: source)
         
         let tokens = scanner.scanTokens()
-        print(tokens)
         
         if hadError {
             return
@@ -57,7 +56,7 @@ struct Nic {
             try irGenerator.generate(statements)
             irGenerator.builder.module.dump()
         } catch {
-            print(error.localizedDescription)
+            return
         }
     }
     

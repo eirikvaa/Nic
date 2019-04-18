@@ -4,5 +4,7 @@ var d = -3 + 5;
 
 {
 //var a = 5;
-print a;
+var test = a - 5;
 }
+
+print a + b + d;

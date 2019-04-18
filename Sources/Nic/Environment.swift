@@ -19,6 +19,7 @@ class Environment {
     
     func get(name: Token) throws -> Any? {
         guard values.keys.contains(name.lexeme) else {
+            Nic.error(at: name.line, message: "Variable '\(name.lexeme)' could not be found in the current scope.")
             throw NicRuntimeError.undefinedVariable(name: name)
         }
         
