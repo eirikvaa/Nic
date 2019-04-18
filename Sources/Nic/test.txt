@@ -1,4 +1,5 @@
-var a = 1;
+var a = 1 + (-5);
 var b = 5;
-print 1.5 + 1.5;
-var d = a + b;
+print 1.5 + 1.5 * b;
+var d = a + (5 * b);
+print a + (5 * -b);

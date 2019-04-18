@@ -13,6 +13,7 @@ protocol ExprVisitor {
     func visitBinaryExpr(expr: Expr.Binary) throws -> ExprVisitorReturn
     func visitVariableExpr(expr: Expr.Variable) throws -> ExprVisitorReturn
     func visitUnaryExpr(expr: Expr.Unary) throws -> ExprVisitorReturn
+    func visitGroupExpr(expr: Expr.Group) throws -> ExprVisitorReturn
 }
 
 /// `Expr` implements `ExprVisitor`, making it possible to traverse the expression nodes in the tree.
@@ -75,6 +76,18 @@ class Expr {
         
         override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitUnaryExpr(expr: self)
+        }
+    }
+    
+    class Group: Expr {
+        let value: Expr
+        
+        init(value: Expr) {
+            self.value = value
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+            return try visitor.visitGroupExpr(expr: self)
         }
     }
 }

@@ -46,6 +46,10 @@ extension TypeChecker: StmtVisitor {
 }
 
 extension TypeChecker: ExprVisitor {
+    func visitGroupExpr(expr: Expr.Group) throws -> () {
+        try typecheck(expr.value)
+    }
+    
     func visitUnaryExpr(expr: Expr.Unary) throws {
         try typecheck(expr.value)
     }

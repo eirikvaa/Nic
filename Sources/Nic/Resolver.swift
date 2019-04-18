@@ -17,6 +17,10 @@ class Resolver {
 }
 
 extension Resolver: ExprVisitor {
+    func visitGroupExpr(expr: Expr.Group) throws -> () {
+        try resolve(expr.value)
+    }
+    
     func visitUnaryExpr(expr: Expr.Unary) throws -> () {
         try resolve(expr.value)
     }

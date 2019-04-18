@@ -67,7 +67,7 @@ struct Parser {
             value = nil
         } else {
             value = try expression()
-            try consume(tokenType: .semicolon, errorMessage: "Expected semicolon.")
+            try consume(tokenType: .semicolon, errorMessage: "Expected semicolon after print statement.")
         }
         
         let printStmt = Stmt.Print(value: value)
@@ -184,12 +184,21 @@ struct Parser {
             return Expr.Variable(name: previous())
         }
         
+        if match(types: .leftParen) {
+            let expr = try expression()
+            
+            try consume(tokenType: .rightParen, errorMessage: "Expecting ')' in parenthesized expression.")
+            
+            return Expr.Group(value: expr)
+        }
+        
         throw NicParserError.missingRValue // TODO: Shold be "Expected expression or something"
     }
     
     @discardableResult
     mutating private func consume(tokenType: TokenType, errorMessage: String) throws -> Token {
         guard check(tokenType: tokenType) else {
+            Nic.error(at: previous().line, message: errorMessage)
             throw NicParserError.unexpectedToken(token: peek())
         }
         

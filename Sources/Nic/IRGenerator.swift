@@ -80,6 +80,10 @@ class IRGenerator {
 }
 
 extension IRGenerator: ExprVisitor {
+    func visitGroupExpr(expr: Expr.Group) throws -> Any? {
+        return try evaluate(expr.value)
+    }
+    
     func visitUnaryExpr(expr: Expr.Unary) throws -> Any? {
         let value = try evaluate(expr.value)
         
