@@ -18,9 +18,10 @@ extension Token: Equatable {
         switch (lhs.type, rhs.type) {
         case (.string, .string):
             return lhs.literal as? String == rhs.literal as? String
-        case (.integer, .integer),
-             (.double, .double):
+        case (.integer, .integer):
             return lhs.literal as? Int == rhs.literal as? Int
+        case (.double, .double):
+            return lhs.literal as? Double == rhs.literal as? Double
         default:
             return lhs.lexeme == rhs.lexeme
         }
