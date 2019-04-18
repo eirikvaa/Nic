@@ -13,9 +13,6 @@ class Environment {
     private var enclosing: Environment?
     private var values: [String: Any?] = [:]
     
-    static let shared = Environment()
-    private init() {}
-    
     func define(name: String, value: Any?) {
         values[name] = value
     }
@@ -26,6 +23,32 @@ class Environment {
         }
         
         return values[name.lexeme] ?? nil
+    }
+    
+    func ancestor(distance: Int) -> Environment? {
+        var environment: Environment? = self
+        
+        for _ in 0..<distance {
+            environment = environment?.enclosing
+        }
+        
+        return environment
+    }
+    
+    func get(at distance: Int, name: String) -> Any? {
+        return ancestor(distance: distance)?.values[name] ?? nil
+    }
+    
+    func assign(at distance: Int, name: Token, value: Any?) {
+        ancestor(distance: distance)?.values[name.lexeme] = value
+    }
+}
+
+extension Environment {
+    convenience init(environment: Environment) {
+        self.init()
+        
+        self.enclosing = environment
     }
 }
 

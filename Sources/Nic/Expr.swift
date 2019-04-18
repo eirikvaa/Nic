@@ -78,3 +78,13 @@ class Expr {
         }
     }
 }
+
+extension Expr: Hashable {
+    static func ==(lhs: Expr, rhs: Expr) -> Bool {
+        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(ObjectIdentifier(self))
+    }
+}

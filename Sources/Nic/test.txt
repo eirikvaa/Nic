@@ -1,3 +1,8 @@
 var a = 3;
 var b = 4;
 var d = -3 + 5;
+
+{
+//var a = 5;
+print a;
+}

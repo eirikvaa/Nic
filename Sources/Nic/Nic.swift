@@ -41,8 +41,8 @@ struct Nic {
             return
         }
         
-        let resolver = Resolver()
-        let codeGenerator = IRGenerator()
+        let irGenerator = IRGenerator()
+        let resolver = Resolver(irGenerator: irGenerator)
         let typeChecker = TypeChecker()
         
         do {
@@ -54,8 +54,8 @@ struct Nic {
                 return
             }
             
-            try codeGenerator.generate(statements)
-            codeGenerator.builder.module.dump()
+            try irGenerator.generate(statements)
+            irGenerator.builder.module.dump()
         } catch {
             print(error.localizedDescription)
         }

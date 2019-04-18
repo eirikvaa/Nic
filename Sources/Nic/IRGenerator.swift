@@ -15,7 +15,9 @@ class IRGenerator {
     let builder: IRBuilder
     let mainFunction: Function
     var blocks: Stack<BasicBlock> = []
-    let environment = Environment.shared
+    let globals = Environment()
+    private var environment: Environment
+    private var locals: [Expr: Int] = [:]
     
     init(environment: [String: Any?] = [:]) {
         module = Module(name: "main")
@@ -26,6 +28,8 @@ class IRGenerator {
         
         let entry = mainFunction.appendBasicBlock(named: "entry")
         builder.positionAtEnd(of: entry)
+        
+        self.environment = globals
     }
     
     func addGlobalVariable(declaration: Stmt.Var) {
@@ -47,6 +51,21 @@ class IRGenerator {
             let _ = builder.addGlobal(name, initializer: irValue)
         case let bool as Bool:
             let _ = builder.addGlobal(name, initializer: bool)
+        default:
+            break
+        }
+    }
+    
+    func buildVarStmt(name: String, value: Any?) {
+        switch value {
+        case let number as Int:
+            let irValue = builder.buildAlloca(type: IntType.int64, name: name)
+            builder.buildStore(number, to: irValue)
+        case let boolean as Bool:
+            let irValue = builder.buildAlloca(type: IntType.int1, name: name)
+            builder.buildStore(boolean, to: irValue)
+        case let string as String:
+            _ = builder.addGlobalString(name: name, value: string)
         default:
             break
         }
@@ -74,7 +93,7 @@ extension IRGenerator: ExprVisitor {
             return nil
         }
         
-        return try environment.get(name: name)
+        return try lookUpVariable(name: name, expr: expr)
     }
     
     func visitBinaryExpr(expr: Expr.Binary) throws -> Any? {
@@ -102,7 +121,7 @@ extension IRGenerator: ExprVisitor {
 
 extension IRGenerator: StmtVisitor {
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
-        let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
+        /*let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
         let bb = mainFunction.appendBasicBlock(named: "block_\(blockCount)")
         builder.positionAtEnd(of: bb)
         blocks.push(bb)
@@ -114,6 +133,10 @@ extension IRGenerator: StmtVisitor {
         }
         
         blocks.pop()
+        */
+        // Start generating code for the block we're about to visit.
+        // We create a new environment which has the current environment as its enclosing environment.
+        try generateBlock(stmt.statements, environment: Environment(environment: environment))
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws {
@@ -125,18 +148,7 @@ extension IRGenerator: StmtVisitor {
         
         environment.define(name: name, value: value)
         
-        switch value {
-        case let number as Int:
-            let irValue = builder.buildAlloca(type: IntType.int64, name: name)
-            builder.buildStore(number, to: irValue)
-        case let boolean as Bool:
-            let irValue = builder.buildAlloca(type: IntType.int1, name: name)
-            builder.buildStore(boolean, to: irValue)
-        case let string as String:
-            _ = builder.addGlobalString(name: name, value: string)
-        default:
-            break
-        }
+        buildVarStmt(name: name, value: value)
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
@@ -160,6 +172,30 @@ extension IRGenerator: StmtVisitor {
 }
 
 extension IRGenerator {
+    func generateBlock(_ statements: [Stmt], environment: Environment) throws {
+        let previous = environment
+        
+        defer {
+            self.environment = previous
+        }
+        
+        self.environment = environment
+        
+        try generate(statements)
+    }
+    
+    func resolve(expr: Expr, depth: Int) {
+        locals[expr] = depth
+    }
+    
+    func lookUpVariable(name: Token, expr: Expr) throws -> Any? {
+        if let distance = locals[expr] {
+            return environment.get(at: distance, name: name.lexeme)
+        } else {
+            return try globals.get(name: name)
+        }
+    }
+    
     func generate(_ statements: [Stmt]) throws {
         for stmt in statements {
             try generate(stmt)

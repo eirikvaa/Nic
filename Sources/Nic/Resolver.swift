@@ -8,7 +8,12 @@
 
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
-    var scopes: Stack<[String: Bool]> = []
+    var scopes: [[String: Bool]] = []
+    let irGenerator: IRGenerator
+    
+    init(irGenerator: IRGenerator) {
+        self.irGenerator = irGenerator
+    }
 }
 
 extension Resolver: ExprVisitor {
@@ -28,15 +33,11 @@ extension Resolver: ExprVisitor {
             return
         }
         
-        guard let currentScope = scopes.peek() else {
-            return
+        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme] == false {
+            NicError.error(name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
         
-        guard currentScope[name.lexeme] == true else {
-            NicError.error(name.line, message: "Can't use a variable before it's initialized.")
-            return // Maybe throw?
-        }
-        
+        resolveLocal(expr: expr, name: name)
         
     }
 }
@@ -49,13 +50,13 @@ extension Resolver: StmtVisitor {
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        define(stmt.name)
+        declare(stmt.name)
         
         if let initializer = stmt.initializer {
             try resolve(initializer)
         }
         
-        declare(stmt.name)
+        define(stmt.name)
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
@@ -83,7 +84,7 @@ extension Resolver {
     func resolveLocal(expr: Expr, name: Token) {
         for i in stride(from: scopes.count - 1, through: 0, by: -1) {
             if scopes[i].keys.contains(name.lexeme) {
-                // TODO: Right now we have no scopes other than the global scope.
+                irGenerator.resolve(expr: expr, depth: scopes.count - i - 1)
                 return
             }
         }
@@ -91,25 +92,31 @@ extension Resolver {
         // Not found. Assume it is global.
     }
     
-    func define(_ name: Token) {
-        if var curentScope = scopes.pop() {
-            curentScope[name.lexeme] = false
-            scopes.push(curentScope)
+    func declare(_ name: Token) {
+        if scopes.isEmpty {
+            return
         }
+        
+        if scopes[scopes.endIndex - 1].keys.contains(name.lexeme) == true {
+            Nic.error(at: name.line, message: "Variable with this name is already declared in this scope.")
+        }
+        
+        scopes[scopes.endIndex - 1][name.lexeme] = false
     }
     
-    func declare(_ name: Token) {
-        if var curentScope = scopes.pop() {
-            curentScope[name.lexeme] = true
-            scopes.push(curentScope)
+    func define(_ name: Token) {
+        if scopes.isEmpty {
+            return
         }
+        
+        scopes[scopes.endIndex - 1][name.lexeme] = true
     }
     
     func beginScope() {
-        scopes.push([:])
+        scopes.append([:])
     }
     
     func endScope() {
-        scopes.pop()
+        _ = scopes.popLast()
     }
 }
