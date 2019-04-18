@@ -36,7 +36,7 @@
 		E5714B642250C2B40057F751 /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicParserError.swift */; };
 		E5714B652250C2B40057F751 /* NicScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* NicScannerError.swift */; };
 		E5714B662250C2B40057F751 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Expr.swift */; };
-		E5714B672250C2B40057F751 /* IRGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* IRGenerator.swift */; };
+		E5714B672250C2B40057F751 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* CodeGenerator.swift */; };
 		E5714B682250C2B40057F751 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Parser.swift */; };
 		E5714B692250C2B40057F751 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Resolver.swift */; };
 		E5714B6A2250C2B40057F751 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* Scanner.swift */; };
@@ -107,7 +107,7 @@
 		OBJ_169 /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicParserError.swift */; };
 		OBJ_170 /* NicScannerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* NicScannerError.swift */; };
 		OBJ_171 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Expr.swift */; };
-		OBJ_172 /* IRGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* IRGenerator.swift */; };
+		OBJ_172 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* CodeGenerator.swift */; };
 		OBJ_173 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Parser.swift */; };
 		OBJ_174 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Resolver.swift */; };
 		OBJ_175 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* Scanner.swift */; };
@@ -199,7 +199,7 @@
 		OBJ_12 /* NicParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicParserError.swift; sourceTree = "<group>"; };
 		OBJ_13 /* NicScannerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicScannerError.swift; sourceTree = "<group>"; };
 		OBJ_14 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
-		OBJ_15 /* IRGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IRGenerator.swift; sourceTree = "<group>"; };
+		OBJ_15 /* CodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
 		OBJ_16 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		OBJ_17 /* Resolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
 		OBJ_18 /* Scanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Scanner.swift; sourceTree = "<group>"; };
@@ -466,7 +466,7 @@
 				OBJ_16 /* Parser.swift */,
 				OBJ_17 /* Resolver.swift */,
 				E59D32912263FDD0004AF443 /* TypeChecker.swift */,
-				OBJ_15 /* IRGenerator.swift */,
+				OBJ_15 /* CodeGenerator.swift */,
 				OBJ_20 /* Token.swift */,
 				OBJ_21 /* TokenType.swift */,
 				OBJ_14 /* Expr.swift */,
@@ -737,7 +737,7 @@
 				OBJ_170 /* NicScannerError.swift in Sources */,
 				E5E31CAD226874C200C5D1C9 /* Character+Ext.swift in Sources */,
 				OBJ_171 /* Expr.swift in Sources */,
-				OBJ_172 /* IRGenerator.swift in Sources */,
+				OBJ_172 /* CodeGenerator.swift in Sources */,
 				E548C55522673B08002E7779 /* Stack.swift in Sources */,
 				OBJ_173 /* Parser.swift in Sources */,
 				OBJ_174 /* Resolver.swift in Sources */,
@@ -788,7 +788,7 @@
 				E5714B6D2250C2B40057F751 /* TokenType.swift in Sources */,
 				E5714B632250C2B40057F751 /* Nic.swift in Sources */,
 				E5714B6E2250C2B40057F751 /* main.swift in Sources */,
-				E5714B672250C2B40057F751 /* IRGenerator.swift in Sources */,
+				E5714B672250C2B40057F751 /* CodeGenerator.swift in Sources */,
 				E5714B6C2250C2B40057F751 /* Token.swift in Sources */,
 				OBJ_203 /* XCTestManifests.swift in Sources */,
 			);

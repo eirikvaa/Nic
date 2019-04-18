@@ -1,5 +1,5 @@
 //
-//  IRGenerator.swift
+//  CodeGenerator.swift
 //  Nic
 //
 //  Created by Eirik Vale Aase on 23/03/2019.
@@ -8,9 +8,9 @@
 
 import LLVM
 
-/// `IRGenerator` will traverse the abstract syntax tree and generate LLVM IR, which stands for
+/// `CodeGenerator` will traverse the abstract syntax tree and generate LLVM IR, which stands for
 /// (Low-Level Virtual Machine Intermediate Representation).
-class IRGenerator {
+class CodeGenerator {
     let module: Module
     let builder: IRBuilder
     let mainFunction: Function
@@ -32,33 +32,6 @@ class IRGenerator {
         self.environment = globals
     }
     
-    func addGlobalVariable(declaration: Stmt.Var) {
-        let stmtName = declaration.name.lexeme
-        
-        var value: Any?
-        if let initializer = declaration.initializer {
-            value = try? evaluate(initializer)
-            buildGlobal(name: stmtName, value: value)
-        }
-    }
-    
-    func buildGlobal(name: String, value: Any?) {
-        switch value {
-        case let str as String:
-            let _ = builder.addGlobalString(name: name, value: str)
-        case let num as Int:
-            let irValue = IntType.int64.constant(num)
-            let _ = builder.addGlobal(name, initializer: irValue)
-        case let double as Double:
-            let doubleIRValue = FloatType.double.constant(double)
-            let _ = builder.addGlobal(name, initializer: doubleIRValue)
-        case let bool as Bool:
-            let _ = builder.addGlobal(name, initializer: bool)
-        default:
-            break
-        }
-    }
-    
     func buildVarStmt(name: String, value: Any?) {
         switch value {
         case let number as Int:
@@ -77,97 +50,7 @@ class IRGenerator {
             break
         }
     }
-}
-
-extension IRGenerator: ExprVisitor {
-    func visitGroupExpr(expr: Expr.Group) throws -> Any? {
-        return try evaluate(expr.value)
-    }
     
-    func visitUnaryExpr(expr: Expr.Unary) throws -> Any? {
-        let value = try evaluate(expr.value)
-        
-        switch expr.operator.type {
-        case .minus:
-            if let integer = value as? Int {
-                return integer * -1
-            } else if let double = value as? Double {
-                return double * -1.0
-            }
-        default:
-            break
-        }
-        
-        return nil
-    }
-    
-    func visitVariableExpr(expr: Expr.Variable) throws -> Any? {
-        guard let name = expr.name else {
-            return nil
-        }
-        
-        return try lookUpVariable(name: name, expr: expr)
-    }
-    
-    func visitBinaryExpr(expr: Expr.Binary) throws -> Any? {
-        let lhs = try evaluate(expr.leftValue)
-        let rhs = try evaluate(expr.rightValue)
-        
-        let numericOperation = expr.operator.type != .slash
-        let op = expr.operator.lexeme
-        
-        return numericOperation ?
-            performNumericOperation(lhs: lhs, op: op, rhs: rhs) :
-            performDivisionOperation(lhs: lhs, rhs: rhs)
-    }
-    
-    func visitLiteralExpr(expr: Expr.Literal) throws -> Any? {
-        return expr.value
-    }
-}
-
-extension IRGenerator: StmtVisitor {
-    func visitBlockStmt(_ stmt: Stmt.Block) throws {
-        // Start generating code for the block we're about to visit.
-        // We create a new environment which has the current environment as its enclosing environment.
-        try generateBlock(stmt.statements, environment: Environment(environment: environment))
-    }
-    
-    func visitVarStmt(_ stmt: Stmt.Var) throws {
-        let name = stmt.name.lexeme
-        var value: Any?
-        if let initializer = stmt.initializer {
-            value = try evaluate(initializer)
-        }
-        
-        environment.define(name: name, value: value)
-        
-        buildVarStmt(name: name, value: value)
-    }
-    
-    func visitPrintStmt(_ stmt: Stmt.Print) throws {
-        guard let expr = stmt.value else {
-            return
-        }
-        
-        let value = try evaluate(expr)
-        
-        switch value {
-        case let integer as Int:
-            print(integer)
-        case let double as Double:
-            print(double)
-        case let string as String:
-            print(string)
-        case let boolean as Bool:
-            print(boolean)
-        default:
-            print(value ?? "")
-        }
-    }
-}
-
-extension IRGenerator {
     func performNumericOperation(lhs: Any?, op: String, rhs: Any?) -> Any? {
         switch (lhs, rhs) {
         case (let intA as Int, let intB as Int):
@@ -262,5 +145,97 @@ extension IRGenerator {
     
     func evaluate(_ expr: Expr) throws -> Any? {
         return try expr.accept(visitor: self)
+    }
+}
+
+// MARK: ExprVisitor
+
+extension CodeGenerator: ExprVisitor {
+    func visitGroupExpr(expr: Expr.Group) throws -> Any? {
+        return try evaluate(expr.value)
+    }
+    
+    func visitUnaryExpr(expr: Expr.Unary) throws -> Any? {
+        let value = try evaluate(expr.value)
+        
+        switch expr.operator.type {
+        case .minus:
+            if let integer = value as? Int {
+                return integer * -1
+            } else if let double = value as? Double {
+                return double * -1.0
+            }
+        default:
+            break
+        }
+        
+        return nil
+    }
+    
+    func visitVariableExpr(expr: Expr.Variable) throws -> Any? {
+        guard let name = expr.name else {
+            return nil
+        }
+        
+        return try lookUpVariable(name: name, expr: expr)
+    }
+    
+    func visitBinaryExpr(expr: Expr.Binary) throws -> Any? {
+        let lhs = try evaluate(expr.leftValue)
+        let rhs = try evaluate(expr.rightValue)
+        
+        let numericOperation = expr.operator.type != .slash
+        let op = expr.operator.lexeme
+        
+        return numericOperation ?
+            performNumericOperation(lhs: lhs, op: op, rhs: rhs) :
+            performDivisionOperation(lhs: lhs, rhs: rhs)
+    }
+    
+    func visitLiteralExpr(expr: Expr.Literal) throws -> Any? {
+        return expr.value
+    }
+}
+
+// MARK: StmtVisitor
+
+extension CodeGenerator: StmtVisitor {
+    func visitBlockStmt(_ stmt: Stmt.Block) throws {
+        // Start generating code for the block we're about to visit.
+        // We create a new environment which has the current environment as its enclosing environment.
+        try generateBlock(stmt.statements, environment: Environment(environment: environment))
+    }
+    
+    func visitVarStmt(_ stmt: Stmt.Var) throws {
+        let name = stmt.name.lexeme
+        var value: Any?
+        if let initializer = stmt.initializer {
+            value = try evaluate(initializer)
+        }
+        
+        environment.define(name: name, value: value)
+        
+        buildVarStmt(name: name, value: value)
+    }
+    
+    func visitPrintStmt(_ stmt: Stmt.Print) throws {
+        guard let expr = stmt.value else {
+            return
+        }
+        
+        let value = try evaluate(expr)
+        
+        switch value {
+        case let integer as Int:
+            print(integer)
+        case let double as Double:
+            print(double)
+        case let string as String:
+            print(string)
+        case let boolean as Bool:
+            print(boolean)
+        default:
+            print(value ?? "")
+        }
     }
 }

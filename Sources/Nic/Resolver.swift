@@ -9,10 +9,10 @@
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
     var scopes: [[String: Bool]] = []
-    let irGenerator: IRGenerator
+    let codeGenerator: CodeGenerator
     
-    init(irGenerator: IRGenerator) {
-        self.irGenerator = irGenerator
+    init(codeGenerator: CodeGenerator) {
+        self.codeGenerator = codeGenerator
     }
 }
 
@@ -88,7 +88,7 @@ extension Resolver {
     func resolveLocal(expr: Expr, name: Token) {
         for i in stride(from: scopes.count - 1, through: 0, by: -1) {
             if scopes[i].keys.contains(name.lexeme) {
-                irGenerator.resolve(expr: expr, depth: scopes.count - i - 1)
+                codeGenerator.resolve(expr: expr, depth: scopes.count - i - 1)
                 return
             }
         }
