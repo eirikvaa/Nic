@@ -80,35 +80,3 @@ class Expr {
         }
     }
 }
-
-extension Expr {
-    func exprType() -> NicType? {
-        switch self {
-        case let literal as Literal:
-            return literal.type
-        case let variable as Variable:
-            return variable.type
-        default:
-            return nil
-        }
-    }
-    
-    func value() -> Any? {
-        switch self {
-        case let literal as Literal:
-            return literal.value
-        default:
-            return nil
-        }
-    }
-}
-
-extension Expr.Binary {
-    func leftExprType() -> NicType? {
-        return leftValue.exprType()
-    }
-    
-    func rightExprType() -> NicType? {
-        return rightValue.exprType()
-    }
-}

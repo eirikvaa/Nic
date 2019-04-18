@@ -102,11 +102,6 @@ struct Parser {
         var initializer: Expr?
         if match(types: .equal) {
             initializer = try expression()
-            
-            // Don't let the type of the rvalue override a potential type annotation.
-            if variableType == nil {
-                variableType = initializer?.exprType()
-            }
         }
         
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
