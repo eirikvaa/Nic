@@ -8,9 +8,7 @@
 
 import Foundation
 
-/// In the Visitor Pattern the `Resolver` acts as the visitor, because it implements all the `visit`
-/// methods. The resolver will do a single pass over the tree and resolve any variables.
-/// TODO: Identifiers must here be resolved. Use scopes.
+/// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
     var scopes: Stack<[String: Bool]> = []
 }

@@ -16,6 +16,8 @@ protocol StmtVisitor {
     func visitBlockStmt(_ stmt: Stmt.Block) throws -> StmtVisitorReturn
 }
 
+/// `Stmt` implements `StmtVisitor`, making it possible to traverse the statement nodes in the tree.
+/// Together with `Expr`, since it implements `ExprVisitor`, one can walk the entire abstract syntax tree.
 class Stmt {
     func accept<V: StmtVisitor, R>(visitor: V) throws -> R where R == V.StmtVisitorReturn {
         fatalError("Don't call this directly, must be implemented.")

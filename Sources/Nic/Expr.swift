@@ -17,8 +17,8 @@ protocol ExprVisitor {
     func visitUnaryExpr(expr: Expr.Unary) throws -> ExprVisitorReturn
 }
 
-/// `Expr`defines a fair share of implementable classes, like `Literal` and the like, because it implements
-/// the `accept` methods in the Visitor Pattern.
+/// `Expr` implements `ExprVisitor`, making it possible to traverse the expression nodes in the tree.
+/// Together with `Stmt`, since it implements `StmtVisitor`, one can walk the entire abstract syntax tree.
 class Expr {
     func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturn {
         fatalError("Don't call this directly, must be implemented.")

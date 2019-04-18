@@ -9,7 +9,8 @@
 import Foundation
 import LLVM
 
-/// The `IRGenerator` will do a single pass over the tree and generate the LLVM IR.
+/// `IRGenerator` will traverse the abstract syntax tree and generate LLVM IR, which stands for
+/// (Low-Level Virtual Machine Intermediate Representation).
 class IRGenerator {
     let module: Module
     let builder: IRBuilder
