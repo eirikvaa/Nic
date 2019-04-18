@@ -28,3 +28,11 @@ class Environment {
         return values[name.lexeme] ?? nil
     }
 }
+
+extension Environment: CustomStringConvertible {
+    var description: String {
+        return values.map {
+            return "\($0.key): \($0.value ?? "")"
+        }.joined(separator: "\n")
+    }
+}

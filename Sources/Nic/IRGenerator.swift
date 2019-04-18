@@ -23,6 +23,9 @@ class IRGenerator {
         
         let mainType = FunctionType(argTypes: [], returnType: VoidType())
         mainFunction = builder.addFunction("main", type: mainType)
+        
+        let entry = mainFunction.appendBasicBlock(named: "entry")
+        builder.positionAtEnd(of: entry)
     }
     
     func addGlobalVariable(declaration: Stmt.Var) {
@@ -67,7 +70,11 @@ extension IRGenerator: ExprVisitor {
     }
     
     func visitVariableExpr(expr: Expr.Variable) throws -> Any? {
-        return nil
+        guard let name = expr.name else {
+            return nil
+        }
+        
+        return try environment.get(name: name)
     }
     
     func visitBinaryExpr(expr: Expr.Binary) throws -> Any? {
@@ -110,29 +117,25 @@ extension IRGenerator: StmtVisitor {
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        let isGlobalScope = blocks.count == 0
-        
         let name = stmt.name.lexeme
         var value: Any?
         if let initializer = stmt.initializer {
             value = try evaluate(initializer)
         }
         
-        if isGlobalScope {
-            addGlobalVariable(declaration: stmt)
-        } else {
-            switch value {
-            case let number as Int:
-                let irValue = builder.buildAlloca(type: IntType.int64, count: 1, alignment: .zero, name: name)
-                builder.buildStore(number, to: irValue)
-            case let boolean as Bool:
-                let irValue = builder.buildAlloca(type: IntType.int1, count: 1, alignment: .zero, name: name)
-                builder.buildStore(boolean, to: irValue)
-            case let string as String:
-                _ = builder.addGlobalString(name: name, value: string)
-            default:
-                break
-            }
+        environment.define(name: name, value: value)
+        
+        switch value {
+        case let number as Int:
+            let irValue = builder.buildAlloca(type: IntType.int64, count: 1, alignment: .zero, name: name)
+            builder.buildStore(number, to: irValue)
+        case let boolean as Bool:
+            let irValue = builder.buildAlloca(type: IntType.int1, count: 1, alignment: .zero, name: name)
+            builder.buildStore(boolean, to: irValue)
+        case let string as String:
+            _ = builder.addGlobalString(name: name, value: string)
+        default:
+            break
         }
     }
     
