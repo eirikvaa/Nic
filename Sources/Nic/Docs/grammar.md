@@ -11,8 +11,8 @@ whitespace_item             ->  <linebreak> | <comment> | <multiline_comment> |�
 
 line_break                  ->  U+000A (newline, \n)
 
-comment                     ->  // <comment_text> <line_break>
-multiline_comment           ->  /* <multiline_comment_text> */
+comment                     ->  "//" <comment_text> <line_break>
+multiline_comment           ->  "/*" <multiline_comment_text> "*/"
 
 comment_text                ->  <comment_text_item> (<comment_text>)?
 comment_text_item           ->  All characters except for newline character
@@ -31,24 +31,24 @@ identifier                  ->  [_a-zA-Z][_a-zA-Z0-9]*
 literal                     ->  <numeric_literal> | <string_literal> | <boolean_literal>
 numeric_literal             ->  (1-9)(0-9)*
 string_literal              ->  "(<a-zA-Z0-9>)*"
-boolean_literal             ->  true | false
+boolean_literal             ->  "true" | "false"
 ```
 
 ### Grammar for operators
 ```
-operator                    ->  + | - | * | / | =
+operator                    ->  "+" | "-" | "*" | "/" | "="
 ```
 
 ## Expressions
 
 ### Grammar of an expression
 ```
-expression                  ->  assignment
-assignment                  ->  addition
-addition                    ->  multiplication ( ( "-" | "+" ) multiplication )*
-multiplication              ->  unary ( ( "/" | "*" ) unary )*
-unary                       ->  ( "!" | "-" ) unary
-primary                     ->  literal | identifier
+expression                  ->  <assignment>
+assignment                  ->  <addition>
+addition                    ->  <multiplication> ( ( "-" | "+" ) <multiplication> )*
+multiplication              ->  <unary> ( ( "/" | "*" ) <unary> )*
+unary                       ->  ( "!" | "-" ) <unary>
+primary                     ->  <literal> | <identifier> | "(" <expression> ")"
 ```
 
 ## Statements
@@ -60,7 +60,7 @@ statement                   ->  <print_statement> | <declaration>;
 
 ### Grammar of a print statement
 ```
-print_statement             ->  print <expression>
+print_statement             ->  "print" <expression>
 ```
 
 ## Declarations
@@ -77,5 +77,5 @@ top_level_declarations      ->  (<statement>)*
 
 ### Grammar for a variable declaration
 ```
-variable_declaration        ->  var <identifier> = <expression>
+variable_declaration        ->  "var" <identifier> "=" <expression>
 ```
