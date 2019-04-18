@@ -107,6 +107,8 @@ extension IRGenerator: ExprVisitor {
             return lhsNum - rhsNum
         case (let lhsNum as Int, .star, let rhsNum as Int):
             return lhsNum * rhsNum
+        case (let lhsNum as Int, .slash, let rhsNum as Int):
+            return lhsNum / rhsNum
         case (let lhsStr as String, .plus, let rhsStr as String):
             return lhsStr + rhsStr
         default:
