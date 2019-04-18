@@ -55,12 +55,12 @@ class IRGenerator {
 
 extension IRGenerator: ExprVisitor {
     func visitUnaryExpr(expr: Expr.Unary) throws -> Any? {
-        let value = try evaluate(expr)
+        let value = try evaluate(expr.value)
         
         switch expr.operator.type {
         case .minus:
-            if var num = value as? Int {
-                return num.negate()
+            if let num = value as? Int {
+                return num * -1
             }
         default:
             break
@@ -127,10 +127,10 @@ extension IRGenerator: StmtVisitor {
         
         switch value {
         case let number as Int:
-            let irValue = builder.buildAlloca(type: IntType.int64, count: 1, alignment: .zero, name: name)
+            let irValue = builder.buildAlloca(type: IntType.int64, name: name)
             builder.buildStore(number, to: irValue)
         case let boolean as Bool:
-            let irValue = builder.buildAlloca(type: IntType.int1, count: 1, alignment: .zero, name: name)
+            let irValue = builder.buildAlloca(type: IntType.int1, name: name)
             builder.buildStore(boolean, to: irValue)
         case let string as String:
             _ = builder.addGlobalString(name: name, value: string)
