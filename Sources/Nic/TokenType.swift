@@ -27,6 +27,7 @@ enum TokenType: String {
     
     // keywords
     case `var`          = "var"
+    case const          = "const"
     case print          = "print"
     
     // other

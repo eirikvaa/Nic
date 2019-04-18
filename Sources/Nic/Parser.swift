@@ -42,6 +42,8 @@ struct Parser {
         do {
             if match(types: .var) {
                 return try variableDeclaration()
+            } else if match(types: .const) {
+                return try constDeclaration()
             }
             
             return try statement()
@@ -52,6 +54,7 @@ struct Parser {
     }
     
     mutating func statement() throws -> Stmt? {
+        
         if match(types: .print) {
             return try printStatement()
         } else if match(types: .leftBrace) {
@@ -90,7 +93,7 @@ struct Parser {
     }
     
     mutating private func variableDeclaration() throws -> Stmt {
-        let name = try consume(tokenType: .identifier, errorMessage: "Expect variable name.")
+        let name = try consume(tokenType: .identifier, errorMessage: "Expect name for variable.")
         
         var variableType: NicType?
         if match(types: .colon) {
@@ -105,6 +108,22 @@ struct Parser {
         
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
         return Stmt.Var(name: name, type: variableType, initializer: initializer)
+    }
+    
+    mutating private func constDeclaration() throws -> Stmt {
+        let name = try consume(tokenType: .identifier, errorMessage: "Expect name for constant.")
+        
+        var constantType: NicType?
+        if match(types: .colon) {
+            let type = try consume(tokenType: .identifier, errorMessage: "Expect a type after colon in constant declaration.")
+            constantType = types[type.lexeme]
+        }
+        
+        try consume(tokenType: .equal, errorMessage: "Expect initializer for constant declaration.")
+        let initializer = try expression()
+        
+        try consume(tokenType: .semicolon, errorMessage: "Expected ';' in constant declaration.")
+        return Stmt.Const(name: name, type: constantType, initializer: initializer)
     }
     
     mutating private func expression() throws -> Expr {

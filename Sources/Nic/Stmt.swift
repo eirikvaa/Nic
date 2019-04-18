@@ -10,6 +10,7 @@ protocol StmtVisitor {
     associatedtype StmtVisitorReturn
     
     func visitVarStmt(_ stmt: Stmt.Var) throws -> StmtVisitorReturn
+    func visitConstStmt(_ stmt: Stmt.Const) throws -> StmtVisitorReturn
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> StmtVisitorReturn
     func visitBlockStmt(_ stmt: Stmt.Block) throws -> StmtVisitorReturn
 }
@@ -34,6 +35,22 @@ class Stmt {
         
         override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitVarStmt(self)
+        }
+    }
+    
+    class Const: Stmt {
+        let name: Token
+        let type: NicType?
+        let initializer: Expr
+        
+        init(name: Token, type: NicType?, initializer: Expr) {
+            self.name = name
+            self.type = type
+            self.initializer = initializer
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+            return try visitor.visitConstStmt(self)
         }
     }
     

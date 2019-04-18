@@ -47,6 +47,10 @@ extension Resolver: ExprVisitor {
 }
 
 extension Resolver: StmtVisitor {
+    func visitConstStmt(_ stmt: Stmt.Const) throws -> () {
+        try resolve(stmt.initializer)
+    }
+    
     func visitBlockStmt(_ stmt: Stmt.Block) throws -> () {
         beginScope()
         try resolve(stmt.statements)

@@ -22,6 +22,10 @@ struct TypeChecker {
 }
 
 extension TypeChecker: StmtVisitor {
+    func visitConstStmt(_ stmt: Stmt.Const) throws -> () {
+        try typecheck(stmt.initializer)
+    }
+    
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
         for stmt in stmt.statements {
             try typecheck(stmt)

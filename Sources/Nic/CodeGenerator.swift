@@ -200,6 +200,16 @@ extension CodeGenerator: ExprVisitor {
 // MARK: StmtVisitor
 
 extension CodeGenerator: StmtVisitor {
+    func visitConstStmt(_ stmt: Stmt.Const) throws -> () {
+        let name = stmt.name.lexeme
+        let value = try evaluate(stmt.initializer)
+        
+        environment.define(name: name, value: value)
+        
+        // TODO: Swap with LLVM IR constant expression, if it exists?
+        buildVarStmt(name: name, value: value)
+    }
+    
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
         // Start generating code for the block we're about to visit.
         // We create a new environment which has the current environment as its enclosing environment.
