@@ -47,7 +47,7 @@ struct Parser {
             
             return try statement()
         } catch {
-            // TODO: Synchronize
+            synchronize()
             return nil
         }
     }
@@ -55,21 +55,39 @@ struct Parser {
     mutating func statement() throws -> Stmt? {
         if match(types: .print) {
             return try printStatement()
+        } else if match(types: .leftBrace) {
+            return try block()
         }
         
         return nil
     }
     
     mutating private func printStatement() throws -> Stmt {
-        // Advance beyond 'print' token
-        advance()
+        var value: Expr?
+        if match(types: .semicolon) {
+            value = nil
+        } else {
+            value = try expression()
+            try consume(tokenType: .semicolon, errorMessage: "Expected semicolon.")
+        }
         
-        let printExpr = match(types: .semicolon) ? nil : try expression()
-        let printStmt = Stmt.Print(value: printExpr)
-        
-        try consume(tokenType: .semicolon, errorMessage: "Expected semicolon.")
+        let printStmt = Stmt.Print(value: value)
         
         return printStmt
+    }
+    
+    mutating private func block() throws -> Stmt {
+        var statements: [Stmt] = []
+        
+        while (!check(tokenType: .rightBrace) && !isAtEnd()) {
+            if let declaration = try? declaration() {
+                statements.append(declaration)
+            }
+        }
+        
+        try consume(tokenType: .rightBrace, errorMessage: "Expecting right brace to complete block.")
+        
+        return Stmt.Block(statements: statements)
     }
     
     mutating private func variableDeclaration() throws -> Stmt {
@@ -178,9 +196,31 @@ struct Parser {
         return advance()
     }
     
+    mutating private func synchronize() {
+        advance()
+        
+        while (!isAtEnd()) {
+            if previous().type == .semicolon {
+                return
+            }
+            
+            switch peek().type {
+            case .var,
+                 .print:
+                return
+            default:
+                break
+            }
+            
+            advance()
+        }
+    }
+    
     @discardableResult
     mutating private func advance(steps: Int = 1) -> Token {
-        currentIndex += steps
+        if !isAtEnd() {
+            currentIndex += steps
+        }
         return tokens[currentIndex - steps]
     }
     

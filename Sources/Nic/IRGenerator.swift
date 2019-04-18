@@ -10,95 +10,32 @@ import Foundation
 import LLVM
 
 /// The `IRGenerator` will do a single pass over the tree and generate the LLVM IR.
-struct IRGenerator {
+class IRGenerator {
     let module: Module
     let builder: IRBuilder
     let mainFunction: Function
-    let environment: [String: Any?]
+    var blocks: Stack<BasicBlock> = []
+    let environment = Environment.shared
     
     init(environment: [String: Any?] = [:]) {
-        self.environment = environment
-        
         module = Module(name: "main")
         builder = IRBuilder(module: module)
         
         let mainType = FunctionType(argTypes: [], returnType: VoidType())
         mainFunction = builder.addFunction("main", type: mainType)
-        
-        let entry = mainFunction.appendBasicBlock(named: "entry")
-        builder.positionAtEnd(of: entry)
     }
     
     func addGlobalVariable(declaration: Stmt.Var) {
         let stmtName = declaration.name.lexeme
         
-        switch declaration.initializer {
-        case let literal as Expr.Literal:
-            switch literal.value {
-            case let number as Int:
-                buildGlobal(name: stmtName, value: number)
-            case let string as String:
-                buildGlobal(name: stmtName, value: string)
-            case let bool as Bool:
-                buildGlobal(name: stmtName, value: bool)
-            default:
-                break
-            }
-        case let unary as Expr.Unary:
-            switch (unary.value, unary.operator) {
-            case (let lhs as Expr.Literal, _):
-                switch (lhs.value, unary.operator.lexeme) {
-                case (let num as Int, "-"):
-                    buildNegOperation(name: stmtName, value: num)
-                default:
-                    break
-                }
-            default:
-                break
-            }
-        case let binary as Expr.Binary:
-            switch (binary.leftValue, binary.operator, binary.rightValue) {
-            case (let lhs as Expr.Literal, _, let rhs as Expr.Literal):
-                switch (lhs.value, binary.operator.lexeme, rhs.value) {
-                case (let lhsNumber as Int, "+", let rhsNumber as Int):
-                    buildAddOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
-                case (let lhsNumber as Int, "*", let rhsNumber as Int):
-                    buildMulOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
-                case (let lhsString as String, "+", let rhsString as String):
-                    buildAddOperation(name: stmtName, lhsValue: lhsString, rhsValue: rhsString)
-                case (let lhsNumber as Int, "-", let rhsNumber as Int):
-                    buildSubOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
-                default:
-                    break
-                }
-            case (let lhs as Expr.Variable, _, let rhs as Expr.Literal):
-                let lhsValue = environment[lhs.name!.lexeme] ?? nil
-                switch (lhsValue, binary.operator.lexeme, rhs.value) {
-                case (let lhsNumber as Int, "+", let rhsNumber as Int):
-                    buildAddOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
-                default:
-                    break
-                }
-            case (let lhs as Expr.Variable, _, let rhs as Expr.Variable):
-                let lhsValue = environment[lhs.name!.lexeme] ?? nil
-                let rhsValue = environment[rhs.name!.lexeme] ?? nil
-                switch (lhsValue, binary.operator.lexeme, rhsValue) {
-                case (let lhsNumber as Int, "+", let rhsNumber as Int):
-                    buildAddOperation(name: stmtName, lhsValue: lhsNumber, rhsValue: rhsNumber)
-                case (let lhsString as String, "+", let rhsString as String):
-                    buildAddOperation(name: stmtName, lhsValue: lhsString, rhsValue: rhsString)
-                default:
-                    break
-                }
-            default:
-                break
-            }
-        default:
-            break
+        var value: Any?
+        if let initializer = declaration.initializer {
+            value = try? evaluate(initializer)
+            buildGlobal(name: stmtName, value: value)
         }
     }
     
-    func buildGlobal(name: String, value: IRValue) {
+    func buildGlobal(name: String, value: Any?) {
         switch value {
         case let str as String:
             let _ = builder.addGlobalString(name: name, value: str)
@@ -108,74 +45,113 @@ struct IRGenerator {
         case let bool as Bool:
             let _ = builder.addGlobal(name, initializer: bool)
         default:
-            fatalError()
+            break
         }
-    }
-    
-    func buildAddOperation(name: String, lhsValue: IRValue, rhsValue: IRValue) {
-        let add: IRValue
-        
-        switch (lhsValue, rhsValue) {
-        case (let lhsStr as String, let rhsStr as String):
-            add = builder.addGlobalString(name: name, value: lhsStr + rhsStr)
-        case (is Int, is Int):
-            add = builder.buildAdd(lhsValue, rhsValue)
-        default:
-            fatalError()
-        }
-        
-        let _ = builder.addGlobal(name, initializer: add)
-    }
-    
-    func buildMulOperation(name: String, lhsValue: IRValue, rhsValue: IRValue) {
-        let mult = builder.buildMul(lhsValue, rhsValue)
-        let _ = builder.addGlobal(name, initializer: mult)
-    }
-    
-    func buildSubOperation(name: String, lhsValue: IRValue, rhsValue: IRValue) {
-        let sub = builder.buildSub(lhsValue, rhsValue)
-        let _ = builder.addGlobal(name, initializer: sub)
-    }
-    
-    func buildNegOperation(name: String, value: IRValue) {
-        let neg = builder.buildNeg(value)
-        let _ = builder.addGlobal(name, initializer: neg)
     }
 }
 
 extension IRGenerator: ExprVisitor {
-    func visitUnaryExpr(expr: Expr.Unary) throws {
-        return
+    func visitUnaryExpr(expr: Expr.Unary) throws -> Any? {
+        let value = try evaluate(expr)
+        
+        switch expr.operator.type {
+        case .minus:
+            if var num = value as? Int {
+                return num.negate()
+            }
+        default:
+            break
+        }
+        
+        return nil
     }
     
-    func visitVariableExpr(expr: Expr.Variable) throws {
-        return
+    func visitVariableExpr(expr: Expr.Variable) throws -> Any? {
+        return nil
     }
     
-    func visitBinaryExpr(expr: Expr.Binary) throws {
-        return
+    func visitBinaryExpr(expr: Expr.Binary) throws -> Any? {
+        let lhs = try evaluate(expr.leftValue)
+        let rhs = try evaluate(expr.rightValue)
+        
+        switch (lhs, expr.operator.type, rhs) {
+        case (let lhsNum as Int, .plus, let rhsNum as Int):
+            return lhsNum + rhsNum
+        case (let lhsNum as Int, .minus, let rhsNum as Int):
+            return lhsNum - rhsNum
+        case (let lhsNum as Int, .star, let rhsNum as Int):
+            return lhsNum * rhsNum
+        case (let lhsStr as String, .plus, let rhsStr as String):
+            return lhsStr + rhsStr
+        default:
+            return nil
+        }
     }
     
-    func visitLiteralExpr(expr: Expr.Literal) throws {
-        return
+    func visitLiteralExpr(expr: Expr.Literal) throws -> Any? {
+        return expr.value
     }
 }
 
 extension IRGenerator: StmtVisitor {
+    func visitBlockStmt(_ stmt: Stmt.Block) throws {
+        let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
+        let bb = mainFunction.appendBasicBlock(named: "block_\(blockCount)")
+        builder.positionAtEnd(of: bb)
+        blocks.push(bb)
+        
+        try generate(stmt.statements)
+        
+        if let firstBlock = mainFunction.firstBlock {
+            builder.positionAtEnd(of: firstBlock)
+        }
+        
+        blocks.pop()
+    }
+    
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        addGlobalVariable(declaration: stmt)
+        let isGlobalScope = blocks.count == 0
+        
+        let name = stmt.name.lexeme
+        var value: Any?
+        if let initializer = stmt.initializer {
+            value = try evaluate(initializer)
+        }
+        
+        if isGlobalScope {
+            addGlobalVariable(declaration: stmt)
+        } else {
+            switch value {
+            case let number as Int:
+                let irValue = builder.buildAlloca(type: IntType.int64, count: 1, alignment: .zero, name: name)
+                builder.buildStore(number, to: irValue)
+            case let boolean as Bool:
+                let irValue = builder.buildAlloca(type: IntType.int1, count: 1, alignment: .zero, name: name)
+                builder.buildStore(boolean, to: irValue)
+            case let string as String:
+                _ = builder.addGlobalString(name: name, value: string)
+            default:
+                break
+            }
+        }
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
-        switch stmt.value {
-        case let literal as Expr.Literal:
-            print(literal.value ?? "")
-        case let variable as Expr.Variable:
-            print(variable.value() ?? "")
-        case let addition as Expr.Binary:
-            print(addition.leftValue, addition.operator.lexeme, addition.rightValue)
+        guard let expr = stmt.value else {
+            return
+        }
+        
+        let value = try evaluate(expr)
+        
+        switch value {
+        case let number as Int:
+            print(number)
+        case let string as String:
+            print(string)
+        case let boolean as Bool:
+            print(boolean)
         default:
-            print()
+            print(value ?? "")
         }
     }
 }
@@ -191,7 +167,7 @@ extension IRGenerator {
         try stmt.accept(visitor: self)
     }
     
-    func generate(_ expr: Expr) throws {
-        try expr.accept(visitor: self)
+    func evaluate(_ expr: Expr) throws -> Any? {
+        return try expr.accept(visitor: self)
     }
 }

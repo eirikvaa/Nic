@@ -24,21 +24,31 @@ struct TypeChecker {
 }
 
 extension TypeChecker: StmtVisitor {
+    func visitBlockStmt(_ stmt: Stmt.Block) throws -> () {
+        for stmt in stmt.statements {
+            try typecheck(stmt)
+        }
+    }
+    
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        if let initializer = stmt.initializer {
-            switch initializer {
-            case let literal as Expr.Literal:
-                if stmt.type != literal.type {
-                    if let stmtType = stmt.type, let literalType = literal.type {
-                        let msg = "'\(stmt.name.lexeme)' was initialized with a value of type '\(literalType.rawValue)', but expected a value of type '\(stmtType.rawValue)' instead."
-                        Nic.error(at: stmt.name.line, message: msg)
-                    }
+        guard let initializer = stmt.initializer else {
+            return
+        }
+        
+        switch initializer {
+        case let literal as Expr.Literal:
+            if stmt.type != literal.type {
+                if let stmtType = stmt.type, let literalType = literal.type {
+                    let msg = "'\(stmt.name.lexeme)' was initialized with a value of type '\(literalType.rawValue)', but expected a value of type '\(stmtType.rawValue)' instead."
+                    Nic.error(at: stmt.name.line, message: msg)
                 }
-            case let binary as Expr.Binary:
-                try typecheck(binary)
-            default:
-                break
             }
+        case let binary as Expr.Binary:
+            try typecheck(binary)
+        case let variable as Expr.Variable:
+            try typecheck(variable)
+        default:
+            break
         }
     }
     

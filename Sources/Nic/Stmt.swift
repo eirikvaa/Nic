@@ -13,6 +13,7 @@ protocol StmtVisitor {
     
     func visitVarStmt(_ stmt: Stmt.Var) throws -> StmtVisitorReturn
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> StmtVisitorReturn
+    func visitBlockStmt(_ stmt: Stmt.Block) throws -> StmtVisitorReturn
 }
 
 class Stmt {
@@ -45,6 +46,18 @@ class Stmt {
         
         override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitPrintStmt(self)
+        }
+    }
+    
+    class Block: Stmt {
+        let statements: [Stmt]
+        
+        init(statements: [Stmt]) {
+            self.statements = statements
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+            return try visitor.visitBlockStmt(self)
         }
     }
 }

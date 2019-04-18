@@ -46,6 +46,12 @@ extension Resolver: ExprVisitor {
 }
 
 extension Resolver: StmtVisitor {
+    func visitBlockStmt(_ stmt: Stmt.Block) throws -> () {
+        beginScope()
+        try resolve(stmt.statements)
+        endScope()
+    }
+    
     func visitVarStmt(_ stmt: Stmt.Var) throws {
         define(stmt.name)
         
@@ -90,19 +96,17 @@ extension Resolver {
     }
     
     func define(_ name: Token) {
-        guard var currentScope = scopes.peek() else {
-            return
+        if var curentScope = scopes.pop() {
+            curentScope[name.lexeme] = false
+            scopes.push(curentScope)
         }
-        
-        currentScope[name.lexeme] = false
     }
     
     func declare(_ name: Token) {
-        guard var currentScope = scopes.peek() else {
-            return
+        if var curentScope = scopes.pop() {
+            curentScope[name.lexeme] = true
+            scopes.push(curentScope)
         }
-        
-        currentScope[name.lexeme] = true
     }
     
     func beginScope() {
