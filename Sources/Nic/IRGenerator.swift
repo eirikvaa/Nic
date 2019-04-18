@@ -49,6 +49,9 @@ class IRGenerator {
         case let num as Int:
             let irValue = IntType.int64.constant(num)
             let _ = builder.addGlobal(name, initializer: irValue)
+        case let double as Double:
+            let doubleIRValue = FloatType.double.constant(double)
+            let _ = builder.addGlobal(name, initializer: doubleIRValue)
         case let bool as Bool:
             let _ = builder.addGlobal(name, initializer: bool)
         default:
@@ -61,6 +64,10 @@ class IRGenerator {
         case let number as Int:
             let irValue = builder.buildAlloca(type: IntType.int64, name: name)
             builder.buildStore(number, to: irValue)
+        case let double as Double:
+            let doubleIRValue = FloatType.double.constant(double)
+            let irValue = builder.buildAlloca(type: FloatType.double, name: name)
+            builder.buildStore(doubleIRValue, to: irValue)
         case let boolean as Bool:
             let irValue = builder.buildAlloca(type: IntType.int1, name: name)
             builder.buildStore(boolean, to: irValue)
@@ -78,8 +85,10 @@ extension IRGenerator: ExprVisitor {
         
         switch expr.operator.type {
         case .minus:
-            if let num = value as? Int {
-                return num * -1
+            if let integer = value as? Int {
+                return integer * -1
+            } else if let double = value as? Double {
+                return double * -1.0
             }
         default:
             break
@@ -100,20 +109,12 @@ extension IRGenerator: ExprVisitor {
         let lhs = try evaluate(expr.leftValue)
         let rhs = try evaluate(expr.rightValue)
         
-        switch (lhs, expr.operator.type, rhs) {
-        case (let lhsNum as Int, .plus, let rhsNum as Int):
-            return lhsNum + rhsNum
-        case (let lhsNum as Int, .minus, let rhsNum as Int):
-            return lhsNum - rhsNum
-        case (let lhsNum as Int, .star, let rhsNum as Int):
-            return lhsNum * rhsNum
-        case (let lhsNum as Int, .slash, let rhsNum as Int):
-            return lhsNum / rhsNum
-        case (let lhsStr as String, .plus, let rhsStr as String):
-            return lhsStr + rhsStr
-        default:
-            return nil
-        }
+        let numericOperation = expr.operator.type != .slash
+        let op = expr.operator.lexeme
+        
+        return numericOperation ?
+            performNumericOperation(lhs: lhs, op: op, rhs: rhs) :
+            performDivisionOperation(lhs: lhs, rhs: rhs)
     }
     
     func visitLiteralExpr(expr: Expr.Literal) throws -> Any? {
@@ -148,8 +149,10 @@ extension IRGenerator: StmtVisitor {
         let value = try evaluate(expr)
         
         switch value {
-        case let number as Int:
-            print(number)
+        case let integer as Int:
+            print(integer)
+        case let double as Double:
+            print(double)
         case let string as String:
             print(string)
         case let boolean as Bool:
@@ -161,6 +164,53 @@ extension IRGenerator: StmtVisitor {
 }
 
 extension IRGenerator {
+    func performNumericOperation(lhs: Any?, op: String, rhs: Any?) -> Any? {
+        switch (lhs, rhs) {
+        case (let intA as Int, let intB as Int):
+            return performOperation(lhs: intA, op: op, rhs: intB)
+        case (let doubleA as Double, let doubleB as Double):
+            return performOperation(lhs: doubleA, op: op, rhs: doubleB)
+        case (let intA as Int, let doubleB as Double):
+            return performOperation(lhs: Double(intA), op: op, rhs: doubleB)
+        case (let doubleA as Double, let intB as Int):
+            return performOperation(lhs: doubleA, op: op, rhs: Double(intB))
+        default:
+            return nil
+        }
+    }
+    
+    func performDivisionOperation(lhs: Any?, rhs: Any?) -> Any? {
+        switch (lhs, rhs) {
+        case (let intA as Int, let intB as Int):
+            return performDivisionOperation(lhs: intA, rhs: intB)
+        case (let doubleA as Double, let doubleB as Double):
+            return performDivisionOperation(lhs: doubleA, rhs: doubleB)
+        case (let intA as Int, let doubleB as Double):
+            return performDivisionOperation(lhs: Double(intA), rhs: doubleB)
+        case (let doubleA as Double, let intB as Int):
+            return performDivisionOperation(lhs: doubleA, rhs: Double(intB))
+        default:
+            return nil
+        }
+    }
+    
+    func performOperation<T: Numeric>(lhs: T, op: String, rhs: T) -> T {
+        switch op {
+        case "+": return lhs + rhs
+        case "-": return lhs - rhs
+        case "*": return lhs * rhs
+        default: return 0
+        }
+    }
+    
+    func performDivisionOperation(lhs: Int, rhs: Int) -> Double {
+        return Double(lhs / rhs)
+    }
+    
+    func performDivisionOperation(lhs: Double, rhs: Double) -> Double {
+        return lhs / rhs
+    }
+    
     func generateBlock(_ statements: [Stmt], environment: Environment) throws {
         let previous = environment
         

@@ -19,7 +19,8 @@ struct Parser {
     }
     
     let types: [String: NicType] = [
-        "Number": .number,
+        "Int": .integer,
+        "Double": .double,
         "String": .string,
         "Bool": .boolean
     ]
@@ -149,9 +150,15 @@ struct Parser {
     }
     
     mutating private func primary() throws -> Expr {
-        if match(types: .number) {
+        if match(types: .integer) {
             let expr = Expr.Literal(value: previous().literal)
-            expr.type = .number
+            expr.type = .integer
+            return expr
+        }
+        
+        if match(types: .double) {
+            let expr = Expr.Literal(value: previous().literal)
+            expr.type = .double
             return expr
         }
         

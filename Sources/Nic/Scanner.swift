@@ -57,7 +57,7 @@ struct Scanner {
             }
         default:
             if character.isNumber {
-                digit()
+                number()
             } else {
                 identifier()
             }
@@ -143,14 +143,25 @@ extension Scanner {
         addToken(type: .string, literal: string)
     }
     
-    mutating func digit() {
+    mutating func number() {
         while peek()?.isNumber == true && !isAtEnd() {
             advance()
         }
         
-        let numberString = String(source[startIndex..<currentIndex])
-        let number = Int(numberString) ?? 0
-        addToken(type: .number, literal: number)
+        if match(".") {
+            while peek()?.isNumber == true && !isAtEnd() {
+                advance()
+            }
+            
+            let numberString = String(source[startIndex..<currentIndex])
+            let number = Double(numberString)
+            addToken(type: .double, literal: number)
+        } else {
+            let numberString = String(source[startIndex..<currentIndex])
+            let number = Int(numberString)
+            addToken(type: .integer, literal: number)
+            return
+        }
     }
 }
 

@@ -6,10 +6,12 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+// TODO: Create a namespace for the different token types, like one for mathematical operators?
 enum TokenType: String {
     // primary values
     case string
-    case number
+    case integer
+    case double
     case identifier
     
     // operators

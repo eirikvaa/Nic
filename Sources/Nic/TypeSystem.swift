@@ -7,6 +7,7 @@
 
 enum NicType: String {
     case string = "String"
-    case number = "Number"
+    case integer = "Integer"
+    case double = "Double"
     case boolean = "Bool"
 }
