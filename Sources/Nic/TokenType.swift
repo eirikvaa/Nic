@@ -8,11 +8,12 @@
 
 // TODO: Create a namespace for the different token types, like one for mathematical operators?
 enum TokenType: String {
-    // primary values
+    // literals
     case string
     case integer
     case double
-    case identifier
+    case `true`         = "true"
+    case `false`        = "false"
     
     // operators
     case equal          = "="
@@ -21,21 +22,20 @@ enum TokenType: String {
     case slash          = "/"
     case star           = "*"
     
-    // boolean
-    case `true`         = "true"
-    case `false`        = "false"
-    
     // keywords
     case `var`          = "var"
     case const          = "const"
     case print          = "print"
     
-    // other
+    // punctuation
     case semicolon      = ";"
     case colon          = ":"
     case leftParen      = "("
     case rightParen     = ")"
     case leftBrace      = "{"
     case rightBrace     = "}"
+    
+    // other
+    case identifier
     case eof            = "EOF"
 }
