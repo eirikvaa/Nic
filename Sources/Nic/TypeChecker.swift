@@ -5,19 +5,12 @@
 //  Created by Eirik Vale Aase on 15/04/2019.
 //
 
+/// `TypeChecker` would traverse the tree and make sure that the type system is satisfied.
 struct TypeChecker {
     func typecheck(_ statements: [Stmt]) throws {
         for stmt in statements {
             try stmt.accept(visitor: self)
         }
-    }
-    
-    func typecheck(_ stmt: Stmt) throws {
-        try stmt.accept(visitor: self)
-    }
-    
-    func typecheck(_ expr: Expr) throws {
-        try expr.accept(visitor: self)
     }
 }
 
@@ -74,4 +67,14 @@ extension TypeChecker: ExprVisitor {
     }
     
     func visitVariableExpr(expr: Expr.Variable) throws {}
+}
+
+private extension TypeChecker {
+    func typecheck(_ stmt: Stmt) throws {
+        try stmt.accept(visitor: self)
+    }
+    
+    func typecheck(_ expr: Expr) throws {
+        try expr.accept(visitor: self)
+    }
 }
