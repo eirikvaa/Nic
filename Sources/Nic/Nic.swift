@@ -55,7 +55,7 @@ struct Nic {
             }
             
             try codeGenerator.generate(statements)
-            codeGenerator.builder.module.dump()
+            codeGenerator.dumpLLVMIR()
         } catch {
             return
         }
