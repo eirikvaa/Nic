@@ -22,6 +22,9 @@ extension Token: Equatable {
             return lhs.literal as? Int == rhs.literal as? Int
         case (.double, .double):
             return lhs.literal as? Double == rhs.literal as? Double
+        case (.true, .true),
+             (.false, .false):
+            return lhs.literal as? Bool == rhs.literal as? Bool
         default:
             return lhs.lexeme == rhs.lexeme
         }
