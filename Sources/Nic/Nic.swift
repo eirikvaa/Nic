@@ -27,7 +27,7 @@ struct Nic {
         guard let source = String(data: data, encoding: .utf8) else { return }
         var scanner = Scanner(source: source)
         
-        let tokens = scanner.scanTokens()
+        let tokens = scanner.scan()
         print(tokens)
         
         if hadError {

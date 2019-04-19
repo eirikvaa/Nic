@@ -18,7 +18,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "An empty source should give an empty token list.")
     }
@@ -29,7 +29,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a single number should return a token list with a single token of type number.")
     }
@@ -39,7 +39,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a single number should return a token list with a single token of type number.")
     }
@@ -49,7 +49,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a single multi-digit number should resolve to a single token.")
     }
@@ -60,7 +60,7 @@ class NicTests: XCTestCase {
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .integer, .semicolon, .eof]
         
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of two multi-digit numbers should resolve to two tokens.")
     }
@@ -71,7 +71,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -81,7 +81,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -91,7 +91,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of two forward slashes should be interpreted as as comment and return an empty list of tokens.")
     }
@@ -101,7 +101,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting solely of a multi-digit number and a multi-line comment consisting of number inside should return a single number token.")
     }
@@ -112,7 +112,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.string, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A source consisting of a string should return a single token of that string.")
     }
@@ -123,7 +123,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .plus, .integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A number, an operator and a number should result in three tokens.")
     }
@@ -133,7 +133,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .slash, .integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A number, an operator and a number should result in three tokens (including EOF).")
     }
@@ -144,7 +144,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.print, .string, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "Print statement that prints a string was not tokenized correctly.")
     }
@@ -154,7 +154,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.print, .integer, .plus, .integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "Print statements that prints the result of adding two literal numbers not tokenized correctly.")
     }
@@ -165,7 +165,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "A var keyword, an identifier, an equals sign and a number should result in four tokens (including EOF).")
     }
@@ -175,7 +175,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .true, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "Tokenizing of a boolean variable declaration failed.")
     }
@@ -185,7 +185,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .colon, .identifier, .equal, .false, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "Tokenizing of a boolean variable declaration failed.")
     }
     
@@ -194,7 +194,7 @@ class NicTests: XCTestCase {
         var scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .integer, .plus, .integer, .semicolon, .eof]
-        let tokenTypes = scanner.scanTokens().map { $0.type }
+        let tokenTypes = scanner.scan().map { $0.type }
         
         XCTAssertEqual(expectedTokenTypes, tokenTypes, "Variable declaration for binary expression with number literal operands failed.")
     }

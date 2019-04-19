@@ -9,12 +9,12 @@
 /// The `Scanner` will take as input a string of characters, split it on whitespace and turn
 /// it into a list of tokens.
 struct Scanner {
-    var startIndex: String.Index
-    var currentIndex: String.Index
-    var line = 0
-    var source: String
-    var tokens: [Token] = []
-    let keywords: [String: TokenType] = [
+    private var startIndex: String.Index
+    private var currentIndex: String.Index
+    private var line = 0
+    private var source: String
+    private var tokens: [Token] = []
+    private let keywords: [String: TokenType] = [
         "var": .var,
         "const": .const,
         "print": .print,
@@ -28,7 +28,111 @@ struct Scanner {
         currentIndex = source.startIndex
     }
     
-    mutating func scanToken() {
+    mutating func scan() -> [Token] {
+        while (!isAtEnd()) {
+            startIndex = currentIndex
+            scanToken()
+        }
+        
+        addToken(type: .eof)
+        
+        return tokens
+    }
+}
+
+// MARK: Consuming methods
+
+extension Scanner {
+    private mutating func identifier() {
+        while (peek()?.isAlphaNumeric == true && !isAtEnd()) {
+            advance()
+        }
+        
+        let identifier = String(source[startIndex..<currentIndex])
+        let type = keywords[identifier] ?? .identifier
+        addToken(type: type)
+    }
+    
+    private mutating func multiLineComment() {
+        while peek() != "*" && !isAtEnd() {
+            if peek()?.isNewline == true {
+                line += 1
+            }
+            
+            advance()
+        }
+        
+        if isAtEnd() {
+            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '*'.")
+            return
+        }
+        
+        advance() // advance beyond "*"
+        if peek() == "/" {
+            advance() // advance past last "/"
+        } else {
+            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '/'.")
+            return
+        }
+    }
+    
+    private mutating func singleLineComment() {
+        while peek()?.isNewline == false && !isAtEnd() {
+            advance()
+        }
+    }
+    
+    private mutating func string() {
+        advance() // advance beyond first "
+        
+        while peek() != "\"" && !isAtEnd() {
+            if peek()?.isNewline == true {
+                line += 1
+            }
+            
+            advance()
+        }
+        
+        if isAtEnd() {
+            Nic.error(at: line, message: "Unterminated string")
+            return
+        }
+        
+        advance() // advance beyond last "
+        
+        let _startIndex = source.index(after: startIndex)
+        let endIndex = source.index(before: currentIndex)
+        
+        let string = String(source[_startIndex..<endIndex])
+        addToken(type: .string, literal: string)
+    }
+    
+    private mutating func number() {
+        while peek()?.isNumber == true && !isAtEnd() {
+            advance()
+        }
+        
+        if match(".") {
+            while peek()?.isNumber == true && !isAtEnd() {
+                advance()
+            }
+            
+            let numberString = String(source[startIndex..<currentIndex])
+            let number = Double(numberString)
+            addToken(type: .double, literal: number)
+        } else {
+            let numberString = String(source[startIndex..<currentIndex])
+            let number = Int(numberString)
+            addToken(type: .integer, literal: number)
+            return
+        }
+    }
+}
+
+// MARK: Helper methods
+
+private extension Scanner {
+    private mutating func scanToken() {
         // `advance` will increment `currentIndex` and return the character before
         // the character `currentIndex` corresponds to. That way, we never index
         // into the string with an invalid index.
@@ -65,119 +169,11 @@ struct Scanner {
         }
     }
     
-    mutating func scanTokens() -> [Token] {
-        while (!isAtEnd()) {
-            startIndex = currentIndex
-            scanToken()
-        }
-        
-        addToken(type: .eof)
-
-        return tokens
-    }
-}
-
-// MARK: Consuming methods
-
-extension Scanner {
-    mutating func identifier() {
-        while (peek()?.isAlphaNumeric == true && !isAtEnd()) {
-            advance()
-        }
-        
-        let identifier = String(source[startIndex..<currentIndex])
-        let type = keywords[identifier] ?? .identifier
-        addToken(type: type)
-    }
-    
-    mutating func multiLineComment() {
-        while peek() != "*" && !isAtEnd() {
-            if peek()?.isNewline == true {
-                line += 1
-            }
-            
-            advance()
-        }
-        
-        if isAtEnd() {
-            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '*'.")
-            return
-        }
-        
-        advance() // advance beyond "*"
-        if peek() == "/" {
-            advance() // advance past last "/"
-        } else {
-            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '/'.")
-            return
-        }
-    }
-    
-    mutating func singleLineComment() {
-        while peek()?.isNewline == false && !isAtEnd() {
-            advance()
-        }
-    }
-    
-    mutating func string() {
-        advance() // advance beyond first "
-        
-        while peek() != "\"" && !isAtEnd() {
-            if peek()?.isNewline == true {
-                line += 1
-            }
-            
-            advance()
-        }
-        
-        if isAtEnd() {
-            Nic.error(at: line, message: "Unterminated string")
-            return
-        }
-        
-        advance() // advance beyond last "
-        
-        let _startIndex = source.index(after: startIndex)
-        let endIndex = source.index(before: currentIndex)
-        
-        let string = String(source[_startIndex..<endIndex])
-        addToken(type: .string, literal: string)
-    }
-    
-    mutating func number() {
-        while peek()?.isNumber == true && !isAtEnd() {
-            advance()
-        }
-        
-        if match(".") {
-            while peek()?.isNumber == true && !isAtEnd() {
-                advance()
-            }
-            
-            let numberString = String(source[startIndex..<currentIndex])
-            let number = Double(numberString)
-            addToken(type: .double, literal: number)
-        } else {
-            let numberString = String(source[startIndex..<currentIndex])
-            let number = Int(numberString)
-            addToken(type: .integer, literal: number)
-            return
-        }
-    }
-}
-
-// MARK: Analyzing methods
-
-extension Scanner {
     func isAtEnd() -> Bool {
         let index = source.distance(from: source.startIndex, to: currentIndex)
         return index >= source.count
     }
-}
-
-// MARK: Helper methods
-
-extension Scanner {
+    
     mutating func match(_ character: Character) -> Bool {
         guard isAtEnd() == false else {
             return false
