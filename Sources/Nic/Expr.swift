@@ -10,6 +10,7 @@ protocol ExprVisitor {
     associatedtype ExprVisitorReturn
     
     func visitLiteralExpr(expr: Expr.Literal) throws -> ExprVisitorReturn
+    func visitAssignExpr(expr: Expr.Assign) throws -> ExprVisitorReturn
     func visitBinaryExpr(expr: Expr.Binary) throws -> ExprVisitorReturn
     func visitVariableExpr(expr: Expr.Variable) throws -> ExprVisitorReturn
     func visitUnaryExpr(expr: Expr.Unary) throws -> ExprVisitorReturn
@@ -33,6 +34,20 @@ class Expr {
         
         override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitLiteralExpr(expr: self)
+        }
+    }
+    
+    class Assign: Expr {
+        let name: Token
+        let value: Expr
+        
+        init(name: Token, value: Expr) {
+            self.name = name
+            self.value = value
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+            return try visitor.visitAssignExpr(expr: self)
         }
     }
     

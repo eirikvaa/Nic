@@ -9,4 +9,5 @@ import Foundation
 
 enum NicRuntimeError: Error {
     case undefinedVariable(name: Token)
+    case illegalConstantMutation(name: Token)
 }

@@ -13,6 +13,7 @@ protocol StmtVisitor {
     func visitConstStmt(_ stmt: Stmt.Const) throws -> StmtVisitorReturn
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> StmtVisitorReturn
     func visitBlockStmt(_ stmt: Stmt.Block) throws -> StmtVisitorReturn
+    func visitExpressionStatement(_ stmt: Stmt.Expression) throws -> StmtVisitorReturn
 }
 
 /// `Stmt` implements `StmtVisitor`, making it possible to traverse the statement nodes in the tree.
@@ -75,6 +76,18 @@ class Stmt {
         
         override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitBlockStmt(self)
+        }
+    }
+    
+    class Expression: Stmt {
+        let expression: Expr
+        
+        init(expression: Expr) {
+            self.expression = expression
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+            return try visitor.visitExpressionStatement(self)
         }
     }
 }

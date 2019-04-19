@@ -5,26 +5,31 @@
 //  Created by Eirik Vale Aase on 17/04/2019.
 //
 
+struct NameInformation {
+    var value: Any?
+    var isMutable: Bool
+}
+
 /// `Environment` handles the bindings between variables and values.
 /// The opetional `enclosing` field is used for the enclosing environment.
 /// The global environment, containing global declarations, have no such enclosing
 /// environment, only environments nested inside the global scope.
 class Environment {
     private var enclosing: Environment?
-    private var values: [String: Any?] = [:]
+    private var values: [String: NameInformation] = [:]
     
     /// Bind the variable with the given name to the given value
     /// - parameters:
     ///     - name: Name of variable
     ///     - value: The value that `name` should be bound to
-    func define(name: String, value: Any?) {
-        values[name] = value
+    func define(name: String, nameInformation: NameInformation) {
+        values[name] = nameInformation
     }
     
     /// Get the value that `name` is bound to.
     /// - parameter name: The token representing a variable.
     /// - returns: The value that `name` is bound to.
-    func get(name: Token) throws -> Any? {
+    func get(name: Token) throws -> NameInformation? {
         guard values.keys.contains(name.lexeme) else {
             Nic.error(at: name.line, message: "Variable '\(name.lexeme)' could not be found in the current scope.")
             throw NicRuntimeError.undefinedVariable(name: name)
@@ -38,7 +43,7 @@ class Environment {
     ///     - distance: The number of jumps away from the current environment
     ///     - name: The name of the variable for which a value should be found
     /// - returns: The value bound to the variable `name`
-    func get(at distance: Int, name: String) -> Any? {
+    func get(at distance: Int, name: String) -> NameInformation? {
         return ancestor(distance: distance)?.values[name] ?? nil
     }
     
@@ -48,8 +53,27 @@ class Environment {
     ///     - distance: The number of jumps from the current environment
     ///     - name: The token corresponding to the variable for which we assign a value to
     ///     - value: The value that should be assigned to the variable
-    func assign(at distance: Int, name: Token, value: Any?) {
+    func assign(at distance: Int, name: Token, value: NameInformation?) {
         ancestor(distance: distance)?.values[name.lexeme] = value
+    }
+    
+    func assign(token: Token, value: NameInformation?) throws {
+        if values.keys.contains(token.lexeme) {
+            values[token.lexeme]?.value = value?.value
+            return
+        }
+        
+        if let enclosing = enclosing {
+            try enclosing.assign(token: token, value: value)
+            return
+        }
+        
+        throw NicRuntimeError.undefinedVariable(name: token)
+        
+    }
+    
+    func update(at distance: Int, name: Token, value: Any?) {
+        ancestor(distance: distance)?.values[name.lexeme]?.value = value
     }
     
     /// Return the environment, starting from the current, innermost environment,
@@ -78,7 +102,7 @@ extension Environment {
 extension Environment: CustomStringConvertible {
     var description: String {
         return values.map {
-            return "\($0.key): \($0.value ?? "")"
+            return "\($0.key): \($0.value.value ?? "")"
         }.joined(separator: "\n")
     }
 }

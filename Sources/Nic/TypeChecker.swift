@@ -22,7 +22,11 @@ struct TypeChecker {
 }
 
 extension TypeChecker: StmtVisitor {
-    func visitConstStmt(_ stmt: Stmt.Const) throws -> () {
+    func visitExpressionStatement(_ stmt: Stmt.Expression) throws {
+        try typecheck(stmt.expression)
+    }
+    
+    func visitConstStmt(_ stmt: Stmt.Const) throws {
         try typecheck(stmt.initializer)
     }
     
@@ -50,7 +54,11 @@ extension TypeChecker: StmtVisitor {
 }
 
 extension TypeChecker: ExprVisitor {
-    func visitGroupExpr(expr: Expr.Group) throws -> () {
+    func visitAssignExpr(expr: Expr.Assign) throws {
+        try typecheck(expr.value)
+    }
+    
+    func visitGroupExpr(expr: Expr.Group) throws {
         try typecheck(expr.value)
     }
     

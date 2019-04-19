@@ -61,7 +61,7 @@ struct Parser {
             return try block()
         }
         
-        return nil
+        return try expressionStatement()
     }
     
     mutating private func printStatement() throws -> Stmt {
@@ -90,6 +90,12 @@ struct Parser {
         try consume(tokenType: .rightBrace, errorMessage: "Expecting right brace to complete block.")
         
         return Stmt.Block(statements: statements)
+    }
+    
+    mutating private func expressionStatement() throws -> Stmt {
+        let expr = try expression()
+        try consume(tokenType: .semicolon, errorMessage: "Expected ';' after expression statement.")
+        return Stmt.Expression(expression: expr)
     }
     
     mutating private func variableDeclaration() throws -> Stmt {
@@ -131,7 +137,21 @@ struct Parser {
     }
     
     mutating private func assignment() throws -> Expr {
-        return try addition()
+        let expr = try addition()
+        
+        if match(types: .equal) {
+            let equals = previous()
+            let value = try assignment()
+            
+            if let variable = expr as? Expr.Variable,
+                let name = variable.name {
+                return Expr.Assign(name: name, value: value)
+            }
+            
+            Nic.error(at: equals.line, message: "Invalid assignment target!")
+        }
+        
+        return expr
     }
     
     mutating private func addition() throws -> Expr {

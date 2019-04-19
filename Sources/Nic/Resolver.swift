@@ -6,9 +6,14 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
+struct VariableInformation {
+    var defined: Bool
+    var mutable: Bool
+}
+
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
-    var scopes: [[String: Bool]] = []
+    var scopes: [[String: VariableInformation]] = []
     let codeGenerator: CodeGenerator
     
     init(codeGenerator: CodeGenerator) {
@@ -17,11 +22,16 @@ class Resolver {
 }
 
 extension Resolver: ExprVisitor {
-    func visitGroupExpr(expr: Expr.Group) throws -> () {
+    func visitAssignExpr(expr: Expr.Assign) throws {
+        try resolve(expr.value)
+        resolveLocal(expr: expr, name: expr.name)
+    }
+    
+    func visitGroupExpr(expr: Expr.Group) throws {
         try resolve(expr.value)
     }
     
-    func visitUnaryExpr(expr: Expr.Unary) throws -> () {
+    func visitUnaryExpr(expr: Expr.Unary) throws {
         try resolve(expr.value)
     }
     
@@ -37,7 +47,7 @@ extension Resolver: ExprVisitor {
             return
         }
         
-        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme] == false {
+        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme]?.defined == false {
             NicError.error(name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
         
@@ -47,18 +57,26 @@ extension Resolver: ExprVisitor {
 }
 
 extension Resolver: StmtVisitor {
-    func visitConstStmt(_ stmt: Stmt.Const) throws -> () {
-        try resolve(stmt.initializer)
+    func visitExpressionStatement(_ stmt: Stmt.Expression) throws {
+        try resolve(stmt.expression)
     }
     
-    func visitBlockStmt(_ stmt: Stmt.Block) throws -> () {
+    func visitConstStmt(_ stmt: Stmt.Const) throws {
+        declare(stmt.name, mutable: false)
+        
+        try resolve(stmt.initializer)
+        
+        define(stmt.name)
+    }
+    
+    func visitBlockStmt(_ stmt: Stmt.Block) throws {
         beginScope()
         try resolve(stmt.statements)
         endScope()
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        declare(stmt.name)
+        declare(stmt.name, mutable: true)
         
         if let initializer = stmt.initializer {
             try resolve(initializer)
@@ -100,7 +118,7 @@ extension Resolver {
         // Not found. Assume it is global.
     }
     
-    func declare(_ name: Token) {
+    func declare(_ name: Token, mutable: Bool) {
         if scopes.isEmpty {
             return
         }
@@ -109,7 +127,7 @@ extension Resolver {
             Nic.error(at: name.line, message: "Variable with this name is already declared in this scope.")
         }
         
-        scopes[scopes.endIndex - 1][name.lexeme] = false
+        scopes[scopes.endIndex - 1][name.lexeme] = VariableInformation(defined: false, mutable: mutable)
     }
     
     func define(_ name: Token) {
@@ -117,7 +135,7 @@ extension Resolver {
             return
         }
         
-        scopes[scopes.endIndex - 1][name.lexeme] = true
+        scopes[scopes.endIndex - 1][name.lexeme]?.defined = true
     }
     
     func beginScope() {

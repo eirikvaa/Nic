@@ -32,20 +32,37 @@ class CodeGenerator {
         self.environment = globals
     }
     
-    func buildVarStmt(name: String, value: Any?) {
-        switch value {
+    func buildVarStmt(name: String, nameInformation: NameInformation) {
+        
+        switch nameInformation.value {
         case let number as Int:
             let irValue = builder.buildAlloca(type: IntType.int64, name: name)
             builder.buildStore(number, to: irValue)
+            environment.define(name: name, nameInformation: nameInformation)
         case let double as Double:
             let doubleIRValue = FloatType.double.constant(double)
             let irValue = builder.buildAlloca(type: FloatType.double, name: name)
             builder.buildStore(doubleIRValue, to: irValue)
+            environment.define(name: name, nameInformation: nameInformation)
         case let boolean as Bool:
             let irValue = builder.buildAlloca(type: IntType.int1, name: name)
             builder.buildStore(boolean, to: irValue)
+            environment.define(name: name, nameInformation: nameInformation)
         case let string as String:
             _ = builder.addGlobalString(name: name, value: string)
+            globals.define(name: name, nameInformation: nameInformation)
+        default:
+            break
+        }
+    }
+    
+    func updateVariable(name: String, nameInformation: NameInformation?) {
+        // TODO: Not sure if this is the correct way to go about this.
+        switch nameInformation?.value {
+        case let number as Int:
+            _ = builder.buildMalloc(IntType.int64, name: name)
+            let irValue = builder.buildAlloca(type: IntType.int64, name: name)
+            builder.buildStore(number, to: irValue)
         default:
             break
         }
@@ -125,7 +142,7 @@ class CodeGenerator {
         locals[expr] = depth
     }
     
-    func lookUpVariable(name: Token, expr: Expr) throws -> Any? {
+    func lookUpVariable(name: Token, expr: Expr) throws -> NameInformation? {
         if let distance = locals[expr] {
             return environment.get(at: distance, name: name.lexeme)
         } else {
@@ -151,6 +168,33 @@ class CodeGenerator {
 // MARK: ExprVisitor
 
 extension CodeGenerator: ExprVisitor {
+    func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
+        var nameInformation = try lookUpVariable(name: expr.name, expr: expr)
+        
+        if nameInformation?.isMutable == false {
+            Nic.error(at: expr.name.line, message: "Cannot mutate constant '\(expr.name.lexeme)'.")
+            throw NicRuntimeError.illegalConstantMutation(name: expr.name)
+        } else {
+            var value: Any? = try evaluate(expr.value)
+            
+            if let info = value as? NameInformation {
+                value = info.value
+            }
+            
+            nameInformation?.value = value
+            
+            if let distance = locals[expr] {
+                environment.assign(at: distance, name: expr.name, value: nameInformation)
+            } else {
+                try globals.assign(token: expr.name, value: nameInformation)
+            }
+            
+            //updateVariable(name: expr.name.lexeme, nameInformation: nameInformation)
+        }
+        
+        return nil
+    }
+    
     func visitGroupExpr(expr: Expr.Group) throws -> Any? {
         return try evaluate(expr.value)
     }
@@ -181,8 +225,16 @@ extension CodeGenerator: ExprVisitor {
     }
     
     func visitBinaryExpr(expr: Expr.Binary) throws -> Any? {
-        let lhs = try evaluate(expr.leftValue)
-        let rhs = try evaluate(expr.rightValue)
+        var lhs = try evaluate(expr.leftValue)
+        var rhs = try evaluate(expr.rightValue)
+        
+        if let lhsInfo = lhs as? NameInformation {
+            lhs = lhsInfo.value
+        }
+        
+        if let rhsInfo = rhs as? NameInformation {
+            rhs = rhsInfo.value
+        }
         
         let numericOperation = expr.operator.type != .slash
         let op = expr.operator.lexeme
@@ -200,14 +252,18 @@ extension CodeGenerator: ExprVisitor {
 // MARK: StmtVisitor
 
 extension CodeGenerator: StmtVisitor {
-    func visitConstStmt(_ stmt: Stmt.Const) throws -> () {
+    func visitExpressionStatement(_ stmt: Stmt.Expression) throws {
+        _ = try evaluate(stmt.expression)
+    }
+    
+    func visitConstStmt(_ stmt: Stmt.Const) throws {
         let name = stmt.name.lexeme
         let value = try evaluate(stmt.initializer)
         
-        environment.define(name: name, value: value)
-        
         // TODO: Swap with LLVM IR constant expression, if it exists?
-        buildVarStmt(name: name, value: value)
+        let nameInformation = NameInformation(value: value, isMutable: false)
+        environment.define(name: name, nameInformation: nameInformation)
+        buildVarStmt(name: name, nameInformation: nameInformation)
     }
     
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
@@ -222,10 +278,10 @@ extension CodeGenerator: StmtVisitor {
         if let initializer = stmt.initializer {
             value = try evaluate(initializer)
         }
+        let nameInformation = NameInformation(value: value, isMutable: true)
+        environment.define(name: name, nameInformation: nameInformation)
         
-        environment.define(name: name, value: value)
-        
-        buildVarStmt(name: name, value: value)
+        buildVarStmt(name: name, nameInformation: nameInformation)
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
@@ -233,7 +289,11 @@ extension CodeGenerator: StmtVisitor {
             return
         }
         
-        let value = try evaluate(expr)
+        var value = try evaluate(expr)
+        
+        if let info = value as? NameInformation {
+            value = info.value
+        }
         
         switch value {
         case let integer as Int:
