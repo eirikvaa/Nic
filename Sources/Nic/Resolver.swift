@@ -6,18 +6,24 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-struct VariableInformation {
-    var defined: Bool
-    var mutable: Bool
+private struct VariableInformation {
+    var isDefined: Bool
+    var isMutable: Bool
 }
 
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
-    var scopes: [[String: VariableInformation]] = []
-    let codeGenerator: CodeGenerator
+    private var scopes: [[String: VariableInformation]] = []
+    private let codeGenerator: CodeGenerator
     
     init(codeGenerator: CodeGenerator) {
         self.codeGenerator = codeGenerator
+    }
+    
+    func resolve(_ statements: [Stmt]) throws {
+        for stmt in statements {
+            try resolve(stmt)
+        }
     }
 }
 
@@ -47,7 +53,7 @@ extension Resolver: ExprVisitor {
             return
         }
         
-        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme]?.defined == false {
+        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme]?.isDefined == false {
             NicError.error(name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
         
@@ -92,13 +98,7 @@ extension Resolver: StmtVisitor {
     }
 }
 
-extension Resolver {
-    func resolve(_ statements: [Stmt]) throws {
-        for stmt in statements {
-            try resolve(stmt)
-        }
-    }
-    
+private extension Resolver {
     func resolve(_ stmt: Stmt) throws {
         try stmt.accept(visitor: self)
     }
@@ -127,7 +127,7 @@ extension Resolver {
             Nic.error(at: name.line, message: "Variable with this name is already declared in this scope.")
         }
         
-        scopes[scopes.endIndex - 1][name.lexeme] = VariableInformation(defined: false, mutable: mutable)
+        scopes[scopes.endIndex - 1][name.lexeme] = VariableInformation(isDefined: false, isMutable: mutable)
     }
     
     func define(_ name: Token) {
@@ -135,7 +135,7 @@ extension Resolver {
             return
         }
         
-        scopes[scopes.endIndex - 1][name.lexeme]?.defined = true
+        scopes[scopes.endIndex - 1][name.lexeme]?.isDefined = true
     }
     
     func beginScope() {
