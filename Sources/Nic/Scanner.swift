@@ -132,7 +132,7 @@ extension Scanner {
 // MARK: Helper methods
 
 private extension Scanner {
-    private mutating func scanToken() {
+    mutating func scanToken() {
         // `advance` will increment `currentIndex` and return the character before
         // the character `currentIndex` corresponds to. That way, we never index
         // into the string with an invalid index.
