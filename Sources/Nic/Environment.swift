@@ -24,10 +24,11 @@ class Environment {
     /// Get the value that `name` is bound to.
     /// - parameter name: The token representing a variable.
     /// - returns: The value that `name` is bound to.
+    /// - throws: `NicResolverError.undefinedVariable` if the variable is not found.
     func get(name: Token) throws -> NameInformation? {
         guard values.keys.contains(name.lexeme) else {
             Nic.error(at: name.line, message: "Variable '\(name.lexeme)' could not be found in the current scope.")
-            throw NicRuntimeError.undefinedVariable(name: name)
+            throw NicResolverError.undefinedVariable(name: name)
         }
         
         return values[name.lexeme] ?? nil
@@ -52,6 +53,11 @@ class Environment {
         ancestor(distance: distance)?.values[name.lexeme] = value
     }
     
+    /// Assign the value `value` to the variable corresponding to the token `token`.
+    /// - parameters:
+    ///     - token: The token for which a value should be assigned to.
+    ///     - value: The value that should be assigned
+    /// - throws: `NicResolverError.undefinedVariable` is the variable is not found.
     func assign(token: Token, value: NameInformation?) throws {
         if values.keys.contains(token.lexeme) {
             values[token.lexeme]?.value = value?.value
@@ -63,12 +69,8 @@ class Environment {
             return
         }
         
-        throw NicRuntimeError.undefinedVariable(name: token)
+        throw NicResolverError.undefinedVariable(name: token)
         
-    }
-    
-    func update(at distance: Int, name: Token, value: Any?) {
-        ancestor(distance: distance)?.values[name.lexeme]?.value = value
     }
     
     /// Return the environment, starting from the current, innermost environment,
