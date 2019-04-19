@@ -5,11 +5,6 @@
 //  Created by Eirik Vale Aase on 17/04/2019.
 //
 
-struct NameInformation {
-    var value: Any?
-    var isMutable: Bool
-}
-
 /// `Environment` handles the bindings between variables and values.
 /// The opetional `enclosing` field is used for the enclosing environment.
 /// The global environment, containing global declarations, have no such enclosing

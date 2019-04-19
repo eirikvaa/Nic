@@ -8,6 +8,17 @@
 
 import LLVM
 
+struct NameInformation {
+    var value: Any?
+    var isMutable: Bool
+    var irValue: IRValue?
+    
+    init(value: Any?, isMutable: Bool) {
+        self.value = value
+        self.isMutable = isMutable
+    }
+}
+
 /// `CodeGenerator` will traverse the abstract syntax tree and generate LLVM IR, which stands for
 /// (Low-Level Virtual Machine Intermediate Representation).
 class CodeGenerator {
@@ -32,22 +43,25 @@ class CodeGenerator {
         self.environment = globals
     }
     
-    func buildVarStmt(name: String, nameInformation: NameInformation) {
+    func buildVarStmt(name: String, nameInformation: inout NameInformation) {
         
         switch nameInformation.value {
         case let number as Int:
             let irValue = builder.buildAlloca(type: IntType.int64, name: name)
             builder.buildStore(number, to: irValue)
             environment.define(name: name, nameInformation: nameInformation)
+            nameInformation.irValue = irValue
         case let double as Double:
             let doubleIRValue = FloatType.double.constant(double)
             let irValue = builder.buildAlloca(type: FloatType.double, name: name)
             builder.buildStore(doubleIRValue, to: irValue)
             environment.define(name: name, nameInformation: nameInformation)
+            nameInformation.irValue = irValue
         case let boolean as Bool:
             let irValue = builder.buildAlloca(type: IntType.int1, name: name)
             builder.buildStore(boolean, to: irValue)
             environment.define(name: name, nameInformation: nameInformation)
+            nameInformation.irValue = irValue
         case let string as String:
             _ = builder.addGlobalString(name: name, value: string)
             globals.define(name: name, nameInformation: nameInformation)
@@ -56,13 +70,14 @@ class CodeGenerator {
         }
     }
     
-    func updateVariable(name: String, nameInformation: NameInformation?) {
-        // TODO: Not sure if this is the correct way to go about this.
+    func updateVariable(name: String, nameInformation: NameInformation?, oldNameInformation: NameInformation?) {
         switch nameInformation?.value {
-        case let number as Int:
-            _ = builder.buildMalloc(IntType.int64, name: name)
-            let irValue = builder.buildAlloca(type: IntType.int64, name: name)
-            builder.buildStore(number, to: irValue)
+        case let integer as Int:
+            if let irValue = nameInformation?.irValue {
+                let load = builder.buildLoad(irValue, name: name)
+                builder.buildStore(integer, to: load)
+                builder.buildStore(load, to: irValue)
+            }
         default:
             break
         }
@@ -170,6 +185,7 @@ class CodeGenerator {
 extension CodeGenerator: ExprVisitor {
     func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
         var nameInformation = try lookUpVariable(name: expr.name, expr: expr)
+        let oldInformation = nameInformation
         
         if nameInformation?.isMutable == false {
             Nic.error(at: expr.name.line, message: "Cannot mutate constant '\(expr.name.lexeme)'.")
@@ -189,7 +205,7 @@ extension CodeGenerator: ExprVisitor {
                 try globals.assign(token: expr.name, value: nameInformation)
             }
             
-            //updateVariable(name: expr.name.lexeme, nameInformation: nameInformation)
+            updateVariable(name: expr.name.lexeme, nameInformation: nameInformation, oldNameInformation: oldInformation)
         }
         
         return nil
@@ -261,9 +277,11 @@ extension CodeGenerator: StmtVisitor {
         let value = try evaluate(stmt.initializer)
         
         // TODO: Swap with LLVM IR constant expression, if it exists?
-        let nameInformation = NameInformation(value: value, isMutable: false)
+        // buildConstStmt will update the nameInformation variable with the IRValue, so defining it in the
+        // environment must happen after the aforementioned call.
+        var nameInformation = NameInformation(value: value, isMutable: false)
+        buildVarStmt(name: name, nameInformation: &nameInformation)
         environment.define(name: name, nameInformation: nameInformation)
-        buildVarStmt(name: name, nameInformation: nameInformation)
     }
     
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
@@ -278,10 +296,12 @@ extension CodeGenerator: StmtVisitor {
         if let initializer = stmt.initializer {
             value = try evaluate(initializer)
         }
-        let nameInformation = NameInformation(value: value, isMutable: true)
-        environment.define(name: name, nameInformation: nameInformation)
         
-        buildVarStmt(name: name, nameInformation: nameInformation)
+        // buildVarStmt will update the nameInformation variable with the IRValue, so defining it in the
+        // environment must happen after the aforementioned call.
+        var nameInformation = NameInformation(value: value, isMutable: true)
+        buildVarStmt(name: name, nameInformation: &nameInformation)
+        environment.define(name: name, nameInformation: nameInformation)
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
