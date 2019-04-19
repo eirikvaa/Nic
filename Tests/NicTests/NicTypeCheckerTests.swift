@@ -17,7 +17,7 @@ class NicTypeCheckerTests: XCTestCase {
         let tokens = scanner.scan()
         
         var parser = Parser(tokens: tokens)
-        let statements = parser.parseTokens()
+        let statements = parser.parse()
         
         let typeChecker = TypeChecker()
         XCTAssertNoThrow(try typeChecker.typecheck(statements))

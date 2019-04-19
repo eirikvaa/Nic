@@ -23,6 +23,6 @@ class NicParserTests: XCTestCase {
         
         var parser = Parser(tokens: tokens)
         
-        XCTAssertNoThrow(parser.parseTokens())
+        XCTAssertNoThrow(parser.parse())
     }
 }

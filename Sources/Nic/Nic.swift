@@ -35,7 +35,7 @@ struct Nic {
         }
         
         var parser = Parser(tokens: tokens)
-        let statements = parser.parseTokens()
+        let statements = parser.parse()
         
         if hadError {
             return
