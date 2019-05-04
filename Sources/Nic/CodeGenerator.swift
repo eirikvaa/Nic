@@ -14,11 +14,8 @@ class CodeGenerator {
     private let module: Module
     private let builder: IRBuilder
     private let mainFunction: Function
-    private var blocks: Stack<BasicBlock> = []
-    private let globals = Environment()
-    private var environment: Environment
+    private var blocks: [BasicBlock] = []
     private let symbolTable = SymbolTable.shared
-    private var locals: [Expr: Int] = [:]
     
     init() {
         module = Module(name: "main")
@@ -29,16 +26,10 @@ class CodeGenerator {
         
         let entry = mainFunction.appendBasicBlock(named: "entry")
         builder.positionAtEnd(of: entry)
-        
-        self.environment = globals
     }
     
     func dumpLLVMIR() {
         builder.module.dump()
-    }
-    
-    func resolve(expr: Expr, depth: Int) {
-        locals[expr] = depth
     }
     
     func generate(_ statements: [Stmt]) throws {
@@ -95,16 +86,8 @@ extension CodeGenerator: ExprVisitor {
     }
     
     func visitBinaryExpr(expr: Expr.Binary) throws -> Any? {
-        var lhs = try evaluate(expr.leftValue)
-        var rhs = try evaluate(expr.rightValue)
-        
-        if let lhsInfo = lhs as? NameInformation {
-            lhs = lhsInfo.value
-        }
-        
-        if let rhsInfo = rhs as? NameInformation {
-            rhs = rhsInfo.value
-        }
+        let lhs = try evaluate(expr.leftValue)
+        let rhs = try evaluate(expr.rightValue)
         
         let numericOperation = expr.operator.type != .slash
         let op = expr.operator.lexeme
@@ -127,35 +110,30 @@ extension CodeGenerator: StmtVisitor {
     }
     
     func visitConstStmt(_ stmt: Stmt.Const) throws {
-        let name = stmt.name.lexeme
-        let value = try evaluate(stmt.initializer)
-        
         // TODO: Swap with LLVM IR constant expression, if it exists?
         // buildConstStmt will update the nameInformation variable with the IRValue, so defining it in the
         // environment must happen after the aforementioned call.
-        var nameInformation = NameInformation(value: value, isMutable: false)
-        buildVarStmt(name: name, nameInformation: &nameInformation)
-        environment.define(name: name, nameInformation: nameInformation)
+        let value = try evaluate(stmt.initializer)
+        let depth = stmt.initializer.depth
+        symbolTable.set(element: value, at: \.value, to: stmt.name, at: depth)
+        try buildVarStmt(name: stmt.name, at: stmt.initializer.depth)
     }
     
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
         // Start generating code for the block we're about to visit.
         // We create a new environment which has the current environment as its enclosing environment.
-        try generateBlock(stmt.statements, environment: Environment(environment: environment))
+        try generateBlock(stmt.statements)
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        let name = stmt.name.lexeme
         var value: Any?
         if let initializer = stmt.initializer {
             value = try evaluate(initializer)
         }
         
-        // buildVarStmt will update the nameInformation variable with the IRValue, so defining it in the
-        // environment must happen after the aforementioned call.
-        var nameInformation = NameInformation(value: value, isMutable: true)
-        buildVarStmt(name: name, nameInformation: &nameInformation)
-        environment.define(name: name, nameInformation: nameInformation)
+        let depth = stmt.initializer?.depth ?? 0
+        symbolTable.set(element: value, at: \.value, to: stmt.name, at: depth)
+        try buildVarStmt(name: stmt.name, at: depth)
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
@@ -183,40 +161,22 @@ extension CodeGenerator: StmtVisitor {
 // MARK: Private helpers
 
 private extension CodeGenerator {
-    func buildVarStmt(name: String, nameInformation: inout NameInformation) {
-        switch nameInformation.value {
+    func buildVarStmt(name: Token, at distance: Int) throws {
+        let value = try symbolTable.get(name: name, at: distance, keyPath: \.value) ?? nil
+        
+        switch value {
         case let number as Int:
-            let irValue = builder.buildAlloca(type: IntType.int64, name: name)
+            let irValue = builder.buildAlloca(type: IntType.int64, name: name.lexeme)
             builder.buildStore(number, to: irValue)
-            environment.define(name: name, nameInformation: nameInformation)
-            nameInformation.irValue = irValue
         case let double as Double:
             let doubleIRValue = FloatType.double.constant(double)
-            let irValue = builder.buildAlloca(type: FloatType.double, name: name)
+            let irValue = builder.buildAlloca(type: FloatType.double, name: name.lexeme)
             builder.buildStore(doubleIRValue, to: irValue)
-            environment.define(name: name, nameInformation: nameInformation)
-            nameInformation.irValue = irValue
         case let boolean as Bool:
-            let irValue = builder.buildAlloca(type: IntType.int1, name: name)
+            let irValue = builder.buildAlloca(type: IntType.int1, name: name.lexeme)
             builder.buildStore(boolean, to: irValue)
-            environment.define(name: name, nameInformation: nameInformation)
-            nameInformation.irValue = irValue
         case let string as String:
-            _ = builder.addGlobalString(name: name, value: string)
-            globals.define(name: name, nameInformation: nameInformation)
-        default:
-            break
-        }
-    }
-    
-    func updateVariable(name: String, nameInformation: NameInformation?, oldNameInformation: NameInformation?) {
-        switch nameInformation?.value {
-        case let integer as Int:
-            if let irValue = nameInformation?.irValue {
-                let load = builder.buildLoad(irValue, name: name)
-                builder.buildStore(integer, to: load)
-                builder.buildStore(load, to: irValue)
-            }
+            _ = builder.addGlobalString(name: name.lexeme, value: string)
         default:
             break
         }
@@ -269,19 +229,11 @@ private extension CodeGenerator {
         return lhs / rhs
     }
     
-    func generateBlock(_ statements: [Stmt], environment: Environment) throws {
-        let previous = environment
-        
-        defer {
-            self.environment = previous
-        }
-        
-        self.environment = environment
-        
+    func generateBlock(_ statements: [Stmt]) throws {
         let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
         let bb = mainFunction.appendBasicBlock(named: "block_\(blockCount)")
         builder.positionAtEnd(of: bb)
-        blocks.push(bb)
+        blocks.append(bb)
         
         try generate(statements)
         
@@ -289,11 +241,10 @@ private extension CodeGenerator {
             builder.positionAtEnd(of: firstBlock)
         }
         
-        blocks.pop()
+        _ = blocks.popLast()
     }
     
     func lookUpVariable(name: Token, expr: Expr) throws -> Any? {
-        //return try symbolTable.get(name: name, at: expr.depth)
         return try symbolTable.get(name: name, at: expr.depth, keyPath: \.value) ?? nil
     }
     

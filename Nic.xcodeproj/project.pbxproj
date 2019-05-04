@@ -24,10 +24,6 @@
 		E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */; };
 		E5035F8922669DE300FD1A0F /* NicTypeCheckerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */; };
 		E5035F8A22669DE400FD1A0F /* NicTypeCheckerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */; };
-		E548C55522673B08002E7779 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55422673B08002E7779 /* Stack.swift */; };
-		E548C55622673B08002E7779 /* Stack.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55422673B08002E7779 /* Stack.swift */; };
-		E548C55822674B5A002E7779 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55722674B5A002E7779 /* Environment.swift */; };
-		E548C55922674B5A002E7779 /* Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55722674B5A002E7779 /* Environment.swift */; };
 		E548C55B22674C96002E7779 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55A22674C96002E7779 /* NicRuntimeError.swift */; };
 		E548C55C22674C96002E7779 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55A22674C96002E7779 /* NicRuntimeError.swift */; };
 		E548C5652267B213002E7779 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C5642267B213002E7779 /* TypeSystem.swift */; };
@@ -187,8 +183,6 @@
 /* Begin PBXFileReference section */
 		E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerTests.swift; sourceTree = "<group>"; };
 		E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerError.swift; sourceTree = "<group>"; };
-		E548C55422673B08002E7779 /* Stack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Stack.swift; sourceTree = "<group>"; };
-		E548C55722674B5A002E7779 /* Environment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Environment.swift; sourceTree = "<group>"; };
 		E548C55A22674C96002E7779 /* NicRuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicRuntimeError.swift; sourceTree = "<group>"; };
 		E548C55E2267AF21002E7779 /* Parsing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Parsing.md; sourceTree = "<group>"; };
 		E548C55F2267B043002E7779 /* TypeSystem.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TypeSystem.md; sourceTree = "<group>"; };
@@ -330,7 +324,6 @@
 			isa = PBXGroup;
 			children = (
 				E5B3EFCD226E39CE000BA760 /* SymbolTable.swift */,
-				E548C55422673B08002E7779 /* Stack.swift */,
 				E5E31CAC226874C200C5D1C9 /* Character+Ext.swift */,
 				E5AF9A19226A15E90057FB99 /* NameInformation.swift */,
 			);
@@ -483,7 +476,6 @@
 				OBJ_21 /* TokenType.swift */,
 				OBJ_14 /* Expr.swift */,
 				OBJ_19 /* Stmt.swift */,
-				E548C55722674B5A002E7779 /* Environment.swift */,
 				E548C5642267B213002E7779 /* TypeSystem.swift */,
 				E548C5602267B14F002E7779 /* Helpers */,
 				OBJ_11 /* Error */,
@@ -750,7 +742,6 @@
 				E5E31CAD226874C200C5D1C9 /* Character+Ext.swift in Sources */,
 				OBJ_171 /* Expr.swift in Sources */,
 				OBJ_172 /* CodeGenerator.swift in Sources */,
-				E548C55522673B08002E7779 /* Stack.swift in Sources */,
 				OBJ_173 /* Parser.swift in Sources */,
 				OBJ_174 /* Resolver.swift in Sources */,
 				OBJ_175 /* Scanner.swift in Sources */,
@@ -766,7 +757,6 @@
 				E59D32922263FDD0004AF443 /* TypeChecker.swift in Sources */,
 				OBJ_178 /* TokenType.swift in Sources */,
 				OBJ_179 /* main.swift in Sources */,
-				E548C55822674B5A002E7779 /* Environment.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -790,7 +780,6 @@
 				OBJ_201 /* NicParserTests.swift in Sources */,
 				E5AF9A1E226A17720057FB99 /* NicResolverError.swift in Sources */,
 				OBJ_202 /* NicScannerTests.swift in Sources */,
-				E548C55622673B08002E7779 /* Stack.swift in Sources */,
 				E5E31CAE226874C200C5D1C9 /* Character+Ext.swift in Sources */,
 				E59D32932263FDD0004AF443 /* TypeChecker.swift in Sources */,
 				E5714B652250C2B40057F751 /* NicScannerError.swift in Sources */,
@@ -798,7 +787,6 @@
 				E5714B662250C2B40057F751 /* Expr.swift in Sources */,
 				E548C5662267B213002E7779 /* TypeSystem.swift in Sources */,
 				E5714B6B2250C2B40057F751 /* Stmt.swift in Sources */,
-				E548C55922674B5A002E7779 /* Environment.swift in Sources */,
 				E5714B642250C2B40057F751 /* NicParserError.swift in Sources */,
 				E5714B692250C2B40057F751 /* Resolver.swift in Sources */,
 				E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */,

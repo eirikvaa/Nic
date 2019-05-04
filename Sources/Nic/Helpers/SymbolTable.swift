@@ -9,6 +9,12 @@ class SymbolTableValue {
     var value: Any?
     var isMutable = false
     var isDefined = false
+    
+    convenience init<Element>(value: Element, keyPath: ReferenceWritableKeyPath<SymbolTableValue, Element>) {
+        self.init()
+        
+        self[keyPath: keyPath] = value
+    }
 }
 
 class SymbolTable {
@@ -18,8 +24,12 @@ class SymbolTable {
     private init() {}
     
     func get<Element>(name: Token, at distance: Int, keyPath: ReferenceWritableKeyPath<SymbolTableValue, Element>) throws -> Element? {
-        guard let value = bindings[distance][name.lexeme] else {
+        guard distance >= 0 || distance - 1 >= 0 else {
             throw NicRuntimeError.undefinedVariable(name: name)
+        }
+        
+        guard let value = bindings[distance][name.lexeme] else {
+            return try get(name: name, at: distance - 1, keyPath: keyPath)
         }
         
         return value[keyPath: keyPath]
@@ -28,8 +38,7 @@ class SymbolTable {
     func set<Element>(element: Element, at keyPath: ReferenceWritableKeyPath<SymbolTableValue, Element>, to token: Token, at distance: Int) {
         guard let value = bindings[distance][token.lexeme] else {
             // Create new value
-            let _value = SymbolTableValue()
-            _value[keyPath: keyPath] = element
+            let _value = SymbolTableValue(value: element, keyPath: keyPath)
             bindings[distance][token.lexeme] = _value
             return
         }
