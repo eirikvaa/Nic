@@ -1,10 +1,8 @@
-var a = 5;
-a = 10;
+// This is a constant value, it can't be changed.
+const a = 5;
 print a;
-{
-print "Hei";
-var a = 450;
-print a + 10;
-}
-a = 450;
-print a;
+
+// This is a variable.
+var b = 5;
+b = 10;
+print b * b;
