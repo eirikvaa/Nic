@@ -6,16 +6,12 @@
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
 
-private struct VariableInformation {
-    var isDefined: Bool
-    var isMutable: Bool
-}
-
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
-    private var scopes: [[String: VariableInformation]] = []
+    private var scopes: [[String: Bool]] = []
     private let codeGenerator: CodeGenerator
     private var scopeDepth = 0
+    private let symbolTable = SymbolTable.shared
     
     init(codeGenerator: CodeGenerator) {
         self.codeGenerator = codeGenerator
@@ -54,7 +50,7 @@ extension Resolver: ExprVisitor {
             return
         }
         
-        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme]?.isDefined == false {
+        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme] == false {
             NicError.error(name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
         
@@ -89,6 +85,8 @@ extension Resolver: StmtVisitor {
             try resolve(initializer)
         }
         
+        symbolTable.set(element: true, at: \.isMutable, to: stmt.name, at: scopeDepth)
+        
         define(stmt.name)
     }
     
@@ -117,11 +115,13 @@ private extension Resolver {
             return
         }
         
-        if scopes[scopes.endIndex - 1].keys.contains(name.lexeme) == true {
+        let scope = scopes.endIndex - 1
+        
+        if scopes[scope].keys.contains(name.lexeme) == true {
             Nic.error(at: name.line, message: "Variable with this name is already declared in this scope.")
         }
         
-        scopes[scopes.endIndex - 1][name.lexeme] = VariableInformation(isDefined: false, isMutable: mutable)
+        scopes[scope][name.lexeme] = false
     }
     
     func define(_ name: Token) {
@@ -129,7 +129,7 @@ private extension Resolver {
             return
         }
         
-        scopes[scopes.endIndex - 1][name.lexeme]?.isDefined = true
+        scopes[scopes.endIndex - 1][name.lexeme] = true
     }
     
     func beginScope() {

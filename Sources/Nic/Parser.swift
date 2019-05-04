@@ -121,7 +121,8 @@ private extension Parser {
             initializer = try expression()
         }
         
-        symbolTable.set(value: nil, to: name, at: scopeDepth)
+        symbolTable.set(element: nil, at: \.value, to: name, at: scopeDepth)
+        symbolTable.set(element: true, at: \.isMutable, to: name, at: initializer?.depth ?? 0)
         
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
         return Stmt.Var(name: name, type: variableType, initializer: initializer)
@@ -138,6 +139,9 @@ private extension Parser {
         
         try consume(tokenType: .equal, errorMessage: "Expect initializer for constant declaration.")
         let initializer = try expression()
+        
+        symbolTable.set(element: nil, at: \.value, to: name, at: initializer.depth)
+        symbolTable.set(element: false, at: \.isMutable, to: name, at: initializer.depth)
         
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' in constant declaration.")
         return Stmt.Const(name: name, type: constantType, initializer: initializer)

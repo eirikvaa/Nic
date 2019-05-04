@@ -53,7 +53,14 @@ class CodeGenerator {
 extension CodeGenerator: ExprVisitor {
     func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
         let value = try evaluate(expr.value)
-        symbolTable.set(value: value, to: expr.name, at: expr.depth)
+        
+        let isMutable = try symbolTable.get(name: expr.name, at: expr.depth, keyPath: \.isMutable) ?? false
+        
+        guard isMutable else {
+            throw NicRuntimeError.illegalConstantMutation(name: expr.name)
+        }
+        
+        symbolTable.set(element: value, at: \.value, to: expr.name, at: expr.depth)
         
         return nil
     }
@@ -286,7 +293,8 @@ private extension CodeGenerator {
     }
     
     func lookUpVariable(name: Token, expr: Expr) throws -> Any? {
-        return try symbolTable.get(name: name, at: expr.depth)
+        //return try symbolTable.get(name: name, at: expr.depth)
+        return try symbolTable.get(name: name, at: expr.depth, keyPath: \.value) ?? nil
     }
     
     func generate(_ stmt: Stmt) throws {
