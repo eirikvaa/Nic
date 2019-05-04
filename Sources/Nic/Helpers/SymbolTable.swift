@@ -8,6 +8,7 @@
 class SymbolTableValue {
     var value: Any?
     var isMutable = false
+    var isDefined = false
 }
 
 class SymbolTable {
@@ -35,6 +36,10 @@ class SymbolTable {
         
         // Update existing value
         value[keyPath: keyPath] = element
+    }
+    
+    func contains(token: Token, at distance: Int) -> Bool {
+        return bindings[distance].keys.contains(token.lexeme)
     }
     
     func beginScope() {

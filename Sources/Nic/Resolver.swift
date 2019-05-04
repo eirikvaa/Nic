@@ -8,7 +8,6 @@
 
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
-    private var scopes: [[String: Bool]] = []
     private let codeGenerator: CodeGenerator
     private var scopeDepth = 0
     private let symbolTable = SymbolTable.shared
@@ -27,22 +26,27 @@ class Resolver {
 extension Resolver: ExprVisitor {
     func visitAssignExpr(expr: Expr.Assign) throws {
         try resolve(expr.value)
-        resolveLocal(expr: expr, name: expr.name)
+        expr.depth = scopeDepth
     }
     
     func visitGroupExpr(expr: Expr.Group) throws {
         try resolve(expr.value)
+        expr.depth = scopeDepth
     }
     
     func visitUnaryExpr(expr: Expr.Unary) throws {
         try resolve(expr.value)
+        expr.depth = scopeDepth
     }
     
-    func visitLiteralExpr(expr: Expr.Literal) throws {}
+    func visitLiteralExpr(expr: Expr.Literal) throws {
+        expr.depth = scopeDepth
+    }
     
     func visitBinaryExpr(expr: Expr.Binary) throws {
         try resolve(expr.leftValue)
         try resolve(expr.rightValue)
+        expr.depth = scopeDepth
     }
     
     func visitVariableExpr(expr: Expr.Variable) throws {
@@ -50,12 +54,11 @@ extension Resolver: ExprVisitor {
             return
         }
         
-        if !scopes.isEmpty, scopes[scopes.endIndex - 1][name.lexeme] == false {
+        if try symbolTable.get(name: name, at: scopeDepth, keyPath: \.isDefined) == false {
             NicError.error(name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
         
-        resolveLocal(expr: expr, name: name)
-        
+        expr.depth = scopeDepth
     }
 }
 
@@ -85,8 +88,6 @@ extension Resolver: StmtVisitor {
             try resolve(initializer)
         }
         
-        symbolTable.set(element: true, at: \.isMutable, to: stmt.name, at: scopeDepth)
-        
         define(stmt.name)
     }
     
@@ -106,39 +107,27 @@ private extension Resolver {
         try expr.accept(visitor: self)
     }
     
-    func resolveLocal(expr: Expr, name: Token) {
-        expr.depth = scopeDepth
-    }
-    
     func declare(_ name: Token, mutable: Bool) {
-        if scopes.isEmpty {
+        do {
+            if try symbolTable.get(name: name, at: scopeDepth, keyPath: \.isDefined) == true {
+                Nic.error(at: name.line, message: "Variable '\(name.lexeme)' is already declared in this scope.")
+            }
+        } catch {
             return
         }
         
-        let scope = scopes.endIndex - 1
-        
-        if scopes[scope].keys.contains(name.lexeme) == true {
-            Nic.error(at: name.line, message: "Variable with this name is already declared in this scope.")
-        }
-        
-        scopes[scope][name.lexeme] = false
+        symbolTable.set(element: false, at: \.isDefined, to: name, at: scopeDepth)
     }
     
     func define(_ name: Token) {
-        if scopes.isEmpty {
-            return
-        }
-        
-        scopes[scopes.endIndex - 1][name.lexeme] = true
+        symbolTable.set(element: true, at: \.isDefined, to: name, at: scopeDepth)
     }
     
     func beginScope() {
-        scopes.append([:])
         scopeDepth += 1
     }
     
     func endScope() {
-        _ = scopes.popLast()
         scopeDepth -= 1
     }
 }
