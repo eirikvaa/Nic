@@ -20,6 +20,8 @@ protocol ExprVisitor {
 /// `Expr` implements `ExprVisitor`, making it possible to traverse the expression nodes in the tree.
 /// Together with `Stmt`, since it implements `StmtVisitor`, one can walk the entire abstract syntax tree.
 class Expr {
+    var depth = 0
+    
     func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturn {
         fatalError("Don't call this directly, must be implemented.")
     }

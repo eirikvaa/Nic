@@ -52,6 +52,8 @@
 		E5AF9A1B226A15E90057FB99 /* NameInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AF9A19226A15E90057FB99 /* NameInformation.swift */; };
 		E5AF9A1D226A17720057FB99 /* NicResolverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AF9A1C226A17720057FB99 /* NicResolverError.swift */; };
 		E5AF9A1E226A17720057FB99 /* NicResolverError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5AF9A1C226A17720057FB99 /* NicResolverError.swift */; };
+		E5B3EFCE226E39CE000BA760 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B3EFCD226E39CE000BA760 /* SymbolTable.swift */; };
+		E5B3EFCF226E39CE000BA760 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5B3EFCD226E39CE000BA760 /* SymbolTable.swift */; };
 		E5E31CAD226874C200C5D1C9 /* Character+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E31CAC226874C200C5D1C9 /* Character+Ext.swift */; };
 		E5E31CAE226874C200C5D1C9 /* Character+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E31CAC226874C200C5D1C9 /* Character+Ext.swift */; };
 		OBJ_102 /* Alias.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_31 /* Alias.swift */; };
@@ -196,6 +198,7 @@
 		E59D3294226409A1004AF443 /* NicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicError.swift; sourceTree = "<group>"; };
 		E5AF9A19226A15E90057FB99 /* NameInformation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameInformation.swift; sourceTree = "<group>"; };
 		E5AF9A1C226A17720057FB99 /* NicResolverError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicResolverError.swift; sourceTree = "<group>"; };
+		E5B3EFCD226E39CE000BA760 /* SymbolTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTable.swift; sourceTree = "<group>"; };
 		E5E31CAC226874C200C5D1C9 /* Character+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Character+Ext.swift"; sourceTree = "<group>"; };
 		"LLVM::LLVM::Product" /* LLVM.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = LLVM.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		"LLVM::llvmshims::Product" /* llvmshims.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = llvmshims.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -326,6 +329,7 @@
 		E548C5602267B14F002E7779 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E5B3EFCD226E39CE000BA760 /* SymbolTable.swift */,
 				E548C55422673B08002E7779 /* Stack.swift */,
 				E5E31CAC226874C200C5D1C9 /* Character+Ext.swift */,
 				E5AF9A19226A15E90057FB99 /* NameInformation.swift */,
@@ -752,6 +756,7 @@
 				OBJ_175 /* Scanner.swift in Sources */,
 				OBJ_176 /* Stmt.swift in Sources */,
 				E5AF9A1A226A15E90057FB99 /* NameInformation.swift in Sources */,
+				E5B3EFCE226E39CE000BA760 /* SymbolTable.swift in Sources */,
 				E548C5652267B213002E7779 /* TypeSystem.swift in Sources */,
 				E5AF9A1D226A17720057FB99 /* NicResolverError.swift in Sources */,
 				E548C55B22674C96002E7779 /* NicRuntimeError.swift in Sources */,
@@ -780,6 +785,7 @@
 				E548C55C22674C96002E7779 /* NicRuntimeError.swift in Sources */,
 				E59D3296226409A1004AF443 /* NicError.swift in Sources */,
 				E5035F8A22669DE400FD1A0F /* NicTypeCheckerError.swift in Sources */,
+				E5B3EFCF226E39CE000BA760 /* SymbolTable.swift in Sources */,
 				E5714B6A2250C2B40057F751 /* Scanner.swift in Sources */,
 				OBJ_201 /* NicParserTests.swift in Sources */,
 				E5AF9A1E226A17720057FB99 /* NicResolverError.swift in Sources */,

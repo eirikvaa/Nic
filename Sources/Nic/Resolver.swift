@@ -15,6 +15,7 @@ private struct VariableInformation {
 class Resolver {
     private var scopes: [[String: VariableInformation]] = []
     private let codeGenerator: CodeGenerator
+    private var scopeDepth = 0
     
     init(codeGenerator: CodeGenerator) {
         self.codeGenerator = codeGenerator
@@ -108,14 +109,7 @@ private extension Resolver {
     }
     
     func resolveLocal(expr: Expr, name: Token) {
-        for i in stride(from: scopes.count - 1, through: 0, by: -1) {
-            if scopes[i].keys.contains(name.lexeme) {
-                codeGenerator.resolve(expr: expr, depth: scopes.count - i - 1)
-                return
-            }
-        }
-        
-        // Not found. Assume it is global.
+        expr.depth = scopeDepth
     }
     
     func declare(_ name: Token, mutable: Bool) {
@@ -140,9 +134,11 @@ private extension Resolver {
     
     func beginScope() {
         scopes.append([:])
+        scopeDepth += 1
     }
     
     func endScope() {
         _ = scopes.popLast()
+        scopeDepth -= 1
     }
 }

@@ -28,7 +28,6 @@ struct Nic {
         var scanner = Scanner(source: source)
         
         let tokens = scanner.scan()
-        print(tokens)
         
         if hadError {
             return
@@ -47,7 +46,6 @@ struct Nic {
         
         do {
             try resolver.resolve(statements)
-            
             try typeChecker.typecheck(statements)
             
             if hadError {
@@ -55,9 +53,28 @@ struct Nic {
             }
             
             try codeGenerator.generate(statements)
-            codeGenerator.dumpLLVMIR()
+            //codeGenerator.dumpLLVMIR()
         } catch {
+            handleError(error)
             return
+        }
+    }
+    
+    private static func handleError(_ error: Error) {
+        switch error {
+        case let runtimeError as NicRuntimeError:
+            handleRuntimeError(runtimeError)
+        default:
+            print(error.localizedDescription)
+        }
+    }
+    
+    private static func handleRuntimeError(_ error: NicRuntimeError) {
+        switch error {
+        case .undefinedVariable(let name):
+            print("[Line \(name.line + 1)] Undefined variable '\(name.lexeme)'")
+        case .illegalConstantMutation(let name):
+            print("[Line \(name.line + 1)] Tried to mutate constant '\(name.lexeme)'")
         }
     }
     

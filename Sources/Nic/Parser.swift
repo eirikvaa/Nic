@@ -13,6 +13,8 @@
 struct Parser {
     private var currentIndex = 0
     private let tokens: [Token]
+    private let symbolTable = SymbolTable.shared
+    private var scopeDepth = 0
     
     init(tokens: [Token]) {
         self.tokens = tokens
@@ -81,6 +83,9 @@ private extension Parser {
     }
     
     mutating func block() throws -> Stmt {
+        symbolTable.beginScope()
+        scopeDepth += 1
+        
         var statements: [Stmt] = []
         
         while (!check(tokenType: .rightBrace) && !isAtEnd()) {
@@ -90,6 +95,8 @@ private extension Parser {
         }
         
         try consume(tokenType: .rightBrace, errorMessage: "Expecting right brace to complete block.")
+        
+        scopeDepth -= 1
         
         return Stmt.Block(statements: statements)
     }
@@ -113,6 +120,8 @@ private extension Parser {
         if match(types: .equal) {
             initializer = try expression()
         }
+        
+        symbolTable.set(value: nil, to: name, at: scopeDepth)
         
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
         return Stmt.Var(name: name, type: variableType, initializer: initializer)

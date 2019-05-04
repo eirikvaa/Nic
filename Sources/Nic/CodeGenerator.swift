@@ -17,6 +17,7 @@ class CodeGenerator {
     private var blocks: Stack<BasicBlock> = []
     private let globals = Environment()
     private var environment: Environment
+    private let symbolTable = SymbolTable.shared
     private var locals: [Expr: Int] = [:]
     
     init() {
@@ -51,29 +52,8 @@ class CodeGenerator {
 
 extension CodeGenerator: ExprVisitor {
     func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
-        var nameInformation = try lookUpVariable(name: expr.name, expr: expr)
-        let oldInformation = nameInformation
-        
-        if nameInformation?.isMutable == false {
-            Nic.error(at: expr.name.line, message: "Cannot mutate constant '\(expr.name.lexeme)'.")
-            throw NicRuntimeError.illegalConstantMutation(name: expr.name)
-        } else {
-            var value: Any? = try evaluate(expr.value)
-            
-            if let info = value as? NameInformation {
-                value = info.value
-            }
-            
-            nameInformation?.value = value
-            
-            if let distance = locals[expr] {
-                environment.assign(at: distance, name: expr.name, value: nameInformation)
-            } else {
-                try globals.assign(token: expr.name, value: nameInformation)
-            }
-            
-            updateVariable(name: expr.name.lexeme, nameInformation: nameInformation, oldNameInformation: oldInformation)
-        }
+        let value = try evaluate(expr.value)
+        symbolTable.set(value: value, to: expr.name, at: expr.depth)
         
         return nil
     }
@@ -176,11 +156,7 @@ extension CodeGenerator: StmtVisitor {
             return
         }
         
-        var value = try evaluate(expr)
-        
-        if let info = value as? NameInformation {
-            value = info.value
-        }
+        let value = try evaluate(expr)
         
         switch value {
         case let integer as Int:
@@ -309,12 +285,8 @@ private extension CodeGenerator {
         blocks.pop()
     }
     
-    func lookUpVariable(name: Token, expr: Expr) throws -> NameInformation? {
-        if let distance = locals[expr] {
-            return environment.get(at: distance, name: name.lexeme)
-        } else {
-            return try globals.get(name: name)
-        }
+    func lookUpVariable(name: Token, expr: Expr) throws -> Any? {
+        return try symbolTable.get(name: name, at: expr.depth)
     }
     
     func generate(_ stmt: Stmt) throws {
