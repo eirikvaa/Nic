@@ -246,7 +246,7 @@ private extension Parser {
             return Expr.Group(value: expr)
         }
         
-        throw NicParserError.missingRValue // TODO: Shold be "Expected expression or something"
+        throw NicParserError.missingRightValue // TODO: Shold be "Expected expression or something"
     }
     
     @discardableResult

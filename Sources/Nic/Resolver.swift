@@ -55,7 +55,7 @@ extension Resolver: ExprVisitor {
         }
         
         if try symbolTable.get(name: name, at: scopeDepth, keyPath: \.isDefined) == false {
-            NicError.error(name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
+            Nic.error(at: name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
         
         expr.depth = scopeDepth
