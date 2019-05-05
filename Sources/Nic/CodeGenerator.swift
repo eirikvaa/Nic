@@ -36,6 +36,10 @@ class CodeGenerator {
         for stmt in statements {
             try generate(stmt)
         }
+        
+        // TODO: This is most likely wrong, because a function is a collection of statements, and a function may not always
+        // return void, but it will do for now.
+        builder.buildRetVoid()
     }
 }
 
