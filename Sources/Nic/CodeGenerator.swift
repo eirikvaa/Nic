@@ -244,8 +244,11 @@ private extension CodeGenerator {
     func generateBlock(_ statements: [Stmt]) throws {
         let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
         let bb = mainFunction.appendBasicBlock(named: "block_\(blockCount)")
-        builder.positionAtEnd(of: bb)
         blocks.append(bb)
+        
+        builder.buildBr(bb)
+        
+        builder.positionAtEnd(of: bb)
         
         try generate(statements)
         
