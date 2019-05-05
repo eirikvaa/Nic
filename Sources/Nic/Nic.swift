@@ -53,7 +53,7 @@ struct Nic {
             }
             
             try codeGenerator.generate(statements)
-            codeGenerator.dumpLLVMIR()
+            codeGenerator.createLLVMIRFile(fileName: "test")
         } catch {
             handleError(error)
             return

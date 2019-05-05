@@ -24,6 +24,7 @@
 		E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */; };
 		E5035F8922669DE300FD1A0F /* NicTypeCheckerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */; };
 		E5035F8A22669DE400FD1A0F /* NicTypeCheckerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */; };
+		E50BF248227EE00700DE7779 /* test.ll in Sources */ = {isa = PBXBuildFile; fileRef = E50BF247227EE00700DE7779 /* test.ll */; };
 		E548C55B22674C96002E7779 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55A22674C96002E7779 /* NicRuntimeError.swift */; };
 		E548C55C22674C96002E7779 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55A22674C96002E7779 /* NicRuntimeError.swift */; };
 		E548C5652267B213002E7779 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C5642267B213002E7779 /* TypeSystem.swift */; };
@@ -181,6 +182,7 @@
 /* Begin PBXFileReference section */
 		E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerTests.swift; sourceTree = "<group>"; };
 		E5035F8722669DDD00FD1A0F /* NicTypeCheckerError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerError.swift; sourceTree = "<group>"; };
+		E50BF247227EE00700DE7779 /* test.ll */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.llvm; path = test.ll; sourceTree = "<group>"; };
 		E548C55A22674C96002E7779 /* NicRuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicRuntimeError.swift; sourceTree = "<group>"; };
 		E548C55E2267AF21002E7779 /* Parsing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Parsing.md; sourceTree = "<group>"; };
 		E548C55F2267B043002E7779 /* TypeSystem.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TypeSystem.md; sourceTree = "<group>"; };
@@ -461,6 +463,7 @@
 			isa = PBXGroup;
 			children = (
 				OBJ_9 /* test.txt */,
+				E50BF247227EE00700DE7779 /* test.ll */,
 				OBJ_22 /* main.swift */,
 				OBJ_10 /* Nic.swift */,
 				OBJ_18 /* Scanner.swift */,
@@ -691,6 +694,7 @@
 				OBJ_124 /* IRValue.swift in Sources */,
 				OBJ_125 /* Initialization.swift in Sources */,
 				OBJ_126 /* Instruction.swift in Sources */,
+				E50BF248227EE00700DE7779 /* test.ll in Sources */,
 				OBJ_127 /* IntType.swift in Sources */,
 				OBJ_128 /* Intrinsic.swift in Sources */,
 				OBJ_129 /* JIT.swift in Sources */,
