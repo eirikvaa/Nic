@@ -32,6 +32,10 @@ class CodeGenerator {
         builder.module.dump()
     }
     
+    func verifyLLVMIR() throws {
+        try builder.module.verify()
+    }
+    
     func createLLVMIRFile(fileName: String) {
         do {
             try builder.module.print(to: "/Users/eirik/Documents/Utvikling/macOS/Nic/Sources/Nic/\(fileName).ll")
