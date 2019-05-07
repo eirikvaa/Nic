@@ -168,17 +168,14 @@ private extension TypeChecker {
     func validOperands(operand1: Any?, operand2: Any?, for operationType: TokenType) -> Bool {
         let lhsType = operand1.nicType()
         let rhsType = operand2.nicType()
-        switch (lhsType, operationType, rhsType) {
-        case (.integer?, .plus, .integer?),
-             (.integer?, .minus, .integer?),
-             (.integer?, .star, .integer?),
-             (.integer?, .slash, .integer?),
-             (.double?, .plus, .double?),
-             (.double?, .minus, .double?),
-             (.double?, .star, .double?),
-             (.double?, .slash, .double?),
-             (.string?, .plus, .string?):
-            return true
+        
+        switch (lhsType, rhsType) {
+        case (.integer?, .integer?),
+             (.double?, .double?):
+            let validTypes: [TokenType] = [.plus, .minus, .star, .slash]
+            return validTypes.contains(operationType)
+        case (.string?, .string?):
+            return operationType == .plus
         default:
             return false
         }
