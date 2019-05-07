@@ -114,7 +114,11 @@ private extension Parser {
         var variableType: NicType?
         if match(types: .colon) {
             let type = try consume(tokenType: .identifier, errorMessage: "Expect a type after colon in variable declaration.")
-            variableType = types[type.lexeme]
+            if let type = types[type.lexeme] {
+                variableType = type
+            } else {
+                self.error(token: previous(), message: "Unknown type '\(type.lexeme)' in type annotation.")
+            }
         }
         
         var initializer: Expr?
