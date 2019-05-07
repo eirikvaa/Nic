@@ -129,10 +129,8 @@ extension CodeGenerator: StmtVisitor {
         // TODO: Swap with LLVM IR constant expression, if it exists?
         // buildConstStmt will update the nameInformation variable with the IRValue, so defining it in the
         // environment must happen after the aforementioned call.
-        let value = try evaluate(stmt.initializer)
         let depth = stmt.initializer.depth
-        symbolTable.set(element: value, at: \.value, to: stmt.name, at: depth)
-        try buildVarStmt(name: stmt.name, at: stmt.initializer.depth)
+        try buildVarStmt(name: stmt.name, at: depth)
     }
     
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
@@ -142,13 +140,7 @@ extension CodeGenerator: StmtVisitor {
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws {
-        var value: Any?
-        if let initializer = stmt.initializer {
-            value = try evaluate(initializer)
-        }
-        
         let depth = stmt.initializer?.depth ?? 0
-        symbolTable.set(element: value, at: \.value, to: stmt.name, at: depth)
         try buildVarStmt(name: stmt.name, at: depth)
     }
     

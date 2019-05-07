@@ -1,5 +1,5 @@
 //
-//  NicParserError.swift
+//  NicError.swift
 //  Nic
 //
 //  Created by Eirik Vale Aase on 10/03/2019.
@@ -8,7 +8,9 @@
 
 import Foundation
 
-enum NicParserError: Error {
+enum NicError: Error {
     case unexpectedToken(token: Token)
     case missingRightValue
+    case declarationTypeMismatch(token: Token)
+    case invalidAssignment
 }

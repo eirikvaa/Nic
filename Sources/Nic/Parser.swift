@@ -246,14 +246,14 @@ private extension Parser {
             return Expr.Group(value: expr)
         }
         
-        throw NicParserError.missingRightValue // TODO: Shold be "Expected expression or something"
+        throw NicError.missingRightValue // TODO: Shold be "Expected expression or something"
     }
     
     @discardableResult
     mutating func consume(tokenType: TokenType, errorMessage: String) throws -> Token {
         guard check(tokenType: tokenType) else {
             Nic.error(at: previous().line, message: errorMessage)
-            throw NicParserError.unexpectedToken(token: peek())
+            throw NicError.unexpectedToken(token: peek())
         }
         
         return advance()

@@ -23,12 +23,14 @@
 /* Begin PBXBuildFile section */
 		E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */; };
 		E50BF248227EE00700DE7779 /* test.ll in Sources */ = {isa = PBXBuildFile; fileRef = E50BF247227EE00700DE7779 /* test.ll */; };
+		E5102B97228143B0001B5B43 /* Any+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5102B952281436E001B5B43 /* Any+Extension.swift */; };
+		E5102B98228143B1001B5B43 /* Any+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5102B952281436E001B5B43 /* Any+Extension.swift */; };
 		E548C55B22674C96002E7779 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55A22674C96002E7779 /* NicRuntimeError.swift */; };
 		E548C55C22674C96002E7779 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C55A22674C96002E7779 /* NicRuntimeError.swift */; };
 		E548C5652267B213002E7779 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C5642267B213002E7779 /* TypeSystem.swift */; };
 		E548C5662267B213002E7779 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = E548C5642267B213002E7779 /* TypeSystem.swift */; };
 		E5714B632250C2B40057F751 /* Nic.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Nic.swift */; };
-		E5714B642250C2B40057F751 /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicParserError.swift */; };
+		E5714B642250C2B40057F751 /* NicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicError.swift */; };
 		E5714B662250C2B40057F751 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Expr.swift */; };
 		E5714B672250C2B40057F751 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* CodeGenerator.swift */; };
 		E5714B682250C2B40057F751 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Parser.swift */; };
@@ -98,7 +100,7 @@
 		OBJ_154 /* llvmshims.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = "LLVM::llvmshims::Product" /* llvmshims.framework */; };
 		OBJ_162 /* Package.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_89 /* Package.swift */; };
 		OBJ_168 /* Nic.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_10 /* Nic.swift */; };
-		OBJ_169 /* NicParserError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicParserError.swift */; };
+		OBJ_169 /* NicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_12 /* NicError.swift */; };
 		OBJ_171 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* Expr.swift */; };
 		OBJ_172 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* CodeGenerator.swift */; };
 		OBJ_173 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_16 /* Parser.swift */; };
@@ -174,6 +176,7 @@
 /* Begin PBXFileReference section */
 		E5035F8522669BBF00FD1A0F /* NicTypeCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerTests.swift; sourceTree = "<group>"; };
 		E50BF247227EE00700DE7779 /* test.ll */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.llvm; path = test.ll; sourceTree = "<group>"; };
+		E5102B952281436E001B5B43 /* Any+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Any+Extension.swift"; sourceTree = "<group>"; };
 		E548C55A22674C96002E7779 /* NicRuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicRuntimeError.swift; sourceTree = "<group>"; };
 		E548C55E2267AF21002E7779 /* Parsing.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = Parsing.md; sourceTree = "<group>"; };
 		E548C55F2267B043002E7779 /* TypeSystem.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = TypeSystem.md; sourceTree = "<group>"; };
@@ -187,7 +190,7 @@
 		"Nic::Nic::Product" /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Nic::NicTests::Product" /* NicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = NicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* Nic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nic.swift; sourceTree = "<group>"; };
-		OBJ_12 /* NicParserError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicParserError.swift; sourceTree = "<group>"; };
+		OBJ_12 /* NicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicError.swift; sourceTree = "<group>"; };
 		OBJ_14 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
 		OBJ_15 /* CodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
 		OBJ_16 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
@@ -312,6 +315,7 @@
 			children = (
 				E5B3EFCD226E39CE000BA760 /* SymbolTable.swift */,
 				E5E31CAC226874C200C5D1C9 /* Character+Ext.swift */,
+				E5102B952281436E001B5B43 /* Any+Extension.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -319,7 +323,7 @@
 		OBJ_11 /* Error */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_12 /* NicParserError.swift */,
+				OBJ_12 /* NicError.swift */,
 				E548C55A22674C96002E7779 /* NicRuntimeError.swift */,
 			);
 			path = Error;
@@ -721,7 +725,7 @@
 			buildActionMask = 0;
 			files = (
 				OBJ_168 /* Nic.swift in Sources */,
-				OBJ_169 /* NicParserError.swift in Sources */,
+				OBJ_169 /* NicError.swift in Sources */,
 				E5E31CAD226874C200C5D1C9 /* Character+Ext.swift in Sources */,
 				OBJ_171 /* Expr.swift in Sources */,
 				OBJ_172 /* CodeGenerator.swift in Sources */,
@@ -736,6 +740,7 @@
 				E59D32922263FDD0004AF443 /* TypeChecker.swift in Sources */,
 				OBJ_178 /* TokenType.swift in Sources */,
 				OBJ_179 /* main.swift in Sources */,
+				E5102B97228143B0001B5B43 /* Any+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -755,13 +760,14 @@
 				E5B3EFCF226E39CE000BA760 /* SymbolTable.swift in Sources */,
 				E5714B6A2250C2B40057F751 /* Scanner.swift in Sources */,
 				OBJ_201 /* NicParserTests.swift in Sources */,
+				E5102B98228143B1001B5B43 /* Any+Extension.swift in Sources */,
 				OBJ_202 /* NicScannerTests.swift in Sources */,
 				E5E31CAE226874C200C5D1C9 /* Character+Ext.swift in Sources */,
 				E59D32932263FDD0004AF443 /* TypeChecker.swift in Sources */,
 				E5714B662250C2B40057F751 /* Expr.swift in Sources */,
 				E548C5662267B213002E7779 /* TypeSystem.swift in Sources */,
 				E5714B6B2250C2B40057F751 /* Stmt.swift in Sources */,
-				E5714B642250C2B40057F751 /* NicParserError.swift in Sources */,
+				E5714B642250C2B40057F751 /* NicError.swift in Sources */,
 				E5714B692250C2B40057F751 /* Resolver.swift in Sources */,
 				E5035F8622669BBF00FD1A0F /* NicTypeCheckerTests.swift in Sources */,
 				E5714B682250C2B40057F751 /* Parser.swift in Sources */,
