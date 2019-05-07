@@ -6,7 +6,7 @@
 //
 
 /// `TypeChecker` would traverse the tree and make sure that the type system is satisfied.
-struct TypeChecker {
+class TypeChecker {
     private let symbolTable = SymbolTable.shared
     func typecheck(_ statements: [Stmt]) throws {
         for stmt in statements {
@@ -60,11 +60,15 @@ extension TypeChecker: StmtVisitor {
 extension TypeChecker: ExprVisitor {
     func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
         let assignmentValue = try evaluate(expr.value)
-        let receivingType = try symbolTable.get(name: expr.name, at: expr.depth, keyPath: \.value)?.nicType()
+        let receivingValue = try symbolTable.get(name: expr.name, at: expr.depth, keyPath: \.value) ?? nil
         
-        guard assignmentValue.nicType() == receivingType else {
-            Nic.error(at: expr.depth, message: "Can't assign a value of type '\(assignmentValue) to a variable of type '\(receivingType)'")
-            throw NicError.invalidAssignment
+        guard let typeOfAssignment = assignmentValue.nicType(),
+            let typeOfReceiver = receivingValue.nicType() else {
+                return nil
+        }
+        
+        guard typeOfAssignment == typeOfReceiver else {
+            throw NicError.invalidAssignment(type: typeOfAssignment, token: expr.name)
         }
         
         symbolTable.set(element: assignmentValue, at: \.value, to: expr.name, at: expr.depth)
@@ -88,12 +92,14 @@ extension TypeChecker: ExprVisitor {
         let lhs = try evaluate(expr.leftValue)
         let rhs = try evaluate(expr.rightValue)
         
-        let lhsType = lhs.nicType()
+        guard let lhsType = lhs.nicType(),
+            let rhsType = rhs.nicType() else {
+            return nil
+        }
         let operationType = expr.operator.type
-        let rhsType = rhs.nicType()
         
         if !validOperands(operand1: lhs, operand2: rhs, for: operationType) {
-            Nic.error(at: expr.operator.line, message: "Tried to perform a '\(operationType)' operation on operands of type '\(lhsType)' and '\(rhsType)'")
+            throw NicError.invalidOperands(line: expr.operator.line, lhsType: lhsType, rhsType: rhsType, operationType: operationType)
         }
         
         return evaluateOperation(operationType: operationType, with: lhs, rhs: rhs)
@@ -127,7 +133,6 @@ private extension TypeChecker {
              (.boolean, .boolean):
             break
         default:
-            Nic.error(at: token.line, message: "Declaration initialized with a value of type '\(initializedType)' but expected a value of type '\(declarationType)'")
             throw NicError.declarationTypeMismatch(token: token)
         }
     }

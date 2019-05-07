@@ -21,7 +21,7 @@ class NicParserTests: XCTestCase {
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
         
-        var parser = Parser(tokens: tokens)
+        let parser = Parser(tokens: tokens)
         
         XCTAssertNoThrow(parser.parse())
     }

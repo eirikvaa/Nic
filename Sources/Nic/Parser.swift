@@ -10,7 +10,7 @@
 /// correct syntax of the language, or report syntax errors.
 /// Methods like `expression`, `multiplication` and so forth matches an expression of the respective type
 /// or anything of _higher_ precedense.
-struct Parser {
+class Parser {
     private var currentIndex = 0
     private let tokens: [Token]
     private let symbolTable = SymbolTable.shared
@@ -27,7 +27,7 @@ struct Parser {
         "Bool": .boolean
     ]
     
-    mutating func parse() -> [Stmt] {
+    func parse() -> [Stmt] {
         var statements: [Stmt] = []
         
         while !isAtEnd() {
@@ -42,7 +42,7 @@ struct Parser {
 }
 
 private extension Parser {
-    mutating func declaration() throws -> Stmt? {
+    func declaration() throws -> Stmt? {
         do {
             if match(types: .var) {
                 return try variableDeclaration()
@@ -57,7 +57,7 @@ private extension Parser {
         }
     }
     
-    mutating func statement() throws -> Stmt? {
+    func statement() throws -> Stmt? {
         
         if match(types: .print) {
             return try printStatement()
@@ -68,7 +68,7 @@ private extension Parser {
         return try expressionStatement()
     }
     
-    mutating func printStatement() throws -> Stmt {
+    func printStatement() throws -> Stmt {
         var value: Expr?
         if match(types: .semicolon) {
             value = nil
@@ -82,7 +82,7 @@ private extension Parser {
         return printStmt
     }
     
-    mutating func block() throws -> Stmt {
+    func block() throws -> Stmt {
         symbolTable.beginScope()
         scopeDepth += 1
         
@@ -101,14 +101,14 @@ private extension Parser {
         return Stmt.Block(statements: statements)
     }
     
-    mutating func expressionStatement() throws -> Stmt {
+    func expressionStatement() throws -> Stmt {
         let expr = try expression()
         expr.depth = scopeDepth
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after expression statement.")
         return Stmt.Expression(expression: expr)
     }
     
-    mutating func variableDeclaration() throws -> Stmt {
+    func variableDeclaration() throws -> Stmt {
         let name = try consume(tokenType: .identifier, errorMessage: "Expect name for variable.")
         
         var variableType: NicType?
@@ -131,7 +131,7 @@ private extension Parser {
         return Stmt.Var(name: name, type: variableType, initializer: initializer)
     }
     
-    mutating func constDeclaration() throws -> Stmt {
+    func constDeclaration() throws -> Stmt {
         let name = try consume(tokenType: .identifier, errorMessage: "Expect name for constant.")
         
         var constantType: NicType?
@@ -151,11 +151,11 @@ private extension Parser {
         return Stmt.Const(name: name, type: constantType, initializer: initializer)
     }
     
-    mutating func expression() throws -> Expr {
+    func expression() throws -> Expr {
         return try assignment()
     }
     
-    mutating func assignment() throws -> Expr {
+    func assignment() throws -> Expr {
         let expr = try addition()
         
         if match(types: .equal) {
@@ -169,13 +169,14 @@ private extension Parser {
                 return assign
             }
             
-            Nic.error(at: equals.line, message: "Invalid assignment target!")
+            error(token: equals, message: "Invalid assignment target")
+            
         }
         
         return expr
     }
     
-    mutating func addition() throws -> Expr {
+    func addition() throws -> Expr {
         var expr = try multiplication()
         
         while match(types: .plus, .minus) {
@@ -188,7 +189,7 @@ private extension Parser {
         return expr
     }
     
-    mutating func multiplication() throws -> Expr {
+    func multiplication() throws -> Expr {
         var expr = try unary()
         
         while match(types: .star, .slash) {
@@ -201,7 +202,7 @@ private extension Parser {
         return expr
     }
     
-    mutating func unary() throws -> Expr {
+    func unary() throws -> Expr {
         if match(types: .minus) {
             let op = previous()
             let right = try unary()
@@ -213,7 +214,7 @@ private extension Parser {
         return try primary()
     }
     
-    mutating func primary() throws -> Expr {
+    func primary() throws -> Expr {
         if match(types: .integer) {
             let expr = Expr.Literal(value: previous().literal)
             expr.type = .integer
@@ -266,20 +267,22 @@ private extension Parser {
             return group
         }
         
-        throw NicError.missingRightValue // TODO: Shold be "Expected expression or something"
+        // TODO: Shold be "Expected expression or something"
+        Nic.error(token: previous(), message: "Expect expression.")
+        throw NicError.expectExpression(token: previous())
     }
     
     @discardableResult
-    mutating func consume(tokenType: TokenType, errorMessage: String) throws -> Token {
+    func consume(tokenType: TokenType, errorMessage: String) throws -> Token {
         guard check(tokenType: tokenType) else {
-            Nic.error(at: previous().line, message: errorMessage)
-            throw NicError.unexpectedToken(token: peek())
+            error(token: previous(), message: errorMessage)
+            throw NicError.unexpectedToken(token: previous())
         }
         
         return advance()
     }
     
-    mutating func synchronize() {
+    func synchronize() {
         advance()
         
         while (!isAtEnd()) {
@@ -300,14 +303,14 @@ private extension Parser {
     }
     
     @discardableResult
-    mutating func advance(steps: Int = 1) -> Token {
+    func advance(steps: Int = 1) -> Token {
         if !isAtEnd() {
             currentIndex += steps
         }
         return tokens[currentIndex - steps]
     }
     
-    mutating func match(types: TokenType...) -> Bool {
+    func match(types: TokenType...) -> Bool {
         for type in types {
             if check(tokenType: type) {
                 advance()
@@ -338,5 +341,9 @@ private extension Parser {
     
     func isAtEnd() -> Bool {
         return tokens[currentIndex].type == .eof
+    }
+    
+    func error(token: Token, message: String){
+        Nic.error(token: token, message: message)
     }
 }

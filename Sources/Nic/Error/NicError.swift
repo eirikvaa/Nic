@@ -10,7 +10,8 @@ import Foundation
 
 enum NicError: Error {
     case unexpectedToken(token: Token)
-    case missingRightValue
+    case expectExpression(token: Token)
     case declarationTypeMismatch(token: Token)
-    case invalidAssignment
+    case invalidAssignment(type: NicType, token: Token)
+    case invalidOperands(line: Int, lhsType: NicType, rhsType: NicType, operationType: TokenType)
 }

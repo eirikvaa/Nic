@@ -8,13 +8,8 @@
 
 /// `Resolver` traverses the abstract syntax tree and resolves any global and local variables.
 class Resolver {
-    private let codeGenerator: CodeGenerator
     private var scopeDepth = 0
     private let symbolTable = SymbolTable.shared
-    
-    init(codeGenerator: CodeGenerator) {
-        self.codeGenerator = codeGenerator
-    }
     
     func resolve(_ statements: [Stmt]) throws {
         for stmt in statements {
@@ -49,7 +44,7 @@ extension Resolver: ExprVisitor {
         }
         
         if try symbolTable.get(name: name, at: expr.depth, keyPath: \.isDefined) == false {
-            Nic.error(at: name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
+            Nic.error(token: name, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
     }
 }
@@ -102,7 +97,7 @@ private extension Resolver {
     func declare(_ name: Token, mutable: Bool) {
         do {
             if try symbolTable.get(name: name, at: scopeDepth, keyPath: \.isDefined) == true {
-                Nic.error(at: name.line, message: "Variable '\(name.lexeme)' is already declared in this scope.")
+                Nic.error(token: name, message: "Variable '\(name.lexeme)' is already declared in this scope.")
             }
         } catch {
             return

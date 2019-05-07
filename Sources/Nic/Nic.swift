@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Nic {
+class Nic {
     static var hadError = false
     
     static func parse(_ arguments: [String]) {
@@ -25,40 +25,28 @@ struct Nic {
     static func run(path: String) {
         guard let data = FileManager.default.contents(atPath: path) else { return }
         guard let source = String(data: data, encoding: .utf8) else { return }
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
+        let codeGenerator = CodeGenerator()
+        let resolver = Resolver()
+        let typeChecker = TypeChecker()
         
         let tokens = scanner.scan()
-        
-        if hadError {
-            return
-        }
-        
-        var parser = Parser(tokens: tokens)
+        let parser = Parser(tokens: tokens)
         let statements = parser.parse()
         
         if hadError {
             return
         }
         
-        let codeGenerator = CodeGenerator()
-        let resolver = Resolver(codeGenerator: codeGenerator)
-        let typeChecker = TypeChecker()
-        
         do {
             try resolver.resolve(statements)
             try typeChecker.typecheck(statements)
-            
-            if hadError {
-                return
-            }
-            
             try codeGenerator.generate(statements)
             try codeGenerator.verifyLLVMIR()
             codeGenerator.dumpLLVMIR()
             codeGenerator.createLLVMIRFile(fileName: "test")
         } catch {
             handleError(error)
-            return
         }
     }
     
@@ -66,6 +54,8 @@ struct Nic {
         switch error {
         case let runtimeError as NicRuntimeError:
             handleRuntimeError(runtimeError)
+        case let error as NicError:
+            handleNicError(error)
         default:
             print(error.localizedDescription)
         }
@@ -74,14 +64,36 @@ struct Nic {
     private static func handleRuntimeError(_ error: NicRuntimeError) {
         switch error {
         case .undefinedVariable(let name):
-            print("[Line \(name.line + 1)] Undefined variable '\(name.lexeme)'")
+            self.error(token: name, message: "Undefined variable '\(name.lexeme)'")
         case .illegalConstantMutation(let name):
-            print("[Line \(name.line + 1)] Tried to mutate constant '\(name.lexeme)'")
+            self.error(token: name, message: "Tried to mutate constant '\(name.lexeme)'")
         }
     }
     
-    static func error(at line: Int, message: String) {
+    private static func handleNicError(_ error: NicError) {
+        switch error {
+        case .declarationTypeMismatch(let token):
+            self.error(token: token, message: "Mismatch between type of initializer and type annotation in declaration.")
+        case .invalidAssignment(let type, let token):
+            print(type)
+            self.error(token: token, message: "Invalid assignment value '\(token.lexeme)'")
+        case .expectExpression(let token):
+            self.error(token: token, message: "Expected expression for token '\(token.lexeme)'")
+        case .unexpectedToken(let token):
+            self.error(token: token, message: "Unexpected token '\(token.lexeme)")
+        case .invalidOperands(let line, let lhsType, let rhsType, let operation):
+            self.error(line: line, message: "Invalid operands of type '\(lhsType)' and '\(rhsType)' for '\(operation)' operation.")
+            break
+        }
+    }
+    
+    static func error(token: Token, message: String) {
         hadError = true
-        print("[Line \(line + 1)] \(message)")
+        print("[Line \(token.line)] \(message)")
+    }
+    
+    static func error(line: Int, message: String) {
+        hadError = true
+        print("[Line \(line) \(message)")
     }
 }

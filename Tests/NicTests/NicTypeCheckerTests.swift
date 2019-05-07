@@ -13,10 +13,10 @@ class NicTypeCheckerTests: XCTestCase {
 
     func testCorrectTypeAnnotation() {
         let source = "var test: Bool = false;";
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         let tokens = scanner.scan()
         
-        var parser = Parser(tokens: tokens)
+        let parser = Parser(tokens: tokens)
         let statements = parser.parse()
         
         let typeChecker = TypeChecker()

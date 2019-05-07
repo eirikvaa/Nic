@@ -8,7 +8,7 @@
 
 /// The `Scanner` will take as input a string of characters, split it on whitespace and turn
 /// it into a list of tokens.
-struct Scanner {
+class Scanner {
     private var startIndex: String.Index
     private var currentIndex: String.Index
     private var line = 0
@@ -28,7 +28,7 @@ struct Scanner {
         currentIndex = source.startIndex
     }
     
-    mutating func scan() -> [Token] {
+    func scan() -> [Token] {
         while (!isAtEnd()) {
             startIndex = currentIndex
             scanToken()
@@ -43,7 +43,7 @@ struct Scanner {
 // MARK: Consuming methods
 
 extension Scanner {
-    private mutating func identifier() {
+    private func identifier() {
         while (peek()?.isAlphaNumeric == true && !isAtEnd()) {
             advance()
         }
@@ -53,7 +53,7 @@ extension Scanner {
         addToken(type: type)
     }
     
-    private mutating func multiLineComment() {
+    private func multiLineComment() {
         while peek() != "*" && !isAtEnd() {
             if peek()?.isNewline == true {
                 line += 1
@@ -63,7 +63,7 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '*'.")
+            Nic.error(line: line, message: "Undeterminated multi-line comment, missing '*'.")
             return
         }
         
@@ -71,18 +71,18 @@ extension Scanner {
         if peek() == "/" {
             advance() // advance past last "/"
         } else {
-            Nic.error(at: line, message: "Undeterminated multi-line comment, missing '/'.")
+            Nic.error(line: line, message: "Undeterminated multi-line comment, missing '/'.")
             return
         }
     }
     
-    private mutating func singleLineComment() {
+    private func singleLineComment() {
         while peek()?.isNewline == false && !isAtEnd() {
             advance()
         }
     }
     
-    private mutating func string() {
+    private func string() {
         advance() // advance beyond first "
         
         while peek() != "\"" && !isAtEnd() {
@@ -94,7 +94,7 @@ extension Scanner {
         }
         
         if isAtEnd() {
-            Nic.error(at: line, message: "Unterminated string")
+            Nic.error(line: line, message: "Unterminated string")
             return
         }
         
@@ -107,7 +107,7 @@ extension Scanner {
         addToken(type: .string, literal: string)
     }
     
-    private mutating func number() {
+    private func number() {
         while peek()?.isNumber == true && !isAtEnd() {
             advance()
         }
@@ -132,7 +132,7 @@ extension Scanner {
 // MARK: Helper methods
 
 private extension Scanner {
-    mutating func scanToken() {
+    func scanToken() {
         // `advance` will increment `currentIndex` and return the character before
         // the character `currentIndex` corresponds to. That way, we never index
         // into the string with an invalid index.
@@ -174,7 +174,7 @@ private extension Scanner {
         return index >= source.count
     }
     
-    mutating func match(_ character: Character) -> Bool {
+    func match(_ character: Character) -> Bool {
         guard isAtEnd() == false else {
             return false
         }
@@ -196,12 +196,12 @@ private extension Scanner {
     }
     
     @discardableResult
-    mutating func advance(steps: Int = 1) -> Character {
+    func advance(steps: Int = 1) -> Character {
         currentIndex = source.index(currentIndex, offsetBy: steps)
         return source[source.index(currentIndex, offsetBy: -steps)]
     }
     
-    mutating func addToken(type: TokenType, literal: Any? = nil) {
+    func addToken(type: TokenType, literal: Any? = nil) {
         // The EOF token is the only token that should be included in the token list,
         // but which have an empty lexeme string, so handle that.
         let lexeme = type == .eof ? "EOF" : String(source[startIndex..<currentIndex])

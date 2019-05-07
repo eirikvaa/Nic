@@ -15,7 +15,7 @@ class NicTests: XCTestCase {
     // MARK: Empty source
     func testEmptySourceShouldGiveEmptyTokenList() {
         let source = ""
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -26,7 +26,7 @@ class NicTests: XCTestCase {
     // MARK: Numbers
     func testSingleDigitNumber() {
         let source = "1;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -36,7 +36,7 @@ class NicTests: XCTestCase {
     
     func testSourceWithSingleDigitNumberEndingInNewline() {
         let source = "1;\n"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -46,7 +46,7 @@ class NicTests: XCTestCase {
     
     func testSingleMultipleDigitNumber() {
         let source = "123;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -56,7 +56,7 @@ class NicTests: XCTestCase {
     
     func testMultipleMultiDigitNumbers() {
         let source = "123; 123;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .integer, .semicolon, .eof]
         
@@ -68,7 +68,7 @@ class NicTests: XCTestCase {
     // MARK: Comments
     func testComment() {
         let source = "//"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -78,7 +78,7 @@ class NicTests: XCTestCase {
     
     func testCommentThatIgnoresASingleToken() {
         let source = "//123"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -88,7 +88,7 @@ class NicTests: XCTestCase {
     
     func testCommentBetweenTwoTokensShouldReturnASingleToken() {
         let source = "123;//123"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -98,7 +98,7 @@ class NicTests: XCTestCase {
     
     func testMultiLineCommentHidesSecondTokenShouldReturnOneToken() {
         let source = "123;/*123*/"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -109,7 +109,7 @@ class NicTests: XCTestCase {
     // MARK: Strings
     func testSingleString() {
         let source = #""Hei på deg";"#
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.string, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -120,7 +120,7 @@ class NicTests: XCTestCase {
     // MARK: Mathematical expressions
     func testNumberPlusNumber() {
         let source = "123+123;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .plus, .integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -130,7 +130,7 @@ class NicTests: XCTestCase {
     
     func testNumberDivideNumber() {
         let source = "123/123;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.integer, .slash, .integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -141,7 +141,7 @@ class NicTests: XCTestCase {
     // MARK: Print
     func testPrintStatementWithValue() {
         let source = #"print "Hello, world!";"#
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.print, .string, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -151,7 +151,7 @@ class NicTests: XCTestCase {
     
     func testPrintStatementWithBinaryNumberLiteralExpression() {
         let source = "print 1 + 1;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.print, .integer, .plus, .integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -162,7 +162,7 @@ class NicTests: XCTestCase {
     // MARK: Variable declarations
     func testVariableDeclarationWithInitialization() {
         let source = "var number = 3;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -172,7 +172,7 @@ class NicTests: XCTestCase {
     
     func testBooleanVariableDeclaration() {
         let source = "var test = true;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .true, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -182,7 +182,7 @@ class NicTests: XCTestCase {
     
     func testBooleanVariableDeclarationWithTypeAnnotation() {
         let source = "var test: Bool = false;";
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .colon, .identifier, .equal, .false, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
@@ -191,7 +191,7 @@ class NicTests: XCTestCase {
     
     func testBinayNumberLiteralExpression() {
         let source = "var test = 1 + 1;"
-        var scanner = Scanner(source: source)
+        let scanner = Scanner(source: source)
         
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .integer, .plus, .integer, .semicolon, .eof]
         let tokenTypes = scanner.scan().map { $0.type }
