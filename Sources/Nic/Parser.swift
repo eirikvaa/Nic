@@ -103,6 +103,7 @@ private extension Parser {
     
     mutating func expressionStatement() throws -> Stmt {
         let expr = try expression()
+        expr.depth = scopeDepth
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after expression statement.")
         return Stmt.Expression(expression: expr)
     }
@@ -119,10 +120,12 @@ private extension Parser {
         var initializer: Expr?
         if match(types: .equal) {
             initializer = try expression()
+            initializer?.depth = scopeDepth
         }
         
-        symbolTable.set(element: nil, at: \.value, to: name, at: scopeDepth)
-        symbolTable.set(element: true, at: \.isMutable, to: name, at: initializer?.depth ?? 0)
+        let depth = initializer?.depth ?? 0
+        symbolTable.set(element: nil, at: \.value, to: name, at: depth)
+        symbolTable.set(element: true, at: \.isMutable, to: name, at: depth)
         
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
         return Stmt.Var(name: name, type: variableType, initializer: initializer)
@@ -139,6 +142,7 @@ private extension Parser {
         
         try consume(tokenType: .equal, errorMessage: "Expect initializer for constant declaration.")
         let initializer = try expression()
+        initializer.depth = scopeDepth
         
         symbolTable.set(element: nil, at: \.value, to: name, at: initializer.depth)
         symbolTable.set(element: false, at: \.isMutable, to: name, at: initializer.depth)
@@ -160,7 +164,9 @@ private extension Parser {
             
             if let variable = expr as? Expr.Variable,
                 let name = variable.name {
-                return Expr.Assign(name: name, value: value)
+                let assign = Expr.Assign(name: name, value: value)
+                assign.depth = scopeDepth
+                return assign
             }
             
             Nic.error(at: equals.line, message: "Invalid assignment target!")
@@ -176,6 +182,7 @@ private extension Parser {
             let op = previous()
             let right = try multiplication()
             expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
+            expr.depth = scopeDepth
         }
         
         return expr
@@ -188,6 +195,7 @@ private extension Parser {
             let op = previous()
             let right = try unary()
             expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
+            expr.depth = scopeDepth
         }
         
         return expr
@@ -197,7 +205,9 @@ private extension Parser {
         if match(types: .minus) {
             let op = previous()
             let right = try unary()
-            return Expr.Unary(operator: op, value: right)
+            let unary = Expr.Unary(operator: op, value: right)
+            unary.depth = scopeDepth
+            return unary
         }
         
         return try primary()
@@ -207,35 +217,42 @@ private extension Parser {
         if match(types: .integer) {
             let expr = Expr.Literal(value: previous().literal)
             expr.type = .integer
+            expr.depth = scopeDepth
             return expr
         }
         
         if match(types: .double) {
             let expr = Expr.Literal(value: previous().literal)
             expr.type = .double
+            expr.depth = scopeDepth
             return expr
         }
         
         if match(types: .string) {
             let expr = Expr.Literal(value: previous().literal)
             expr.type = .string
+            expr.depth = scopeDepth
             return expr
         }
         
         if match(types: .true) {
             let expr = Expr.Literal(value: true)
             expr.type = .boolean
+            expr.depth = scopeDepth
             return expr
         }
         
         if match(types: .false) {
             let expr = Expr.Literal(value: false)
             expr.type = .boolean
+            expr.depth = scopeDepth
             return expr
         }
         
         if match(types: .identifier) {
-            return Expr.Variable(name: previous())
+            let variable = Expr.Variable(name: previous())
+            variable.depth = scopeDepth
+            return variable
         }
         
         if match(types: .leftParen) {
@@ -243,7 +260,10 @@ private extension Parser {
             
             try consume(tokenType: .rightParen, errorMessage: "Expecting ')' in parenthesized expression.")
             
-            return Expr.Group(value: expr)
+            let group = Expr.Group(value: expr)
+            group.depth = scopeDepth
+            
+            return group
         }
         
         throw NicError.missingRightValue // TODO: Shold be "Expected expression or something"

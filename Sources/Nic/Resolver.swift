@@ -26,27 +26,21 @@ class Resolver {
 extension Resolver: ExprVisitor {
     func visitAssignExpr(expr: Expr.Assign) throws {
         try resolve(expr.value)
-        expr.depth = scopeDepth
     }
     
     func visitGroupExpr(expr: Expr.Group) throws {
         try resolve(expr.value)
-        expr.depth = scopeDepth
     }
     
     func visitUnaryExpr(expr: Expr.Unary) throws {
         try resolve(expr.value)
-        expr.depth = scopeDepth
     }
     
-    func visitLiteralExpr(expr: Expr.Literal) throws {
-        expr.depth = scopeDepth
-    }
+    func visitLiteralExpr(expr: Expr.Literal) throws {}
     
     func visitBinaryExpr(expr: Expr.Binary) throws {
         try resolve(expr.leftValue)
         try resolve(expr.rightValue)
-        expr.depth = scopeDepth
     }
     
     func visitVariableExpr(expr: Expr.Variable) throws {
@@ -54,11 +48,9 @@ extension Resolver: ExprVisitor {
             return
         }
         
-        if try symbolTable.get(name: name, at: scopeDepth, keyPath: \.isDefined) == false {
+        if try symbolTable.get(name: name, at: expr.depth, keyPath: \.isDefined) == false {
             Nic.error(at: name.line, message: "Variable '\(name.lexeme)' used inside its own initializer.")
         }
-        
-        expr.depth = scopeDepth
     }
 }
 
