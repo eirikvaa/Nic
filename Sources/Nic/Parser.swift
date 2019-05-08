@@ -175,7 +175,7 @@ private extension Parser {
     }
     
     func assignment() throws -> Expr {
-        let expr = try addition()
+        let expr = try or()
         
         if match(types: .equal) {
             let equals = previous()
@@ -190,6 +190,56 @@ private extension Parser {
             
             error(token: equals, message: "Invalid assignment target")
             
+        }
+        
+        return expr
+    }
+    
+    func or() throws -> Expr {
+        var expr = try and()
+        
+        while match(types: .or) {
+            let op = previous()
+            let right = try and()
+            expr = Expr.Logical(left: expr, op: op, right: right)
+        }
+        
+        return expr
+    }
+    
+    func and() throws -> Expr {
+        var expr = try equality()
+        
+        while match(types: .and) {
+            let op = previous()
+            let right = try equality()
+            expr = Expr.Logical(left: expr, op: op, right: right)
+        }
+        
+        return expr
+    }
+    
+    func equality() throws -> Expr {
+        var expr = try comparison()
+        
+        while match(types: .bang_equal, .equal_equal) {
+            let op = previous()
+            let right = try comparison()
+            expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
+            expr.depth = scopeDepth
+        }
+        
+        return expr
+    }
+    
+    func comparison() throws -> Expr {
+        var expr = try addition()
+        
+        while match(types: .less, .less_equal, .greater_equal, .greater) {
+            let op = previous()
+            let right = try addition()
+            expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
+            expr.depth = scopeDepth
         }
         
         return expr

@@ -69,6 +69,17 @@ class CodeGenerator {
 // MARK: ExprVisitor
 
 extension CodeGenerator: ExprVisitor {
+    func visitLogicalExpr(expr: Expr.Logical) throws -> Any? {
+        let leftValue = try evaluate(expr.left) as? Bool ?? false
+        let rightValue = try evaluate(expr.right) as? Bool ?? false
+        
+        switch expr.op.type {
+        case .and: return leftValue && rightValue
+        case .or: return leftValue || rightValue
+        default: return nil
+        }
+    }
+    
     func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
         let value = try evaluate(expr.value)
         
@@ -122,6 +133,14 @@ extension CodeGenerator: ExprVisitor {
         
         let numericOperation = expr.operator.type != .slash
         let op = expr.operator.lexeme
+        
+        if expr.operator.type.isLogical {
+            return performLogicalOperation(lhs: lhs, op: expr.operator.type, rhs: rhs)
+        }
+        
+        if expr.operator.type.isComparison {
+            return performComparisonOperation(lhs: lhs, op: expr.operator.type, rhs: rhs)
+        }
         
         return numericOperation ?
             performNumericOperation(lhs: lhs, op: op, rhs: rhs) :
@@ -245,6 +264,39 @@ private extension CodeGenerator {
         default:
             break
         }
+    }
+    
+    func performComparisonOperation(lhs: Any?, op: TokenType, rhs: Any?) -> Any? {
+        guard let lhsValue = lhs as? Int, let rhsValue = rhs as? Int else {
+            return nil
+        }
+        
+        switch op {
+        case .equal_equal: return lhsValue == rhsValue
+        case .bang_equal: return lhsValue != rhsValue
+        case .greater_equal: return lhsValue >= rhsValue
+        case .greater: return lhsValue > rhsValue
+        case .less_equal: return lhsValue <= rhsValue
+        case .less: return lhsValue < rhsValue
+        default: return nil
+        }
+    }
+    
+    func performLogicalOperation(lhs: Any?, op: TokenType, rhs: Any?) -> Any? {
+        guard let lhsValue = lhs as? Bool, let rhsValue = rhs as? Bool else {
+            return nil
+        }
+        
+        switch op {
+        case .and:
+            _ = builder.buildAnd(lhsValue, rhsValue)
+        case .or:
+            _ = builder.buildOr(lhsValue, rhsValue)
+        default:
+            break
+        }
+        
+        return nil
     }
     
     func performNumericOperation(lhs: Any?, op: String, rhs: Any?) -> Any? {

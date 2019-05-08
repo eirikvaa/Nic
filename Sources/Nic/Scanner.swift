@@ -21,7 +21,9 @@ class Scanner {
         "true": .true,
         "false": .false,
         "if": .ifBranch,
-        "else": .elseBranch
+        "else": .elseBranch,
+        "or": .or,
+        "and": .and
     ]
 
     init(source: String) {
@@ -150,8 +152,10 @@ private extension Scanner {
         case "+": addToken(type: .plus)
         case "-": addToken(type: .minus)
         case "*": addToken(type: .star)
-        case "=": addToken(type: .equal)
-        case "!": addToken(type: .bang)
+        case "=": addToken(type: match("=") ? .equal_equal : .equal)
+        case "!": addToken(type: match("=") ? .bang_equal : .bang)
+        case "<": addToken(type: match("=") ? .less_equal : .less)
+        case ">": addToken(type: match("=") ? .greater_equal : .greater)
         case "\"": string()
         case " ": break
         case "\n": line += 1

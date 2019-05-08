@@ -74,6 +74,26 @@ extension TypeChecker: StmtVisitor {
 }
 
 extension TypeChecker: ExprVisitor {
+    func visitLogicalExpr(expr: Expr.Logical) throws -> Any? {
+        let lhs = try evaluate(expr.left)
+        let op = expr.op.type
+        let rhs = try evaluate(expr.right)
+        
+        guard let lhsType = lhs.nicType(), let rhsType = rhs.nicType() else {
+            return nil
+        }
+        
+        guard lhsType == .boolean, rhsType == .boolean else {
+            throw NicError.invalidOperands(line: expr.op.line, lhsType: lhsType, rhsType: rhsType, operationType: op)
+        }
+        
+        guard let lhsValue = lhs as? Bool, let rhsValue = rhs as? Bool else {
+            return nil
+        }
+        
+        return evaluateBinaryLogicalOperation(lhs: lhsValue, rhs: rhsValue, operation: op)
+    }
+    
     func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
         let assignmentValue = try evaluate(expr.value)
         let receivingValue = try symbolTable.get(name: expr.name, at: expr.depth, keyPath: \.value) ?? nil
@@ -113,7 +133,6 @@ extension TypeChecker: ExprVisitor {
             break
         }
         
-        print("WRONG!")
         return nil
     }
     
@@ -135,7 +154,19 @@ extension TypeChecker: ExprVisitor {
             throw NicError.invalidOperands(line: expr.operator.line, lhsType: lhsType, rhsType: rhsType, operationType: operationType)
         }
         
-        return evaluateOperation(operationType: operationType, with: lhs, rhs: rhs)
+        let comparisonTokenTypes: [TokenType] = [
+            .bang_equal, .equal_equal, .greater_equal, .less_equal, .greater, .less
+        ]
+        
+        if comparisonTokenTypes.contains(operationType) {
+            if let intA = lhs as? Int, let intB = rhs as? Int {
+                return evaluateComparisonOperation(lhs: intA, rhs: intB, operation: operationType)
+            } else {
+                return nil
+            }
+        } else {
+            return evaluateOperation(operationType: operationType, with: lhs, rhs: rhs)
+        }
     }
     
     func visitVariableExpr(expr: Expr.Variable) throws -> Any? {
@@ -183,6 +214,26 @@ private extension TypeChecker {
         }
     }
     
+    func evaluateComparisonOperation(lhs: Int, rhs: Int, operation: TokenType) -> Bool? {
+        switch operation {
+        case .equal_equal: return lhs == rhs
+        case .bang_equal: return lhs != rhs
+        case .greater: return lhs > rhs
+        case .less: return lhs < rhs
+        case .greater_equal: return lhs >= rhs
+        case .less_equal: return lhs <= rhs
+        default: return nil
+        }
+    }
+    
+    func evaluateBinaryLogicalOperation(lhs: Bool, rhs: Bool, operation: TokenType) -> Bool? {
+        switch operation {
+        case .or: return lhs || rhs
+        case .and: return lhs && rhs
+        default: return nil
+        }
+    }
+    
     func evaluateIntegerOperation(lhs: Int, rhs: Int, operation: TokenType) -> Int? {
         switch operation {
         case .plus: return lhs + rhs
@@ -210,7 +261,11 @@ private extension TypeChecker {
         switch (lhsType, rhsType) {
         case (.integer?, .integer?),
              (.double?, .double?):
-            let validTypes: [TokenType] = [.plus, .minus, .star, .slash]
+            let validTypes: [TokenType] = [
+                .plus, .minus, .star, .slash,
+                .equal_equal, .less_equal, .greater_equal, .bang_equal,
+                .less, .greater
+            ]
             return validTypes.contains(operationType)
         case (.string?, .string?):
             return operationType == .plus

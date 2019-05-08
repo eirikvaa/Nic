@@ -19,6 +19,11 @@ class Resolver {
 }
 
 extension Resolver: ExprVisitor {
+    func visitLogicalExpr(expr: Expr.Logical) throws -> () {
+        try resolve(expr.left)
+        try resolve(expr.right)
+    }
+    
     func visitAssignExpr(expr: Expr.Assign) throws {
         try resolve(expr.value)
     }

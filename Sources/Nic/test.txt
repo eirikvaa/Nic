@@ -1,2 +1,3 @@
-var a: Bool = true;
-print a;
+const a = 30;
+const b = a > 20;
+print b;

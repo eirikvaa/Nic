@@ -15,6 +15,7 @@ protocol ExprVisitor {
     func visitVariableExpr(expr: Expr.Variable) throws -> ExprVisitorReturn
     func visitUnaryExpr(expr: Expr.Unary) throws -> ExprVisitorReturn
     func visitGroupExpr(expr: Expr.Group) throws -> ExprVisitorReturn
+    func visitLogicalExpr(expr: Expr.Logical) throws -> ExprVisitorReturn
 }
 
 /// `Expr` implements `ExprVisitor`, making it possible to traverse the expression nodes in the tree.
@@ -105,6 +106,22 @@ class Expr {
         
         override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitGroupExpr(expr: self)
+        }
+    }
+    
+    class Logical: Expr {
+        let left: Expr
+        let op: Token
+        let right: Expr
+        
+        init(left: Expr, op: Token, right: Expr) {
+            self.left = left
+            self.op = op
+            self.right = right
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+            return try visitor.visitLogicalExpr(expr: self)
         }
     }
 }

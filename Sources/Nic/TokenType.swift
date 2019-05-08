@@ -17,6 +17,12 @@ enum TokenType: String {
     
     // operators
     case equal          = "="
+    case greater        = ">"
+    case less           = "<"
+    case greater_equal
+    case less_equal
+    case bang_equal
+    case equal_equal
     case plus           = "+"
     case minus          = "-"
     case slash          = "/"
@@ -29,6 +35,8 @@ enum TokenType: String {
     case print          = "print"
     case ifBranch       = "if"
     case elseBranch     = "else"
+    case or             = "or"
+    case and            = "and"
     
     // punctuation
     case semicolon      = ";"
@@ -41,4 +49,15 @@ enum TokenType: String {
     // other
     case identifier
     case eof            = "EOF"
+}
+
+extension TokenType {
+    var isComparison: Bool {
+        let comparison: [TokenType] = [.less, .greater, .less_equal, .greater_equal, .equal_equal, .bang_equal]
+        return comparison.contains(self)
+    }
+    
+    var isLogical: Bool {
+        return self == .and || self == .or
+    }
 }

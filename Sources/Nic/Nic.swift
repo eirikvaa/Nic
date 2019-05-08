@@ -32,6 +32,7 @@ class Nic {
         let typeChecker = TypeChecker()
         
         let tokens = scanner.scan()
+        print(tokens)
         let parser = Parser(tokens: tokens)
         let statements = parser.parse()
         
