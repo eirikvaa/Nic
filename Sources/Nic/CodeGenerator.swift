@@ -11,11 +11,21 @@ import LLVM
 /// `CodeGenerator` will traverse the abstract syntax tree and generate LLVM IR, which stands for
 /// (Low-Level Virtual Machine Intermediate Representation).
 class CodeGenerator {
+    
+    /// `Context` is used to signal what state the code generator is currently in.
+    /// If it has just started generating code for an conditional branch, then `branch`
+    /// will be the context.
+    private enum Context {
+        case branch
+        case none
+    }
+    
     private let module: Module
     private let builder: IRBuilder
     private let mainFunction: Function
-    private var blocks: [BasicBlock] = []
     private let symbolTable = SymbolTable.shared
+    private var blockCounter = 0
+    private var context: Context = .none
     
     init() {
         module = Module(name: "main")
@@ -49,9 +59,10 @@ class CodeGenerator {
             try generate(stmt)
         }
         
-        // TODO: This is most likely wrong, because a function is a collection of statements, and a function may not always
-        // return void, but it will do for now.
-        builder.buildRetVoid()
+        if context == .none {
+            builder.buildRetVoid()
+        }
+        
     }
 }
 
@@ -121,22 +132,64 @@ extension CodeGenerator: ExprVisitor {
 // MARK: StmtVisitor
 
 extension CodeGenerator: StmtVisitor {
+    func visitIfStatement(_ stmt: Stmt.If) throws {
+        let oldContext = context
+        context = .branch
+        
+        let value = try evaluate(stmt.condition)
+        
+        guard let condition = value as? Bool else {
+            return
+        }
+        
+        let test = builder.buildICmp(condition, true, .equal)
+        let thenBB = mainFunction.appendBasicBlock(named: "then\(blockCounter)")
+        let elseBB = mainFunction.appendBasicBlock(named: "else\(blockCounter)")
+        let mergeBB = mainFunction.appendBasicBlock(named: "merge\(blockCounter)")
+        
+        builder.buildCondBr(condition: test, then: thenBB, else: elseBB)
+        
+        builder.positionAtEnd(of: thenBB)
+        
+        if condition {
+            try generate(stmt.ifBranch)
+        }
+        
+        builder.positionAtEnd(of: thenBB)
+        builder.buildBr(mergeBB)
+        
+        builder.positionAtEnd(of: elseBB)
+        
+        if !condition {
+            if let elseBranch = stmt.elseBranch {
+                try generate(elseBranch)
+            }
+        }
+        
+        builder.buildBr(mergeBB)
+        builder.positionAtEnd(of: mergeBB)
+        
+        let phi = builder.buildPhi(IntType.int1)
+        phi.addIncoming([
+            (IntType.int1.zero(), thenBB),
+            (IntType.int1.zero(), elseBB)
+        ])
+        
+        context = oldContext
+    }
+    
     func visitExpressionStatement(_ stmt: Stmt.Expression) throws {
         _ = try evaluate(stmt.expression)
     }
     
     func visitConstStmt(_ stmt: Stmt.Const) throws {
-        // TODO: Swap with LLVM IR constant expression, if it exists?
-        // buildConstStmt will update the nameInformation variable with the IRValue, so defining it in the
-        // environment must happen after the aforementioned call.
         let depth = stmt.initializer.depth
         try buildVarStmt(name: stmt.name, at: depth)
     }
     
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
-        // Start generating code for the block we're about to visit.
-        // We create a new environment which has the current environment as its enclosing environment.
-        try generateBlock(stmt.statements)
+        blockCounter += 1
+        try generate(stmt.statements)
     }
     
     func visitVarStmt(_ stmt: Stmt.Var) throws {
@@ -235,24 +288,6 @@ private extension CodeGenerator {
     
     func performDivisionOperation(lhs: Double, rhs: Double) -> Double {
         return lhs / rhs
-    }
-    
-    func generateBlock(_ statements: [Stmt]) throws {
-        let blockCount = mainFunction.basicBlocks.underestimatedCount + 1
-        let bb = mainFunction.appendBasicBlock(named: "block_\(blockCount)")
-        blocks.append(bb)
-        
-        builder.buildBr(bb)
-        
-        builder.positionAtEnd(of: bb)
-        
-        try generate(statements)
-        
-        if let firstBlock = mainFunction.firstBlock {
-            builder.positionAtEnd(of: firstBlock)
-        }
-        
-        _ = blocks.popLast()
     }
     
     func lookUpVariable(name: Token, expr: Expr) throws -> Any? {

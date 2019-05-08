@@ -50,6 +50,15 @@ extension Resolver: ExprVisitor {
 }
 
 extension Resolver: StmtVisitor {
+    func visitIfStatement(_ stmt: Stmt.If) throws {
+        try resolve(stmt.condition)
+        try resolve(stmt.ifBranch)
+        
+        if let elseBranch = stmt.elseBranch {
+            try resolve(elseBranch)
+        }
+    }
+    
     func visitExpressionStatement(_ stmt: Stmt.Expression) throws {
         try resolve(stmt.expression)
     }

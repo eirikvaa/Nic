@@ -16,6 +16,22 @@ class TypeChecker {
 }
 
 extension TypeChecker: StmtVisitor {
+    func visitIfStatement(_ stmt: Stmt.If) throws {
+        let value = try evaluate(stmt.condition)
+        
+        guard let condition = value as? Bool, condition else {
+            return
+        }
+        
+        if condition {
+            try typecheck(stmt.ifBranch)
+        } else {
+            if let elseBranch = stmt.elseBranch {
+                try typecheck(elseBranch)
+            }
+        }
+    }
+    
     func visitExpressionStatement(_ stmt: Stmt.Expression) throws {
         let _ = try evaluate(stmt.expression)
     }

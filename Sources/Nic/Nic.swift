@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import LLVM
 
 class Nic {
     static var hadError = false
@@ -56,6 +57,8 @@ class Nic {
             handleRuntimeError(runtimeError)
         case let error as NicError:
             handleNicError(error)
+        case let moduleError as LLVM.ModuleError:
+            print(moduleError)
         default:
             print(error.localizedDescription)
         }
@@ -75,8 +78,7 @@ class Nic {
         case .declarationTypeMismatch(let token):
             self.error(token: token, message: "Mismatch between type of initializer and type annotation in declaration.")
         case .invalidAssignment(let type, let token):
-            print(type)
-            self.error(token: token, message: "Invalid assignment value '\(token.lexeme)'")
+            self.error(token: token, message: "Invalid assignment value of type '\(type)' for token '\(token.lexeme)'")
         case .expectExpression(let token):
             self.error(token: token, message: "Expected expression for token '\(token.lexeme)'")
         case .unexpectedToken(let token):

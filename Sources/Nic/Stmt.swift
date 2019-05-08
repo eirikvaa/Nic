@@ -14,6 +14,7 @@ protocol StmtVisitor {
     func visitPrintStmt(_ stmt: Stmt.Print) throws -> StmtVisitorReturn
     func visitBlockStmt(_ stmt: Stmt.Block) throws -> StmtVisitorReturn
     func visitExpressionStatement(_ stmt: Stmt.Expression) throws -> StmtVisitorReturn
+    func visitIfStatement(_ stmt: Stmt.If) throws -> StmtVisitorReturn
 }
 
 /// `Stmt` implements `StmtVisitor`, making it possible to traverse the statement nodes in the tree.
@@ -88,6 +89,22 @@ class Stmt {
         
         override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitExpressionStatement(self)
+        }
+    }
+    
+    class If: Stmt {
+        let condition: Expr
+        let ifBranch: Stmt
+        let elseBranch: Stmt?
+        
+        init(condition: Expr, ifBranch: Stmt, elseBranch: Stmt?) {
+            self.condition = condition
+            self.ifBranch = ifBranch
+            self.elseBranch = elseBranch
+        }
+        
+        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+            return try visitor.visitIfStatement(self)
         }
     }
 }

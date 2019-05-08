@@ -57,12 +57,14 @@ private extension Parser {
         }
     }
     
-    func statement() throws -> Stmt? {
+    func statement() throws -> Stmt {
         
         if match(types: .print) {
             return try printStatement()
         } else if match(types: .leftBrace) {
             return try block()
+        } else if match(types: .ifBranch) {
+            return try ifStatement()
         }
         
         return try expressionStatement()
@@ -82,7 +84,7 @@ private extension Parser {
         return printStmt
     }
     
-    func block() throws -> Stmt {
+    func block() throws -> Stmt.Block {
         symbolTable.beginScope()
         scopeDepth += 1
         
@@ -99,6 +101,19 @@ private extension Parser {
         scopeDepth -= 1
         
         return Stmt.Block(statements: statements)
+    }
+    
+    func ifStatement() throws -> Stmt {
+        
+        let condition = try expression()
+        let ifBranch = try statement()
+        
+        var elseBranch: Stmt?
+        if match(types: .elseBranch) {
+            elseBranch = try statement()
+        }
+        
+        return Stmt.If(condition: condition, ifBranch: ifBranch, elseBranch: elseBranch)
     }
     
     func expressionStatement() throws -> Stmt {
@@ -296,7 +311,9 @@ private extension Parser {
             
             switch peek().type {
             case .var,
-                 .print:
+                 .const,
+                 .print,
+                 .ifBranch:
                 return
             default:
                 break

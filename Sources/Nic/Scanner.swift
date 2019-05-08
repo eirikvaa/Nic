@@ -19,7 +19,9 @@ class Scanner {
         "const": .const,
         "print": .print,
         "true": .true,
-        "false": .false
+        "false": .false,
+        "if": .ifBranch,
+        "else": .elseBranch
     ]
 
     init(source: String) {

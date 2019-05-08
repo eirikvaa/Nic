@@ -1,1 +1,9 @@
-var a: Int = 1;
+var b: Bool = true;
+
+if b {
+    print "Hello, world!";
+} else {
+    print "Y";
+}
+
+var a = 3;

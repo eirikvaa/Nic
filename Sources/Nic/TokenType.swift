@@ -26,6 +26,8 @@ enum TokenType: String {
     case `var`          = "var"
     case const          = "const"
     case print          = "print"
+    case ifBranch       = "if"
+    case elseBranch     = "else"
     
     // punctuation
     case semicolon      = ";"
