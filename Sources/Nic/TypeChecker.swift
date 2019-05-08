@@ -97,7 +97,24 @@ extension TypeChecker: ExprVisitor {
     }
     
     func visitUnaryExpr(expr: Expr.Unary) throws -> Any?  {
-        return try evaluate(expr.value)
+        let test = try evaluate(expr.value)
+        
+        switch expr.operator.type {
+        case .bang:
+            let boolean = test as? Bool ?? false
+            return !boolean
+        case .minus:
+            if let number = test as? Int {
+                return -number
+            } else if let double = test as? Double {
+                return -double
+            }
+        default:
+            break
+        }
+        
+        print("WRONG!")
+        return nil
     }
     
     func visitLiteralExpr(expr: Expr.Literal) throws -> Any? {

@@ -222,7 +222,7 @@ private extension Parser {
     }
     
     func unary() throws -> Expr {
-        if match(types: .minus) {
+        if match(types: .minus, .bang) {
             let op = previous()
             let right = try unary()
             let unary = Expr.Unary(operator: op, value: right)

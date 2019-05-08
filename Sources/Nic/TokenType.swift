@@ -21,6 +21,7 @@ enum TokenType: String {
     case minus          = "-"
     case slash          = "/"
     case star           = "*"
+    case bang           = "!"
     
     // keywords
     case `var`          = "var"

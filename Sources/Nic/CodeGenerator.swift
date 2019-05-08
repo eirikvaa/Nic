@@ -97,6 +97,10 @@ extension CodeGenerator: ExprVisitor {
             } else if let double = value as? Double {
                 return double * -1.0
             }
+        case .bang:
+            if let boolean = value as? Bool {
+                return !boolean
+            }
         default:
             break
         }

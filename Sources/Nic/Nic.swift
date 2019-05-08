@@ -43,7 +43,7 @@ class Nic {
             try resolver.resolve(statements)
             try typeChecker.typecheck(statements)
             try codeGenerator.generate(statements)
-            try codeGenerator.verifyLLVMIR()
+            //try codeGenerator.verifyLLVMIR()
             codeGenerator.dumpLLVMIR()
             codeGenerator.createLLVMIRFile(fileName: "test")
         } catch {

@@ -151,6 +151,7 @@ private extension Scanner {
         case "-": addToken(type: .minus)
         case "*": addToken(type: .star)
         case "=": addToken(type: .equal)
+        case "!": addToken(type: .bang)
         case "\"": string()
         case " ": break
         case "\n": line += 1
