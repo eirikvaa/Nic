@@ -6,4 +6,5 @@ namely `ExprVisitor` and `StmtVisitor`. There are currently plans to implement s
 such passes in the compiler:
 
 - The `Resolver` walks the tree and resolves any variables, global and local.
-- The `TypeChecker` walks the tree and checks that operations are performed on the correct types.
+- The `TypeChecker` walks the tree and checks that operations are performed on the correct types and performs type coercion.
+- The `CodeGenerator` walks the tree and produces LLVM IR.
