@@ -110,7 +110,7 @@ extension CodeGenerator: ExprVisitor {
             }
         case .bang:
             if let boolean = value as? Bool {
-                return !boolean
+                return boolean
             }
         default:
             break

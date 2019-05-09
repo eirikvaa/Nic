@@ -32,7 +32,6 @@ class Nic {
         let typeChecker = TypeChecker()
         
         let tokens = scanner.scan()
-        print(tokens)
         let parser = Parser(tokens: tokens)
         let statements = parser.parse()
         
@@ -44,7 +43,7 @@ class Nic {
             try resolver.resolve(statements)
             try typeChecker.typecheck(statements)
             try codeGenerator.generate(statements)
-            //try codeGenerator.verifyLLVMIR()
+            try codeGenerator.verifyLLVMIR()
             codeGenerator.dumpLLVMIR()
             codeGenerator.createLLVMIRFile(fileName: "test")
         } catch {

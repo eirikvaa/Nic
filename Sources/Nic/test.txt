@@ -1,3 +1,14 @@
-const a = 30;
-const b = a > 20;
-print b;
+/*
+This program shows what Nic is capable of at this moment.
+*/
+
+// Define some variables
+var a = false;
+var b = true;
+var c = a or b;
+
+if 10 > 3 {
+    print "Should be in the then branch";
+} else {
+    print "Should be in the else branch";
+}
