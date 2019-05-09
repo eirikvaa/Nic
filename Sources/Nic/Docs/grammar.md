@@ -26,6 +26,11 @@ multiline_comment_text_item ->  All characters except '/*' or '*/'
 identifier                  ->  [_a-zA-Z][_a-zA-Z0-9]*
 ```
 
+### Grammar for a type identifier
+```
+type_identifier             ->  [_a-ZA-Z][_a-zA-Z0-9]*
+```
+
 ### Grammar for literals
 ```
 literal                     ->  <numeric_literal> | <string_literal> | <boolean_literal>
@@ -36,7 +41,7 @@ boolean_literal             ->  "true" | "false"
 
 ### Grammar for operators
 ```
-operator                    ->  "+" | "-" | "*" | "/" | "="
+operator                    ->  "+" | "-" | "*" | "/" | "=" | "==" | "!=" | ">" | "<" | ">=" | "<="
 ```
 
 ## Expressions
@@ -44,7 +49,11 @@ operator                    ->  "+" | "-" | "*" | "/" | "="
 ### Grammar of an expression
 ```
 expression                  ->  <assignment>
-assignment                  ->  <addition>
+assignment                  ->  <or> ( ( "=" ) <assignment> )*
+or                          ->  <and> ( ( "or" ) <and>  )*
+and                         ->  <equality> ( ( "and" ) <equality> )*
+equality                    ->  <comparison> ( ( "!=" | "==" ) <comparison> )*
+compaison                   ->  <addition> ( ( ">", "<", ">=", "<=" ) <addition> )*
 addition                    ->  <multiplication> ( ( "-" | "+" ) <multiplication> )*
 multiplication              ->  <unary> ( ( "/" | "*" ) <unary> )*
 unary                       ->  ( "!" | "-" ) <unary>
@@ -68,6 +77,7 @@ print_statement             ->  "print" <expression>
 ### Grammar for a declaration
 ```
 declaration                 ->  <variable_declaration>
+declaration                 ->  <constant_declaration>
 ```
 
 ### Grammar for top-level declarations
@@ -77,5 +87,10 @@ top_level_declarations      ->  (<statement>)*
 
 ### Grammar for a variable declaration
 ```
-variable_declaration        ->  "var" <identifier> "=" <expression>
+variable_declaration        ->  "var" <identifier> (":" <type_identifier>)? ("=" <expression>)?
+```
+
+### Grammar for a constant declaration
+```
+constant_declaration        ->  "const" <identifier> (":" <type_identifier>)? "=" <expression>
 ```

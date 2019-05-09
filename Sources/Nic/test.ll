@@ -9,6 +9,8 @@ entry:
   store i1 true, i1* %b
   %c = alloca i1
   store i1 true, i1* %c
+  %d = alloca i64
+  store i64 10, i64* %d
   br i1 true, label %then0, label %else0
 
 then0:                                            ; preds = %entry

@@ -7,7 +7,9 @@ var a = false;
 var b = true;
 var c = a or b;
 
-if 10 > 3 {
+const d = 10;
+
+if 10 > -3 {
     print "Should be in the then branch";
 } else {
     print "Should be in the else branch";

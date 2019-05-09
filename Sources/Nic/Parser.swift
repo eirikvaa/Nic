@@ -336,7 +336,6 @@ private extension Parser {
             return group
         }
         
-        // TODO: Shold be "Expected expression or something"
         Nic.error(token: previous(), message: "Expect expression.")
         throw NicError.expectExpression(token: previous())
     }
