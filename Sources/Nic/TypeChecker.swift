@@ -58,11 +58,17 @@ extension TypeChecker: StmtVisitor {
             return
         }
         
-        let value = try evaluate(initializer)
-        
+        var value = try evaluate(initializer)
         if let stmtType = stmt.type,
             let valueType = value.nicType() {
-            try typecheckDeclaration(token: stmt.name, declarationType: stmtType, initializedType: valueType)
+            
+            // We'll coerce variable declarations that were type annotated with double but initialized
+            // with an integer.
+            if stmtType == .double, valueType == .integer {
+                value = Double((value as? Int) ?? 0)
+            } else {
+                try typecheckDeclaration(token: stmt.name, declarationType: stmtType, initializedType: valueType)
+            }
         }
         
         symbolTable.set(element: value, at: \.value, to: stmt.name, at: stmt.initializer?.depth ?? 0)

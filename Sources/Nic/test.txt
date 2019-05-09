@@ -1,16 +1,1 @@
-/*
-This program shows what Nic is capable of at this moment.
-*/
-
-// Define some variables
-var a = false;
-var b = true;
-var c = a or b;
-
-const d = 10;
-
-if 10 > -3 {
-    print "Should be in the then branch";
-} else {
-    print "Should be in the else branch";
-}
+var test: Double = 1;
