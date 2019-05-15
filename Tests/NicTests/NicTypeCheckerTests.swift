@@ -13,6 +13,38 @@ class NicTypeCheckerTests: XCTestCase {
 
     func testCorrectTypeAnnotation() {
         let source = "var test: Bool = false;";
+        XCTAssertNoThrow(try typeCheckSource(source))
+    }
+    
+    func testIncorrectTypeAnnotation() {
+        let source = #"var test: Bool = 1;"#
+        XCTAssertThrowsError(try typeCheckSource(source), "Type of initialization expression does not correspond with type annotation.")
+    }
+    
+    func testCorrectBinaryOperationOperands() {
+        let source = #"var test = 1 + 1;"#
+        XCTAssertNoThrow(try typeCheckSource(source))
+    }
+    
+    func testInvalidBinaryOperationOperands() {
+        let source = #"var test = 1 + true;"#
+        XCTAssertThrowsError(try typeCheckSource(source), "Cannot add an integer and a boolean value")
+    }
+    
+    func testValidIfStatementExpression() {
+        let source = #"var boolean = true; if boolean {}"#
+        XCTAssertNoThrow(try typeCheckSource(source), "Only expressions evaluating to true can appear as an if statement condition.")
+    }
+    
+    func testInvalidIfStatementExpression() {
+        let source = #"var boolean = 1; if boolean {}"#
+        XCTAssertThrowsError(try typeCheckSource(source), "Only expressions evaluating to true can appear as an if statement condition.")
+    }
+
+}
+
+extension NicTypeCheckerTests {
+    func typeCheckSource(_ source: String) throws {
         let scanner = Scanner(source: source)
         let tokens = scanner.scan()
         
@@ -20,7 +52,6 @@ class NicTypeCheckerTests: XCTestCase {
         let statements = parser.parse()
         
         let typeChecker = TypeChecker()
-        XCTAssertNoThrow(try typeChecker.typecheck(statements))
+        try typeChecker.typecheck(statements)
     }
-
 }

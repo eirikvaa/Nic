@@ -1,1 +1,5 @@
-var test: Double = 1;
+var boolean = true;
+
+if boolean {
+
+}

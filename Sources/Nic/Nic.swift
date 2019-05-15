@@ -43,7 +43,7 @@ class Nic {
             try resolver.resolve(statements)
             try typeChecker.typecheck(statements)
             try codeGenerator.generate(statements)
-            try codeGenerator.verifyLLVMIR()
+            //try codeGenerator.verifyLLVMIR()
             codeGenerator.dumpLLVMIR()
             codeGenerator.createLLVMIRFile(fileName: "test")
         } catch {
@@ -85,7 +85,8 @@ class Nic {
             self.error(token: token, message: "Unexpected token '\(token.lexeme)")
         case .invalidOperands(let line, let lhsType, let rhsType, let operation):
             self.error(line: line, message: "Invalid operands of type '\(lhsType)' and '\(rhsType)' for '\(operation)' operation.")
-            break
+        case .invalidConditionalExpressionType(let line, let type):
+            self.error(line: line, message: "Can't use an expression of type \(type) as an if statement condition.")
         }
     }
     

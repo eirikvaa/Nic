@@ -14,4 +14,5 @@ enum NicError: Error {
     case declarationTypeMismatch(token: Token)
     case invalidAssignment(type: NicType, token: Token)
     case invalidOperands(line: Int, lhsType: NicType, rhsType: NicType, operationType: TokenType)
+    case invalidConditionalExpressionType(line: Int, type: NicType)
 }

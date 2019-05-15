@@ -37,20 +37,6 @@
                BlueprintName = "NicTests"
                ReferencedContainer = "container:Nic.xcodeproj">
             </BuildableReference>
-            <SkippedTests>
-               <Test
-                  Identifier = "NicParserTests/testMissingSemicolonThrowsError()">
-               </Test>
-               <Test
-                  Identifier = "NicTests/testUnterminatedMultiLineComment()">
-               </Test>
-               <Test
-                  Identifier = "NicTests/testUnterminatedStringLiteral()">
-               </Test>
-               <Test
-                  Identifier = "NicTypeCheckerTests/testIncorrectTypeAnnotation()">
-               </Test>
-            </SkippedTests>
          </TestableReference>
       </Testables>
       <AdditionalOptions>

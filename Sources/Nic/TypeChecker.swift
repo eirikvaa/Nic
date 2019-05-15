@@ -19,8 +19,12 @@ extension TypeChecker: StmtVisitor {
     func visitIfStatement(_ stmt: Stmt.If) throws {
         let value = try evaluate(stmt.condition)
         
-        guard let condition = value as? Bool, condition else {
+        guard let valueType = value.nicType() else {
             return
+        }
+        
+        guard let condition = value as? Bool, condition else {
+            throw NicError.invalidConditionalExpressionType(line: stmt.condition.depth, type: valueType)
         }
         
         if condition {
