@@ -30,6 +30,14 @@ class NicTests: XCTestCase {
         XCTAssertTrue(result, "A source consisting of a single number should return a token list with a single token of type number.")
     }
     
+    func testFloatingPointNumber() {
+        let source = "1.0;";
+        let expectedTokenTypes: [TokenType] = [.double, .semicolon, .eof]
+        let result = scanSource(source: source, compareWithExpectedTokens: expectedTokenTypes)
+        
+        XCTAssertTrue(result, "A floating point number has not been parsed correctly.")
+    }
+    
     func testSourceWithSingleDigitNumberEndingInNewline() {
         let source = "1;\n"
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
