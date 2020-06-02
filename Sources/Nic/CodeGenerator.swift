@@ -5,7 +5,7 @@
 //  Created by Eirik Vale Aase on 23/03/2019.
 //  Copyright © 2019 Eirik Vale Aase. All rights reserved.
 //
-
+/*
 import LLVM
 
 /// `CodeGenerator` will traverse the abstract syntax tree and generate LLVM IR, which stands for
@@ -358,3 +358,4 @@ private extension CodeGenerator {
         return try expr.accept(visitor: self)
     }
 }
+*/
