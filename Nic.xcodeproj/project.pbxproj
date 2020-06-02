@@ -80,7 +80,6 @@
 		OBJ_32 /* NicParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicParserTests.swift; sourceTree = "<group>"; };
 		OBJ_33 /* NicScannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicScannerTests.swift; sourceTree = "<group>"; };
 		OBJ_34 /* NicTypeCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerTests.swift; sourceTree = "<group>"; };
-		OBJ_9 /* test.ll */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.llvm; path = test.ll; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -153,7 +152,6 @@
 			children = (
 				E59D18F6248629B3002E88C7 /* Error */,
 				E59D18F5248629AE002E88C7 /* Helpers */,
-				OBJ_9 /* test.ll */,
 				OBJ_10 /* test.txt */,
 				OBJ_11 /* CodeGenerator.swift */,
 				E59D18D7248621AC002E88C7 /* NicError.swift */,
