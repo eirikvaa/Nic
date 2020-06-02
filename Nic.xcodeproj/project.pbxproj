@@ -7,27 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		OBJ_45 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* CodeGenerator.swift */; };
-		OBJ_46 /* NicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_13 /* NicError.swift */; };
-		OBJ_47 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_14 /* NicRuntimeError.swift */; };
-		OBJ_48 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Expr.swift */; };
-		OBJ_49 /* Any+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Any+Extension.swift */; };
-		OBJ_50 /* Character+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* Character+Ext.swift */; };
-		OBJ_51 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* SymbolTable.swift */; };
-		OBJ_52 /* Nic.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* Nic.swift */; };
-		OBJ_53 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* Parser.swift */; };
-		OBJ_54 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* Resolver.swift */; };
-		OBJ_55 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* Scanner.swift */; };
-		OBJ_56 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* Stmt.swift */; };
-		OBJ_57 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* Token.swift */; };
-		OBJ_58 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* TokenType.swift */; };
-		OBJ_59 /* TypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* TypeChecker.swift */; };
-		OBJ_60 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* TypeSystem.swift */; };
-		OBJ_61 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* main.swift */; };
-		OBJ_79 /* NicParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* NicParserTests.swift */; };
-		OBJ_80 /* NicScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* NicScannerTests.swift */; };
-		OBJ_81 /* NicTypeCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* NicTypeCheckerTests.swift */; };
-		OBJ_82 /* XCTestManifests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_35 /* XCTestManifests.swift */; };
+		E59D18C124862058002E88C7 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* CodeGenerator.swift */; };
+		E59D18C424862058002E88C7 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Expr.swift */; };
+		E59D18C824862058002E88C7 /* Nic.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* Nic.swift */; };
+		E59D18C924862058002E88C7 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* Parser.swift */; };
+		E59D18CA24862058002E88C7 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* Resolver.swift */; };
+		E59D18CB24862058002E88C7 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* Scanner.swift */; };
+		E59D18CC24862058002E88C7 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* Stmt.swift */; };
+		E59D18CD24862058002E88C7 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* Token.swift */; };
+		E59D18CE24862058002E88C7 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* TokenType.swift */; };
+		E59D18CF24862058002E88C7 /* TypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* TypeChecker.swift */; };
+		E59D18D024862058002E88C7 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* TypeSystem.swift */; };
+		E59D18D124862058002E88C7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* main.swift */; };
+		E59D18D224862064002E88C7 /* NicTypeCheckerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_34 /* NicTypeCheckerTests.swift */; };
+		E59D18D324862068002E88C7 /* NicParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_32 /* NicParserTests.swift */; };
+		E59D18D424862068002E88C7 /* NicScannerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_33 /* NicScannerTests.swift */; };
+		E59D18D9248621AC002E88C7 /* NicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D18D7248621AC002E88C7 /* NicError.swift */; };
+		E59D18DA248621AC002E88C7 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */; };
+		E59D18DE248621EB002E88C7 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* SymbolTable.swift */; };
+		E59D18DF248621EB002E88C7 /* Character+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* Character+Ext.swift */; };
+		E59D18E0248621EB002E88C7 /* Any+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Any+Extension.swift */; };
+		E59D18E1248622CB002E88C7 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* CodeGenerator.swift */; };
+		E59D18E2248622CB002E88C7 /* NicError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D18D7248621AC002E88C7 /* NicError.swift */; };
+		E59D18E3248622CB002E88C7 /* NicRuntimeError.swift in Sources */ = {isa = PBXBuildFile; fileRef = E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */; };
+		E59D18E4248622CB002E88C7 /* Any+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_17 /* Any+Extension.swift */; };
+		E59D18E5248622CB002E88C7 /* Character+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_18 /* Character+Ext.swift */; };
+		E59D18E6248622CB002E88C7 /* SymbolTable.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_19 /* SymbolTable.swift */; };
+		E59D18E7248622CB002E88C7 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Expr.swift */; };
+		E59D18E8248622CB002E88C7 /* Nic.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_20 /* Nic.swift */; };
+		E59D18E9248622CB002E88C7 /* Parser.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_21 /* Parser.swift */; };
+		E59D18EA248622CB002E88C7 /* Resolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_22 /* Resolver.swift */; };
+		E59D18EB248622CB002E88C7 /* Scanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_23 /* Scanner.swift */; };
+		E59D18EC248622CB002E88C7 /* Stmt.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_24 /* Stmt.swift */; };
+		E59D18ED248622CB002E88C7 /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_25 /* Token.swift */; };
+		E59D18EE248622CB002E88C7 /* TokenType.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_26 /* TokenType.swift */; };
+		E59D18EF248622CB002E88C7 /* TypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* TypeChecker.swift */; };
+		E59D18F0248622CB002E88C7 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* TypeSystem.swift */; };
+		E59D18F1248622CB002E88C7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* main.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,16 +57,16 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		"Nic::Nic::Product" /* Nic */ = {isa = PBXFileReference; lastKnownFileType = text; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
-		"Nic::NicTests::Product" /* NicTests.xctest */ = {isa = PBXFileReference; lastKnownFileType = file; path = NicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		E59D18D7248621AC002E88C7 /* NicError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicError.swift; path = Nic/NicError.swift; sourceTree = SOURCE_ROOT; };
+		E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicRuntimeError.swift; path = Nic/Error/NicRuntimeError.swift; sourceTree = SOURCE_ROOT; };
+		"Nic::Nic::Product" /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
+		"Nic::NicTests::Product" /* NicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = NicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		OBJ_10 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
-		OBJ_11 /* CodeGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
-		OBJ_13 /* NicError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicError.swift; sourceTree = "<group>"; };
-		OBJ_14 /* NicRuntimeError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicRuntimeError.swift; sourceTree = "<group>"; };
+		OBJ_11 /* CodeGenerator.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
-		OBJ_17 /* Any+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Any+Extension.swift"; sourceTree = "<group>"; };
-		OBJ_18 /* Character+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Character+Ext.swift"; sourceTree = "<group>"; };
-		OBJ_19 /* SymbolTable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SymbolTable.swift; sourceTree = "<group>"; };
+		OBJ_17 /* Any+Extension.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = "Any+Extension.swift"; sourceTree = "<group>"; };
+		OBJ_18 /* Character+Ext.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = "Character+Ext.swift"; sourceTree = "<group>"; };
+		OBJ_19 /* SymbolTable.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = SymbolTable.swift; sourceTree = "<group>"; };
 		OBJ_20 /* Nic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Nic.swift; sourceTree = "<group>"; };
 		OBJ_21 /* Parser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parser.swift; sourceTree = "<group>"; };
 		OBJ_22 /* Resolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Resolver.swift; sourceTree = "<group>"; };
@@ -64,9 +80,6 @@
 		OBJ_32 /* NicParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicParserTests.swift; sourceTree = "<group>"; };
 		OBJ_33 /* NicScannerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicScannerTests.swift; sourceTree = "<group>"; };
 		OBJ_34 /* NicTypeCheckerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicTypeCheckerTests.swift; sourceTree = "<group>"; };
-		OBJ_35 /* XCTestManifests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = XCTestManifests.swift; sourceTree = "<group>"; };
-		OBJ_39 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		OBJ_6 /* Package.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = Package.swift; sourceTree = "<group>"; };
 		OBJ_9 /* test.ll */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm.llvm; path = test.ll; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,16 +101,7 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		OBJ_12 /* Error */ = {
-			isa = PBXGroup;
-			children = (
-				OBJ_13 /* NicError.swift */,
-				OBJ_14 /* NicRuntimeError.swift */,
-			);
-			path = Error;
-			sourceTree = "<group>";
-		};
-		OBJ_16 /* Helpers */ = {
+		E59D18F5248629AE002E88C7 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_17 /* Any+Extension.swift */,
@@ -107,24 +111,23 @@
 			path = Helpers;
 			sourceTree = "<group>";
 		};
-		OBJ_30 /* Tests */ = {
+		E59D18F6248629B3002E88C7 /* Error */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_31 /* NicTests */,
+				E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */,
+				OBJ_15 /* Expr.swift */,
 			);
-			name = Tests;
-			sourceTree = SOURCE_ROOT;
+			path = Error;
+			sourceTree = "<group>";
 		};
-		OBJ_31 /* NicTests */ = {
+		OBJ_30 /* NicTests */ = {
 			isa = PBXGroup;
 			children = (
 				OBJ_32 /* NicParserTests.swift */,
 				OBJ_33 /* NicScannerTests.swift */,
 				OBJ_34 /* NicTypeCheckerTests.swift */,
-				OBJ_35 /* XCTestManifests.swift */,
 			);
-			name = NicTests;
-			path = Tests/NicTests;
+			path = NicTests;
 			sourceTree = SOURCE_ROOT;
 		};
 		OBJ_36 /* Products */ = {
@@ -136,35 +139,24 @@
 			name = Products;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
-		OBJ_5 /*  */ = {
+		OBJ_5 = {
 			isa = PBXGroup;
 			children = (
-				OBJ_6 /* Package.swift */,
-				OBJ_7 /* Sources */,
-				OBJ_30 /* Tests */,
+				OBJ_7 /* Nic */,
+				OBJ_30 /* NicTests */,
 				OBJ_36 /* Products */,
-				OBJ_39 /* README.md */,
 			);
-			name = "";
 			sourceTree = "<group>";
 		};
-		OBJ_7 /* Sources */ = {
+		OBJ_7 /* Nic */ = {
 			isa = PBXGroup;
 			children = (
-				OBJ_8 /* Nic */,
-			);
-			name = Sources;
-			sourceTree = SOURCE_ROOT;
-		};
-		OBJ_8 /* Nic */ = {
-			isa = PBXGroup;
-			children = (
+				E59D18F6248629B3002E88C7 /* Error */,
+				E59D18F5248629AE002E88C7 /* Helpers */,
 				OBJ_9 /* test.ll */,
 				OBJ_10 /* test.txt */,
 				OBJ_11 /* CodeGenerator.swift */,
-				OBJ_12 /* Error */,
-				OBJ_15 /* Expr.swift */,
-				OBJ_16 /* Helpers */,
+				E59D18D7248621AC002E88C7 /* NicError.swift */,
 				OBJ_20 /* Nic.swift */,
 				OBJ_21 /* Parser.swift */,
 				OBJ_22 /* Resolver.swift */,
@@ -176,8 +168,7 @@
 				OBJ_28 /* TypeSystem.swift */,
 				OBJ_29 /* main.swift */,
 			);
-			name = Nic;
-			path = Sources/Nic;
+			path = Nic;
 			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
@@ -224,6 +215,16 @@
 			attributes = {
 				LastSwiftMigration = 9999;
 				LastUpgradeCheck = 9999;
+				TargetAttributes = {
+					"Nic::Nic" = {
+						DevelopmentTeam = N37KDKBFXC;
+						ProvisioningStyle = Automatic;
+					};
+					"Nic::NicTests" = {
+						DevelopmentTeam = N37KDKBFXC;
+						ProvisioningStyle = Automatic;
+					};
+				};
 			};
 			buildConfigurationList = OBJ_2 /* Build configuration list for PBXProject "Nic" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -232,7 +233,7 @@
 			knownRegions = (
 				en,
 			);
-			mainGroup = OBJ_5 /*  */;
+			mainGroup = OBJ_5;
 			productRefGroup = OBJ_36 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -248,23 +249,23 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_45 /* CodeGenerator.swift in Sources */,
-				OBJ_46 /* NicError.swift in Sources */,
-				OBJ_47 /* NicRuntimeError.swift in Sources */,
-				OBJ_48 /* Expr.swift in Sources */,
-				OBJ_49 /* Any+Extension.swift in Sources */,
-				OBJ_50 /* Character+Ext.swift in Sources */,
-				OBJ_51 /* SymbolTable.swift in Sources */,
-				OBJ_52 /* Nic.swift in Sources */,
-				OBJ_53 /* Parser.swift in Sources */,
-				OBJ_54 /* Resolver.swift in Sources */,
-				OBJ_55 /* Scanner.swift in Sources */,
-				OBJ_56 /* Stmt.swift in Sources */,
-				OBJ_57 /* Token.swift in Sources */,
-				OBJ_58 /* TokenType.swift in Sources */,
-				OBJ_59 /* TypeChecker.swift in Sources */,
-				OBJ_60 /* TypeSystem.swift in Sources */,
-				OBJ_61 /* main.swift in Sources */,
+				E59D18C124862058002E88C7 /* CodeGenerator.swift in Sources */,
+				E59D18C424862058002E88C7 /* Expr.swift in Sources */,
+				E59D18C824862058002E88C7 /* Nic.swift in Sources */,
+				E59D18D9248621AC002E88C7 /* NicError.swift in Sources */,
+				E59D18C924862058002E88C7 /* Parser.swift in Sources */,
+				E59D18CA24862058002E88C7 /* Resolver.swift in Sources */,
+				E59D18CB24862058002E88C7 /* Scanner.swift in Sources */,
+				E59D18DF248621EB002E88C7 /* Character+Ext.swift in Sources */,
+				E59D18CC24862058002E88C7 /* Stmt.swift in Sources */,
+				E59D18CD24862058002E88C7 /* Token.swift in Sources */,
+				E59D18CE24862058002E88C7 /* TokenType.swift in Sources */,
+				E59D18DA248621AC002E88C7 /* NicRuntimeError.swift in Sources */,
+				E59D18CF24862058002E88C7 /* TypeChecker.swift in Sources */,
+				E59D18DE248621EB002E88C7 /* SymbolTable.swift in Sources */,
+				E59D18D024862058002E88C7 /* TypeSystem.swift in Sources */,
+				E59D18D124862058002E88C7 /* main.swift in Sources */,
+				E59D18E0248621EB002E88C7 /* Any+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -272,10 +273,26 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				OBJ_79 /* NicParserTests.swift in Sources */,
-				OBJ_80 /* NicScannerTests.swift in Sources */,
-				OBJ_81 /* NicTypeCheckerTests.swift in Sources */,
-				OBJ_82 /* XCTestManifests.swift in Sources */,
+				E59D18E1248622CB002E88C7 /* CodeGenerator.swift in Sources */,
+				E59D18E2248622CB002E88C7 /* NicError.swift in Sources */,
+				E59D18E3248622CB002E88C7 /* NicRuntimeError.swift in Sources */,
+				E59D18E4248622CB002E88C7 /* Any+Extension.swift in Sources */,
+				E59D18E5248622CB002E88C7 /* Character+Ext.swift in Sources */,
+				E59D18E6248622CB002E88C7 /* SymbolTable.swift in Sources */,
+				E59D18E7248622CB002E88C7 /* Expr.swift in Sources */,
+				E59D18E8248622CB002E88C7 /* Nic.swift in Sources */,
+				E59D18E9248622CB002E88C7 /* Parser.swift in Sources */,
+				E59D18EA248622CB002E88C7 /* Resolver.swift in Sources */,
+				E59D18EB248622CB002E88C7 /* Scanner.swift in Sources */,
+				E59D18EC248622CB002E88C7 /* Stmt.swift in Sources */,
+				E59D18ED248622CB002E88C7 /* Token.swift in Sources */,
+				E59D18EE248622CB002E88C7 /* TokenType.swift in Sources */,
+				E59D18EF248622CB002E88C7 /* TypeChecker.swift in Sources */,
+				E59D18F0248622CB002E88C7 /* TypeSystem.swift in Sources */,
+				E59D18F1248622CB002E88C7 /* main.swift in Sources */,
+				E59D18D324862068002E88C7 /* NicParserTests.swift in Sources */,
+				E59D18D424862068002E88C7 /* NicScannerTests.swift in Sources */,
+				E59D18D224862064002E88C7 /* NicTypeCheckerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -293,151 +310,240 @@
 		OBJ_3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				DYLIB_INSTALL_NAME_BASE = "";
 				ENABLE_NS_ASSERTIONS = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"$(inherited)",
-					"SWIFT_PACKAGE=1",
 					"DEBUG=1",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				ONLY_ACTIVE_ARCH = YES;
-				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
+				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SWIFT_PACKAGE DEBUG";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				USE_HEADERMAP = NO;
+				SWIFT_VERSION = "";
+				USE_HEADERMAP = YES;
 			};
 			name = Debug;
 		};
 		OBJ_4 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
 				CLANG_ENABLE_OBJC_ARC = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COMBINE_HIDPI_IMAGES = NO;
+				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				DYLIB_INSTALL_NAME_BASE = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"$(inherited)",
-					"SWIFT_PACKAGE=1",
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				OTHER_SWIFT_FLAGS = "$(inherited) -DXcode";
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				OTHER_SWIFT_FLAGS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
-				SUPPORTED_PLATFORMS = "macosx iphoneos iphonesimulator appletvos appletvsimulator watchos watchsimulator";
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) SWIFT_PACKAGE";
+				SUPPORTED_PLATFORMS = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
-				USE_HEADERMAP = NO;
+				SWIFT_VERSION = "";
+				USE_HEADERMAP = YES;
 			};
 			name = Release;
 		};
 		OBJ_42 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_TESTABILITY = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/Nic_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
-				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
 				SWIFT_VERSION = 5.0;
-				TARGET_NAME = Nic;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+				TVOS_DEPLOYMENT_TARGET = 13.3;
+				WATCHOS_DEPLOYMENT_TARGET = 6.2;
 			};
 			name = Debug;
 		};
 		OBJ_43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
+				GCC_PREPROCESSOR_DEFINITIONS = "$(inherited)";
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/Nic_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_FORCE_DYNAMIC_LINK_STDLIB = YES;
-				SWIFT_FORCE_STATIC_LINK_STDLIB = NO;
 				SWIFT_VERSION = 5.0;
-				TARGET_NAME = Nic;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+				TVOS_DEPLOYMENT_TARGET = 13.3;
+				WATCHOS_DEPLOYMENT_TARGET = 6.2;
 			};
 			name = Release;
 		};
 		OBJ_76 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
+				ENABLE_TESTABILITY = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/NicTests_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_VERSION = 5.0;
-				TARGET_NAME = NicTests;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+				TVOS_DEPLOYMENT_TARGET = 13.3;
+				WATCHOS_DEPLOYMENT_TARGET = 6.2;
 			};
 			name = Debug;
 		};
 		OBJ_77 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CLANG_ENABLE_MODULES = YES;
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = N37KDKBFXC;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 				);
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/NicTests_Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
 				OTHER_SWIFT_FLAGS = "$(inherited)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
 				SWIFT_VERSION = 5.0;
-				TARGET_NAME = NicTests;
-				TVOS_DEPLOYMENT_TARGET = 9.0;
-				WATCHOS_DEPLOYMENT_TARGET = 2.0;
+				TVOS_DEPLOYMENT_TARGET = 13.3;
+				WATCHOS_DEPLOYMENT_TARGET = 6.2;
 			};
 			name = Release;
 		};
