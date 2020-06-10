@@ -1,5 +1,7 @@
 var boolean = true;
 
-if boolean {
+var a = 2 > 1;
 
+if a {
+    print "Hei";
 }

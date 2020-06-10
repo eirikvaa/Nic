@@ -79,7 +79,11 @@ extension TypeChecker: StmtVisitor {
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
+        guard let value = stmt.value else {
+            return
+        }
         
+        print(try value.accept(visitor: self) ?? "No value")
     }
 }
 
