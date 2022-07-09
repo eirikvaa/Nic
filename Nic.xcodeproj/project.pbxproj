@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -44,6 +44,7 @@
 		E59D18EF248622CB002E88C7 /* TypeChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_27 /* TypeChecker.swift */; };
 		E59D18F0248622CB002E88C7 /* TypeSystem.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_28 /* TypeSystem.swift */; };
 		E59D18F1248622CB002E88C7 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_29 /* main.swift */; };
+		E59DF17C28797DB70060AABD /* LLVM in Frameworks */ = {isa = PBXBuildFile; productRef = E59DF17B28797DB70060AABD /* LLVM */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
+				E59DF17C28797DB70060AABD /* LLVM in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -184,6 +186,9 @@
 			dependencies = (
 			);
 			name = Nic;
+			packageProductDependencies = (
+				E59DF17B28797DB70060AABD /* LLVM */,
+			);
 			productName = Nic;
 			productReference = "Nic::Nic::Product" /* Nic */;
 			productType = "com.apple.product-type.tool";
@@ -232,6 +237,9 @@
 				en,
 			);
 			mainGroup = OBJ_5;
+			packageReferences = (
+				E59DF17A28797DB70060AABD /* XCRemoteSwiftPackageReference "LLVMSwift" */,
+			);
 			productRefGroup = OBJ_36 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -426,7 +434,8 @@
 				SDKROOT = macosx;
 				SUPPORTED_PLATFORMS = macosx;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited)";
-				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_VERSION = "";
 				USE_HEADERMAP = YES;
 			};
@@ -448,7 +457,11 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/Nic_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
+					"@executable_path",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -477,7 +490,11 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/Nic_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) $(TOOLCHAIN_DIR)/usr/lib/swift/macosx @executable_path";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(TOOLCHAIN_DIR)/usr/lib/swift/macosx",
+					"@executable_path",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -506,7 +523,11 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/NicTests_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -534,7 +555,11 @@
 				HEADER_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Nic.xcodeproj/NicTests_Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.5;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @loader_path/../Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@loader_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				OTHER_CFLAGS = "$(inherited)";
 				OTHER_LDFLAGS = "$(inherited)";
@@ -578,6 +603,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E59DF17A28797DB70060AABD /* XCRemoteSwiftPackageReference "LLVMSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/llvm-swift/LLVMSwift.git";
+			requirement = {
+				kind = exactVersion;
+				version = 0.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E59DF17B28797DB70060AABD /* LLVM */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E59DF17A28797DB70060AABD /* XCRemoteSwiftPackageReference "LLVMSwift" */;
+			productName = LLVM;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = OBJ_1 /* Project object */;
 }
