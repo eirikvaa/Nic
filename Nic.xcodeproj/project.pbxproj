@@ -58,7 +58,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		E59D18D7248621AC002E88C7 /* NicError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicError.swift; path = Nic/NicError.swift; sourceTree = SOURCE_ROOT; };
+		E59D18D7248621AC002E88C7 /* NicError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicError.swift; path = Nic/Error/NicError.swift; sourceTree = SOURCE_ROOT; };
 		E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicRuntimeError.swift; path = Nic/Error/NicRuntimeError.swift; sourceTree = SOURCE_ROOT; };
 		"Nic::Nic::Product" /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Nic::NicTests::Product" /* NicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = NicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -102,6 +102,44 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E5810C0E287B38C400E2EF2F /* Frontend */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_23 /* Scanner.swift */,
+				OBJ_21 /* Parser.swift */,
+			);
+			path = Frontend;
+			sourceTree = "<group>";
+		};
+		E5810C0F287B38DD00E2EF2F /* Middleend */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_22 /* Resolver.swift */,
+				OBJ_27 /* TypeChecker.swift */,
+			);
+			path = Middleend;
+			sourceTree = "<group>";
+		};
+		E5810C10287B38E600E2EF2F /* Backend */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_11 /* CodeGenerator.swift */,
+			);
+			path = Backend;
+			sourceTree = "<group>";
+		};
+		E5810C11287B38FD00E2EF2F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				OBJ_24 /* Stmt.swift */,
+				OBJ_15 /* Expr.swift */,
+				OBJ_25 /* Token.swift */,
+				OBJ_26 /* TokenType.swift */,
+				OBJ_28 /* TypeSystem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		E59D18F5248629AE002E88C7 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
@@ -116,7 +154,7 @@
 			isa = PBXGroup;
 			children = (
 				E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */,
-				OBJ_15 /* Expr.swift */,
+				E59D18D7248621AC002E88C7 /* NicError.swift */,
 			);
 			path = Error;
 			sourceTree = "<group>";
@@ -154,19 +192,13 @@
 			children = (
 				E59D18F6248629B3002E88C7 /* Error */,
 				E59D18F5248629AE002E88C7 /* Helpers */,
-				OBJ_10 /* test.txt */,
-				OBJ_11 /* CodeGenerator.swift */,
-				E59D18D7248621AC002E88C7 /* NicError.swift */,
+				E5810C11287B38FD00E2EF2F /* Model */,
+				E5810C0E287B38C400E2EF2F /* Frontend */,
+				E5810C0F287B38DD00E2EF2F /* Middleend */,
+				E5810C10287B38E600E2EF2F /* Backend */,
 				OBJ_20 /* Nic.swift */,
-				OBJ_21 /* Parser.swift */,
-				OBJ_22 /* Resolver.swift */,
-				OBJ_23 /* Scanner.swift */,
-				OBJ_24 /* Stmt.swift */,
-				OBJ_25 /* Token.swift */,
-				OBJ_26 /* TokenType.swift */,
-				OBJ_27 /* TypeChecker.swift */,
-				OBJ_28 /* TypeSystem.swift */,
 				OBJ_29 /* main.swift */,
+				OBJ_10 /* test.txt */,
 			);
 			path = Nic;
 			sourceTree = SOURCE_ROOT;
