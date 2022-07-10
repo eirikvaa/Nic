@@ -9,9 +9,15 @@ class SymbolTableValue {
     var value: Any?
     var isMutable = false
     var isDefined = false
+
+    init(value: Any?, isMutable: Bool = false, isDefined: Bool = false) {
+        self.value = value
+        self.isMutable = isMutable
+        self.isDefined = isDefined
+    }
     
     convenience init<Element>(value: Element, keyPath: ReferenceWritableKeyPath<SymbolTableValue, Element>) {
-        self.init()
+        self.init(value: value)
         
         self[keyPath: keyPath] = value
     }
@@ -34,6 +40,18 @@ class SymbolTable {
         
         return value[keyPath: keyPath]
     }
+
+    func get(name: Token, at distance: Int) throws -> SymbolTableValue? {
+        guard distance >= 0 || distance - 1 >= 0 else {
+            throw NicRuntimeError.undefinedVariable(name: name)
+        }
+
+        guard let value = bindings[distance][name.lexeme] else {
+            return try get(name: name, at: distance - 1)
+        }
+
+        return value
+    }
     
     func set<Element>(element: Element, at keyPath: ReferenceWritableKeyPath<SymbolTableValue, Element>, to token: Token, at distance: Int) {
         guard let value = bindings[distance][token.lexeme] else {
@@ -45,6 +63,15 @@ class SymbolTable {
         
         // Update existing value
         value[keyPath: keyPath] = element
+    }
+
+    func set(newRecord: SymbolTableValue, token: Token, distance: Int) {
+        guard let existingRecord = bindings[distance][token.lexeme] else {
+            bindings[distance][token.lexeme] = newRecord
+            return
+        }
+
+        existingRecord.value = newRecord.value
     }
     
     func contains(token: Token, at distance: Int) -> Bool {
