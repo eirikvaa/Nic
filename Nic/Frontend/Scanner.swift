@@ -89,7 +89,7 @@ extension Scanner {
     private func string() {
         advance() // advance beyond first "
         
-        while peek() != "\"" && !isAtEnd() {
+        while peek() != #"""# && !isAtEnd() {
             if peek()?.isNewline == true {
                 line += 1
             }
