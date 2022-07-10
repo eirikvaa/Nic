@@ -1,4 +1,4 @@
-#  Nic
+# Nic
 
 ## What is Nic?
 
@@ -9,3 +9,17 @@ I have zero and all plans for Nic. I just want to try to create _something_ that
 ## Where did the name come from?
 
 Nic is truly a random name. I have a rubber duck at home with the name "Nordic Semiconductor", and this was at the point where I wast _just_ starting to think about my new programming language, back in January 2018. I just took the first and two last letters of the word _Nordic_, and there it was. Truly underwhelming, one might say. But the name isn't important here.
+
+## Features
+
+- [x] Single and multiline comments
+- [x] Booleans (true/false)
+- [x] Binary operations (+, -, *, /, ==, !=, >=, >, <=, <, and, or)
+- [x] Variables
+- [x] Constants
+- [x] Conditionals (if/else)
+- [x] Printing
+- [x] Int, Double, String and Bool types
+- [x] Basic type checking
+- [ ] Classes and methods
+- [ ] Code generation with LLVM
