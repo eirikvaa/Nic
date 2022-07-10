@@ -41,6 +41,11 @@ class NicTypeCheckerTests: XCTestCase {
         XCTAssertThrowsError(try typeCheckSource(source), "Only expressions evaluating to true can appear as an if statement condition.")
     }
 
+    func testCannotMutateConst() {
+        let source = "const a = 3; a = 4;";
+        XCTAssertThrowsError(try typeCheckSource(source), "Constants cannot be mutated after declaration.")
+    }
+
 }
 
 extension NicTypeCheckerTests {
