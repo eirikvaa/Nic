@@ -49,6 +49,7 @@ extension TypeChecker: StmtVisitor {
         }
         
         symbolTable.set(element: value, at: \.value, to: stmt.name, at: stmt.initializer.depth)
+        symbolTable.set(element: false, at: \.isMutable, to: stmt.name, at: stmt.initializer.depth)
     }
     
     func visitBlockStmt(_ stmt: Stmt.Block) throws {
@@ -76,6 +77,7 @@ extension TypeChecker: StmtVisitor {
         }
         
         symbolTable.set(element: value, at: \.value, to: stmt.name, at: stmt.initializer?.depth ?? 0)
+        symbolTable.set(element: true, at: \.isMutable, to: stmt.name, at: stmt.initializer?.depth ?? 0)
     }
     
     func visitPrintStmt(_ stmt: Stmt.Print) throws {
@@ -111,6 +113,10 @@ extension TypeChecker: ExprVisitor {
     func visitAssignExpr(expr: Expr.Assign) throws -> Any? {
         let assignmentValue = try evaluate(expr.value)
         let receivingValue = try symbolTable.get(name: expr.name, at: expr.depth, keyPath: \.value) ?? nil
+        
+        guard let canBeMutated = try symbolTable.get(name: expr.name, at: expr.depth, keyPath: \.isMutable), canBeMutated else {
+            throw NicError.attemptToMutateConstant(token: expr.name)
+        }
         
         guard let typeOfAssignment = assignmentValue.nicType(),
             let typeOfReceiver = receivingValue.nicType() else {

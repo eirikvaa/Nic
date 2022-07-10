@@ -15,4 +15,5 @@ enum NicError: Error {
     case invalidAssignment(type: NicType, token: Token)
     case invalidOperands(line: Int, lhsType: NicType, rhsType: NicType, operationType: TokenType)
     case invalidConditionalExpressionType(line: Int, type: NicType)
+    case attemptToMutateConstant(token: Token)
 }
