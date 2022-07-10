@@ -29,10 +29,8 @@ extension TypeChecker: StmtVisitor {
         
         if condition {
             try typecheck(stmt.ifBranch)
-        } else {
-            if let elseBranch = stmt.elseBranch {
-                try typecheck(elseBranch)
-            }
+        } else if let elseBranch = stmt.elseBranch {
+            try typecheck(elseBranch)
         }
     }
     
