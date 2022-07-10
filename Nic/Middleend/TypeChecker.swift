@@ -23,7 +23,7 @@ extension TypeChecker: StmtVisitor {
             return
         }
         
-        guard let condition = value as? Bool, condition else {
+        guard let condition = value as? Bool else {
             throw NicError.invalidConditionalExpressionType(line: stmt.condition.depth, type: valueType)
         }
         
