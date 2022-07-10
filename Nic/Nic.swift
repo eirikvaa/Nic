@@ -88,7 +88,7 @@ class Nic {
         case .invalidConditionalExpressionType(let line, let type):
             self.error(line: line, message: "Can't use an expression of type \(type) as an if statement condition.")
         case .attemptToMutateConstant(let token):
-            self.error(line: token.line, message: "Can't mutate a constant.")
+            self.error(line: token.line, message: "Can't mutate constant '\(token.lexeme)'.")
         }
     }
     
