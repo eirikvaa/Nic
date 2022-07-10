@@ -35,6 +35,11 @@ class NicTypeCheckerTests: XCTestCase {
         let source = #"var boolean = true; if boolean {}"#
         XCTAssertNoThrow(try typeCheckSource(source), "Only expressions evaluating to true can appear as an if statement condition.")
     }
+
+    func testValidIfStatementExpressionFalseCondition() {
+        let source = #"var boolean = false; if boolean {}"#
+        XCTAssertNoThrow(try typeCheckSource(source), "Only expressions evaluating to true can appear as an if statement condition.")
+    }
     
     func testInvalidIfStatementExpression() {
         let source = #"var boolean = 1; if boolean {}"#
