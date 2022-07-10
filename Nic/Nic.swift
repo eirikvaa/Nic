@@ -99,6 +99,6 @@ class Nic {
     
     static func error(line: Int, message: String) {
         hadError = true
-        print("[Line \(line) \(message)")
+        print("[Line \(line)] \(message)")
     }
 }
