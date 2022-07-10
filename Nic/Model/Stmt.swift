@@ -35,7 +35,7 @@ class Stmt {
             self.initializer = initializer
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitVarStmt(self)
         }
     }
@@ -51,7 +51,7 @@ class Stmt {
             self.initializer = initializer
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitConstStmt(self)
         }
     }
@@ -63,7 +63,7 @@ class Stmt {
             self.value = value
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitPrintStmt(self)
         }
     }
@@ -75,7 +75,7 @@ class Stmt {
             self.statements = statements
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitBlockStmt(self)
         }
     }
@@ -87,7 +87,7 @@ class Stmt {
             self.expression = expression
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitExpressionStatement(self)
         }
     }
@@ -103,7 +103,7 @@ class Stmt {
             self.elseBranch = elseBranch
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : StmtVisitor, R == V.StmtVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: StmtVisitor, R == V.StmtVisitorReturn {
             return try visitor.visitIfStatement(self)
         }
     }

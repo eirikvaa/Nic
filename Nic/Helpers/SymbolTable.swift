@@ -61,7 +61,7 @@ extension SymbolTable: CustomStringConvertible {
         var content = "======================================\n"
         content += "Symbol table:\n\n"
         
-        for i in 0..<bindings.count {
+        for i in 0 ..< bindings.count {
             let tabString = Array(repeating: "\t", count: i).joined(separator: "")
             let tabTitleString = Array(repeating: "\t", count: i).joined(separator: "")
             

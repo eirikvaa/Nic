@@ -35,7 +35,7 @@ class Expr {
             self.value = value
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitLiteralExpr(expr: self)
         }
     }
@@ -49,7 +49,7 @@ class Expr {
             self.value = value
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitAssignExpr(expr: self)
         }
     }
@@ -65,7 +65,7 @@ class Expr {
             self.rightValue = rightValue
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitBinaryExpr(expr: self)
         }
     }
@@ -78,7 +78,7 @@ class Expr {
             self.name = name
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitVariableExpr(expr: self)
         }
     }
@@ -87,12 +87,12 @@ class Expr {
         let `operator`: Token
         let value: Expr
         
-        init(`operator`: Token, value: Expr) {
+        init(operator: Token, value: Expr) {
             self.operator = `operator`
             self.value = value
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitUnaryExpr(expr: self)
         }
     }
@@ -104,7 +104,7 @@ class Expr {
             self.value = value
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitGroupExpr(expr: self)
         }
     }
@@ -120,7 +120,7 @@ class Expr {
             self.right = right
         }
         
-        override func accept<V, R>(visitor: V) throws -> R where V : ExprVisitor, R == V.ExprVisitorReturn {
+        override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitLogicalExpr(expr: self)
         }
     }

@@ -20,11 +20,10 @@ class NicParserTests: XCTestCase {
             Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
-        
-        
+
         XCTAssertTrue(try parseTokens(tokens, compareWithExpectedNumberOfStatements: 1), "Variable declaration was not parsed correctly.")
     }
-    
+
     func testParsingOfParenthesizesExpression() {
         let tokens: [Token] = [
             Token(type: .var, lexeme: "var", literal: nil, line: 0),
@@ -36,7 +35,7 @@ class NicParserTests: XCTestCase {
             Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
             Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
         ]
-        
+
         XCTAssertTrue(try parseTokens(tokens, compareWithExpectedNumberOfStatements: 1), "Grouped expression was not parsed correctly.")
     }
 }

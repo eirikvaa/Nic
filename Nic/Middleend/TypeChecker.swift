@@ -44,7 +44,8 @@ extension TypeChecker: StmtVisitor {
         let value = try evaluate(stmt.initializer)
         
         if let declarationType = stmt.type,
-            let valueType = value.nicType() {
+           let valueType = value.nicType()
+        {
             try typecheckDeclaration(token: stmt.name, declarationType: declarationType, initializedType: valueType)
         }
         
@@ -65,8 +66,8 @@ extension TypeChecker: StmtVisitor {
         
         var value = try evaluate(initializer)
         if let stmtType = stmt.type,
-            let valueType = value.nicType() {
-            
+           let valueType = value.nicType()
+        {
             // We'll coerce variable declarations that were type annotated with double but initialized
             // with an integer.
             if stmtType == .double, valueType == .integer {
@@ -119,8 +120,9 @@ extension TypeChecker: ExprVisitor {
         }
         
         guard let typeOfAssignment = assignmentValue.nicType(),
-            let typeOfReceiver = receivingValue.nicType() else {
-                return nil
+              let typeOfReceiver = receivingValue.nicType()
+        else {
+            return nil
         }
         
         guard typeOfAssignment == typeOfReceiver else {
@@ -136,7 +138,7 @@ extension TypeChecker: ExprVisitor {
         return try evaluate(expr.value)
     }
     
-    func visitUnaryExpr(expr: Expr.Unary) throws -> Any?  {
+    func visitUnaryExpr(expr: Expr.Unary) throws -> Any? {
         let test = try evaluate(expr.value)
         
         switch expr.operator.type {
@@ -165,7 +167,8 @@ extension TypeChecker: ExprVisitor {
         let rhs = try evaluate(expr.rightValue)
         
         guard let lhsType = lhs.nicType(),
-            let rhsType = rhs.nicType() else {
+              let rhsType = rhs.nicType()
+        else {
             return nil
         }
         let operationType = expr.operator.type

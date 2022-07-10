@@ -11,8 +11,8 @@ import XCTest
 @testable import Nic
 
 class NicTests: XCTestCase {
-
     // MARK: Empty source
+
     func testEmptySourceShouldGiveEmptyTokenList() {
         let source = ""
         let expectedTokenTypes: [TokenType] = [.eof]
@@ -22,6 +22,7 @@ class NicTests: XCTestCase {
     }
     
     // MARK: Numbers
+
     func testSingleDigitNumber() {
         let source = "1;"
         let expectedTokenTypes: [TokenType] = [.integer, .semicolon, .eof]
@@ -31,7 +32,7 @@ class NicTests: XCTestCase {
     }
     
     func testFloatingPointNumber() {
-        let source = "1.0;";
+        let source = "1.0;"
         let expectedTokenTypes: [TokenType] = [.double, .semicolon, .eof]
         let result = scanSource(source: source, compareWithExpectedTokens: expectedTokenTypes)
         
@@ -63,6 +64,7 @@ class NicTests: XCTestCase {
     }
     
     // MARK: Comments
+
     func testComment() {
         let source = "//"
         let expectedTokenTypes: [TokenType] = [.eof]
@@ -96,6 +98,7 @@ class NicTests: XCTestCase {
     }
     
     // MARK: Strings
+
     func testSingleString() {
         let source = #""Hei på deg";"#
         let expectedTokenTypes: [TokenType] = [.string, .semicolon, .eof]
@@ -105,6 +108,7 @@ class NicTests: XCTestCase {
     }
     
     // MARK: Mathematical expressions
+
     func testNumberPlusNumber() {
         let source = "123+123;"
         let expectedTokenTypes: [TokenType] = [.integer, .plus, .integer, .semicolon, .eof]
@@ -122,6 +126,7 @@ class NicTests: XCTestCase {
     }
     
     // MARK: Print
+
     func testPrintStatementWithValue() {
         let source = #"print "Hello, world!";"#
         let expectedTokenTypes: [TokenType] = [.print, .string, .semicolon, .eof]
@@ -139,6 +144,7 @@ class NicTests: XCTestCase {
     }
     
     // MARK: Variable declarations
+
     func testVariableDeclarationWithInitialization() {
         let source = "var number = 3;"
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .equal, .integer, .semicolon, .eof]
@@ -156,7 +162,7 @@ class NicTests: XCTestCase {
     }
     
     func testBooleanVariableDeclarationWithTypeAnnotation() {
-        let source = "var test: Bool = false;";
+        let source = "var test: Bool = false;"
         let expectedTokenTypes: [TokenType] = [.var, .identifier, .colon, .identifier, .equal, .false, .semicolon, .eof]
         let result = scanSource(source: source, compareWithExpectedTokens: expectedTokenTypes)
         
@@ -189,7 +195,6 @@ class NicTests: XCTestCase {
         
         XCTAssertTrue(result, "If statement with if and else branch was not scanned correctly.")
     }
-
 }
 
 extension NicTests {

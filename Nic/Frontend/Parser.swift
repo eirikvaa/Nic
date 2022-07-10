@@ -58,7 +58,6 @@ private extension Parser {
     }
     
     func statement() throws -> Stmt {
-        
         if match(types: .print) {
             return try printStatement()
         } else if match(types: .leftBrace) {
@@ -90,7 +89,7 @@ private extension Parser {
         
         var statements: [Stmt] = []
         
-        while (!check(tokenType: .rightBrace) && !isAtEnd()) {
+        while !check(tokenType: .rightBrace), !isAtEnd() {
             if let declaration = try? declaration() {
                 statements.append(declaration)
             }
@@ -104,7 +103,6 @@ private extension Parser {
     }
     
     func ifStatement() throws -> Stmt {
-        
         let condition = try expression()
         let ifBranch = try statement()
         
@@ -132,7 +130,7 @@ private extension Parser {
             if let type = types[type.lexeme] {
                 variableType = type
             } else {
-                self.error(token: previous(), message: "Unknown type '\(type.lexeme)' in type annotation.")
+                error(token: previous(), message: "Unknown type '\(type.lexeme)' in type annotation.")
             }
         }
         
@@ -182,14 +180,14 @@ private extension Parser {
             let value = try assignment()
             
             if let variable = expr as? Expr.Variable,
-                let name = variable.name {
+               let name = variable.name
+            {
                 let assign = Expr.Assign(name: name, value: value)
                 assign.depth = scopeDepth
                 return assign
             }
             
             error(token: equals, message: "Invalid assignment target")
-            
         }
         
         return expr
@@ -353,7 +351,7 @@ private extension Parser {
     func synchronize() {
         advance()
         
-        while (!isAtEnd()) {
+        while !isAtEnd() {
             if previous().type == .semicolon {
                 return
             }
@@ -413,7 +411,7 @@ private extension Parser {
         return tokens[currentIndex].type == .eof
     }
     
-    func error(token: Token, message: String){
+    func error(token: Token, message: String) {
         Nic.error(token: token, message: message)
     }
 }

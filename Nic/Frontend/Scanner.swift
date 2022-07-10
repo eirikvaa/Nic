@@ -33,7 +33,7 @@ class Scanner {
     }
     
     func scan() -> [Token] {
-        while (!isAtEnd()) {
+        while !isAtEnd() {
             startIndex = currentIndex
             scanToken()
         }
@@ -48,7 +48,7 @@ class Scanner {
 
 extension Scanner {
     private func identifier() {
-        while (peek()?.isAlphaNumeric == true && !isAtEnd()) {
+        while peek()?.isAlphaNumeric == true, !isAtEnd() {
             advance()
         }
         
@@ -58,7 +58,7 @@ extension Scanner {
     }
     
     private func multiLineComment() {
-        while peek() != "*" && !isAtEnd() {
+        while peek() != "*", !isAtEnd() {
             if peek()?.isNewline == true {
                 line += 1
             }
@@ -81,7 +81,7 @@ extension Scanner {
     }
     
     private func singleLineComment() {
-        while peek()?.isNewline == false && !isAtEnd() {
+        while peek()?.isNewline == false, !isAtEnd() {
             advance()
         }
     }
@@ -89,7 +89,7 @@ extension Scanner {
     private func string() {
         advance() // advance beyond first "
         
-        while peek() != #"""# && !isAtEnd() {
+        while peek() != #"""#, !isAtEnd() {
             if peek()?.isNewline == true {
                 line += 1
             }
@@ -112,12 +112,12 @@ extension Scanner {
     }
     
     private func number() {
-        while peek()?.isNumber == true && !isAtEnd() {
+        while peek()?.isNumber == true, !isAtEnd() {
             advance()
         }
         
         if match(".") {
-            while peek()?.isNumber == true && !isAtEnd() {
+            while peek()?.isNumber == true, !isAtEnd() {
                 advance()
             }
             

@@ -12,43 +12,43 @@ enum TokenType: String {
     case string
     case integer
     case double
-    case `true`         = "true"
-    case `false`        = "false"
+    case `true`
+    case `false`
     
     // operators
-    case equal          = "="
-    case greater        = ">"
-    case less           = "<"
+    case equal = "="
+    case greater = ">"
+    case less = "<"
     case greater_equal
     case less_equal
     case bang_equal
     case equal_equal
-    case plus           = "+"
-    case minus          = "-"
-    case slash          = "/"
-    case star           = "*"
-    case bang           = "!"
+    case plus = "+"
+    case minus = "-"
+    case slash = "/"
+    case star = "*"
+    case bang = "!"
     
     // keywords
-    case `var`          = "var"
-    case const          = "const"
-    case print          = "print"
-    case ifBranch       = "if"
-    case elseBranch     = "else"
-    case or             = "or"
-    case and            = "and"
+    case `var`
+    case const
+    case print
+    case ifBranch = "if"
+    case elseBranch = "else"
+    case or
+    case and
     
     // punctuation
-    case semicolon      = ";"
-    case colon          = ":"
-    case leftParen      = "("
-    case rightParen     = ")"
-    case leftBrace      = "{"
-    case rightBrace     = "}"
+    case semicolon = ";"
+    case colon = ":"
+    case leftParen = "("
+    case rightParen = ")"
+    case leftBrace = "{"
+    case rightBrace = "}"
     
     // other
     case identifier
-    case eof            = "EOF"
+    case eof = "EOF"
 }
 
 extension TokenType {

@@ -11,7 +11,7 @@ struct Token {
     let lexeme: String
     let literal: Any?
     let line: Int
-    
+
     func debugString() -> String {
         return "\(line): \(lexeme) | \(type.rawValue) | \(literal ?? "")"
     }
@@ -21,7 +21,7 @@ extension Token: Hashable {
     func hash(into hasher: inout Hasher) {
         hasher.combine(type)
         hasher.combine(lexeme)
-        
+
         switch literal {
         case let number as Int:
             hasher.combine(number)
@@ -34,7 +34,7 @@ extension Token: Hashable {
         default:
             break
         }
-        
+
         hasher.combine(line)
     }
 }
@@ -59,6 +59,6 @@ extension Token: Equatable {
 
 extension Token: CustomStringConvertible {
     var description: String {
-        return literal == nil ? lexeme : self.type.rawValue.uppercased()
+        return literal == nil ? lexeme : type.rawValue.uppercased()
     }
 }
