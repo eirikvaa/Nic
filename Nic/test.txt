@@ -1,2 +1,55 @@
-var boolean: Bool = false;
-print 1.0 + 2;
+// Nic supports single-line comments
+
+/*
+... and multi-line
+comments.
+*/
+
+// There are variables ... and boolean values.
+var compilersAreMagic = false;
+
+// and constants too.
+const answerToLife = 42;
+
+// Variables and constants can also have type annotations.
+var computersAreCool: Bool = true;
+
+// Stuff can be printed.
+print answerToLife;
+
+// We can do binary arithmetic to express the answer to life in another way.
+print 3 + 4 * 12 - 9;
+
+// And we can compare stuff and mix in boolean values.
+print answerToLife >= 42;
+print answerToLife >= 42 and !compilersAreMagic;
+
+// There is some basic type coercion like integer to double when adding an integer
+// and a double.
+print 3 + 4.0 - 4.0 * 3;
+
+// We have the good ol' if-else statement.
+if computersAreCool {
+    print "Computers are indeed cool.";
+}
+
+if !true {} else {
+    print "It's important to showcase the else branch too.'";
+}
+
+// In addition to bools and integers (see above), we have doubles and strings.
+var min: Double = 2.0;
+var max: Double = 4.0;
+var average = (min + max) / 2.0;
+print average;
+
+var helloWorld = "Hello, world!";
+print helloWorld;
+
+// There are also blocks that create new scopes.
+{
+    print "Blocks are cool ...";
+    {
+        print "... because they can be nested.";
+    }
+}
