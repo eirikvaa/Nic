@@ -1,7 +1,2 @@
-var boolean = true;
-
-var a = 2 > 1;
-
-if a {
-    print "Hei";
-}
+var boolean: Bool = false;
+print 1.0 + 2;

@@ -228,6 +228,10 @@ private extension TypeChecker {
             return evaluateIntegerOperation(lhs: lhsInt, rhs: rhsInt, operation: operationType)
         case (let lhsDouble as Double, let rhsDouble as Double):
             return evaluateDoubleOperation(lhs: lhsDouble, rhs: rhsDouble, operation: operationType)
+        case (let lhsDouble as Double, let rhsInt as Int):
+            return evaluateDoubleIntegerOperation(lhs: lhsDouble, rhs: rhsInt, operation: operationType)
+        case (let lhsInt as Int, let rhsDouble as Double):
+            return evaluateIntegerDoubleOperation(lhs: lhsInt, rhs: rhsDouble, operation: operationType)
         case (let lhsString as String, let rhsString as String):
             return lhsString + rhsString
         default:
@@ -274,6 +278,26 @@ private extension TypeChecker {
         default: return nil
         }
     }
+
+    func evaluateDoubleIntegerOperation(lhs: Double, rhs: Int, operation: TokenType) -> Double? {
+        switch operation {
+        case .plus: return lhs + Double(rhs)
+        case .minus: return lhs - Double(rhs)
+        case .star: return lhs * Double(rhs)
+        case .slash: return lhs / Double(rhs)
+        default: return nil
+        }
+    }
+
+    func evaluateIntegerDoubleOperation(lhs: Int, rhs: Double, operation: TokenType) -> Double? {
+        switch operation {
+        case .plus: return Double(lhs) + rhs
+        case .minus: return Double(lhs) - rhs
+        case .star: return Double(lhs) * rhs
+        case .slash: return Double(lhs) / rhs
+        default: return nil
+        }
+    }
     
     func validOperands(operand1: Any?, operand2: Any?, for operationType: TokenType) -> Bool {
         let lhsType = operand1.nicType()
@@ -281,7 +305,9 @@ private extension TypeChecker {
         
         switch (lhsType, rhsType) {
         case (.integer?, .integer?),
-             (.double?, .double?):
+             (.double?, .double?),
+             (.integer?, .double?),
+             (.double?, .integer?):
             let validTypes: [TokenType] = [
                 .plus, .minus, .star, .slash,
                 .equal_equal, .less_equal, .greater_equal, .bang_equal,

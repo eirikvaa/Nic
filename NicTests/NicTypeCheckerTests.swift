@@ -49,6 +49,16 @@ class NicTypeCheckerTests: XCTestCase {
         let source = "const a = 3; a = 4;"
         XCTAssertThrowsError(try typeCheckSource(source), "Constants cannot be mutated after declaration.")
     }
+
+    func canAddIntegerAndDouble() {
+        let source = "const a = 3 + 4.0;"
+        XCTAssertNoThrow(try typeCheckSource(source), "Integer and double can be added.")
+    }
+
+    func canAddIntegerAndDouble2() {
+        let source = "const a = 3.0 + 4;"
+        XCTAssertNoThrow(try typeCheckSource(source), "Double and integer can be added.")
+    }
 }
 
 extension NicTypeCheckerTests {
