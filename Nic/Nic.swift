@@ -7,7 +7,7 @@
 //
 
 import Foundation
- import LLVM
+import LLVM
 
 class Nic {
     static var hadError = false
@@ -57,7 +57,7 @@ class Nic {
             handleRuntimeError(runtimeError)
         case let error as NicError:
             handleNicError(error)
-         case let moduleError as LLVM.ModuleError:
+        case let moduleError as LLVM.ModuleError:
             print(moduleError)
         default:
             print(error.localizedDescription)
