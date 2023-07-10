@@ -70,10 +70,10 @@ extension CodeGenerator: ExprVisitor {
         let leftValue = try evaluate(expr.left) as? Bool ?? false
         let rightValue = try evaluate(expr.right) as? Bool ?? false
 
-        switch expr.op.type {
-        case .and: return leftValue && rightValue
-        case .or: return leftValue || rightValue
-        default: return nil
+        return switch expr.op.type {
+        case .and: leftValue && rightValue
+        case .or: leftValue || rightValue
+        default: nil
         }
     }
 
@@ -268,14 +268,14 @@ private extension CodeGenerator {
             return nil
         }
 
-        switch op {
-        case .equal_equal: return lhsValue == rhsValue
-        case .bang_equal: return lhsValue != rhsValue
-        case .greater_equal: return lhsValue >= rhsValue
-        case .greater: return lhsValue > rhsValue
-        case .less_equal: return lhsValue <= rhsValue
-        case .less: return lhsValue < rhsValue
-        default: return nil
+        return switch op {
+        case .equal_equal: lhsValue == rhsValue
+        case .bang_equal: lhsValue != rhsValue
+        case .greater_equal: lhsValue >= rhsValue
+        case .greater: lhsValue > rhsValue
+        case .less_equal: lhsValue <= rhsValue
+        case .less: lhsValue < rhsValue
+        default: nil
         }
     }
 
@@ -297,54 +297,54 @@ private extension CodeGenerator {
     }
 
     func performNumericOperation(lhs: Any?, op: String, rhs: Any?) -> Any? {
-        switch (lhs, rhs) {
+        return switch (lhs, rhs) {
         case let (intA as Int, intB as Int):
-            return performOperation(lhs: intA, op: op, rhs: intB)
+            performOperation(lhs: intA, op: op, rhs: intB)
         case let (doubleA as Double, doubleB as Double):
-            return performOperation(lhs: doubleA, op: op, rhs: doubleB)
+            performOperation(lhs: doubleA, op: op, rhs: doubleB)
         case let (intA as Int, doubleB as Double):
-            return performOperation(lhs: Double(intA), op: op, rhs: doubleB)
+            performOperation(lhs: Double(intA), op: op, rhs: doubleB)
         case let (doubleA as Double, intB as Int):
-            return performOperation(lhs: doubleA, op: op, rhs: Double(intB))
+            performOperation(lhs: doubleA, op: op, rhs: Double(intB))
         default:
-            return nil
+            nil
         }
     }
 
     func performDivisionOperation(lhs: Any?, rhs: Any?) -> Any? {
-        switch (lhs, rhs) {
+        return switch (lhs, rhs) {
         case let (intA as Int, intB as Int):
-            return performDivisionOperation(lhs: intA, rhs: intB)
+            performDivisionOperation(lhs: intA, rhs: intB)
         case let (doubleA as Double, doubleB as Double):
-            return performDivisionOperation(lhs: doubleA, rhs: doubleB)
+            performDivisionOperation(lhs: doubleA, rhs: doubleB)
         case let (intA as Int, doubleB as Double):
-            return performDivisionOperation(lhs: Double(intA), rhs: doubleB)
+            performDivisionOperation(lhs: Double(intA), rhs: doubleB)
         case let (doubleA as Double, intB as Int):
-            return performDivisionOperation(lhs: doubleA, rhs: Double(intB))
+            performDivisionOperation(lhs: doubleA, rhs: Double(intB))
         default:
-            return nil
+            nil
         }
     }
 
     func performOperation<T: Numeric>(lhs: T, op: String, rhs: T) -> T {
-        switch op {
-        case "+": return lhs + rhs
-        case "-": return lhs - rhs
-        case "*": return lhs * rhs
-        default: return 0
+        return switch op {
+        case "+": lhs + rhs
+        case "-": lhs - rhs
+        case "*": lhs * rhs
+        default: 0
         }
     }
 
     func performDivisionOperation(lhs: Int, rhs: Int) -> Double {
-        return Double(lhs / rhs)
+        Double(lhs / rhs)
     }
 
     func performDivisionOperation(lhs: Double, rhs: Double) -> Double {
-        return lhs / rhs
+        lhs / rhs
     }
 
     func lookUpVariable(name: Token, expr: Expr) throws -> Any? {
-        return try symbolTable.get(name: name, at: expr.depth, keyPath: \.value) ?? nil
+        try symbolTable.get(name: name, at: expr.depth, keyPath: \.value) ?? nil
     }
 
     func generate(_ stmt: Stmt) throws {
@@ -352,6 +352,6 @@ private extension CodeGenerator {
     }
 
     func evaluate(_ expr: Expr) throws -> Any? {
-        return try expr.accept(visitor: self)
+        try expr.accept(visitor: self)
     }
 }

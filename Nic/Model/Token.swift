@@ -41,24 +41,24 @@ extension Token: Hashable {
 
 extension Token: Equatable {
     static func == (lhs: Token, rhs: Token) -> Bool {
-        switch (lhs.type, rhs.type) {
+        return switch (lhs.type, rhs.type) {
         case (.string, .string):
-            return lhs.literal as? String == rhs.literal as? String
+            lhs.literal as? String == rhs.literal as? String
         case (.integer, .integer):
-            return lhs.literal as? Int == rhs.literal as? Int
+            lhs.literal as? Int == rhs.literal as? Int
         case (.double, .double):
-            return lhs.literal as? Double == rhs.literal as? Double
+            lhs.literal as? Double == rhs.literal as? Double
         case (.true, .true),
              (.false, .false):
-            return lhs.literal as? Bool == rhs.literal as? Bool
+            lhs.literal as? Bool == rhs.literal as? Bool
         default:
-            return lhs.lexeme == rhs.lexeme
+            lhs.lexeme == rhs.lexeme
         }
     }
 }
 
 extension Token: CustomStringConvertible {
     var description: String {
-        return literal == nil ? lexeme : type.rawValue.uppercased()
+        literal == nil ? lexeme : type.rawValue.uppercased()
     }
 }

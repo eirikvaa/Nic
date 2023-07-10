@@ -58,6 +58,6 @@ extension TokenType {
     }
 
     var isLogical: Bool {
-        return self == .and || self == .or
+        self == .and || self == .or
     }
 }

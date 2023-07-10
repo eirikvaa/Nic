@@ -223,79 +223,79 @@ private extension TypeChecker {
     }
 
     func evaluateOperation(operationType: TokenType, with lhs: Any?, rhs: Any?) -> Any? {
-        switch (lhs, rhs) {
+        return switch (lhs, rhs) {
         case let (lhsInt as Int, rhsInt as Int):
-            return evaluateIntegerOperation(lhs: lhsInt, rhs: rhsInt, operation: operationType)
+            evaluateIntegerOperation(lhs: lhsInt, rhs: rhsInt, operation: operationType)
         case let (lhsDouble as Double, rhsDouble as Double):
-            return evaluateDoubleOperation(lhs: lhsDouble, rhs: rhsDouble, operation: operationType)
+            evaluateDoubleOperation(lhs: lhsDouble, rhs: rhsDouble, operation: operationType)
         case let (lhsDouble as Double, rhsInt as Int):
-            return evaluateDoubleIntegerOperation(lhs: lhsDouble, rhs: rhsInt, operation: operationType)
+            evaluateDoubleIntegerOperation(lhs: lhsDouble, rhs: rhsInt, operation: operationType)
         case let (lhsInt as Int, rhsDouble as Double):
-            return evaluateIntegerDoubleOperation(lhs: lhsInt, rhs: rhsDouble, operation: operationType)
+            evaluateIntegerDoubleOperation(lhs: lhsInt, rhs: rhsDouble, operation: operationType)
         case let (lhsString as String, rhsString as String):
-            return lhsString + rhsString
+            lhsString + rhsString
         default:
-            return nil
+            nil
         }
     }
 
     func evaluateComparisonOperation(lhs: Int, rhs: Int, operation: TokenType) -> Bool? {
-        switch operation {
-        case .equal_equal: return lhs == rhs
-        case .bang_equal: return lhs != rhs
-        case .greater: return lhs > rhs
-        case .less: return lhs < rhs
-        case .greater_equal: return lhs >= rhs
-        case .less_equal: return lhs <= rhs
-        default: return nil
+        return switch operation {
+        case .equal_equal: lhs == rhs
+        case .bang_equal: lhs != rhs
+        case .greater: lhs > rhs
+        case .less: lhs < rhs
+        case .greater_equal: lhs >= rhs
+        case .less_equal: lhs <= rhs
+        default: nil
         }
     }
 
     func evaluateBinaryLogicalOperation(lhs: Bool, rhs: Bool, operation: TokenType) -> Bool? {
-        switch operation {
-        case .or: return lhs || rhs
-        case .and: return lhs && rhs
-        default: return nil
+        return switch operation {
+        case .or: lhs || rhs
+        case .and: lhs && rhs
+        default: nil
         }
     }
 
     func evaluateIntegerOperation(lhs: Int, rhs: Int, operation: TokenType) -> Int? {
-        switch operation {
-        case .plus: return lhs + rhs
-        case .minus: return lhs - rhs
-        case .star: return lhs * rhs
-        case .slash: return lhs / rhs
-        default: return nil
+        return switch operation {
+        case .plus: lhs + rhs
+        case .minus: lhs - rhs
+        case .star: lhs * rhs
+        case .slash: lhs / rhs
+        default: nil
         }
     }
 
     func evaluateDoubleOperation(lhs: Double, rhs: Double, operation: TokenType) -> Double? {
-        switch operation {
-        case .plus: return lhs + rhs
-        case .minus: return lhs - rhs
-        case .star: return lhs * rhs
-        case .slash: return lhs / rhs
-        default: return nil
+        return switch operation {
+        case .plus: lhs + rhs
+        case .minus: lhs - rhs
+        case .star: lhs * rhs
+        case .slash: lhs / rhs
+        default: nil
         }
     }
 
     func evaluateDoubleIntegerOperation(lhs: Double, rhs: Int, operation: TokenType) -> Double? {
-        switch operation {
-        case .plus: return lhs + Double(rhs)
-        case .minus: return lhs - Double(rhs)
-        case .star: return lhs * Double(rhs)
-        case .slash: return lhs / Double(rhs)
-        default: return nil
+        return switch operation {
+        case .plus: lhs + Double(rhs)
+        case .minus: lhs - Double(rhs)
+        case .star: lhs * Double(rhs)
+        case .slash: lhs / Double(rhs)
+        default: nil
         }
     }
 
     func evaluateIntegerDoubleOperation(lhs: Int, rhs: Double, operation: TokenType) -> Double? {
-        switch operation {
-        case .plus: return Double(lhs) + rhs
-        case .minus: return Double(lhs) - rhs
-        case .star: return Double(lhs) * rhs
-        case .slash: return Double(lhs) / rhs
-        default: return nil
+        return switch operation {
+        case .plus: Double(lhs) + rhs
+        case .minus: Double(lhs) - rhs
+        case .star: Double(lhs) * rhs
+        case .slash: Double(lhs) / rhs
+        default: nil
         }
     }
 

@@ -7,6 +7,6 @@
 
 extension Character {
     var isAlphaNumeric: Bool {
-        return isLetter || isNumber
+        isLetter || isNumber
     }
 }

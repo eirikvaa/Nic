@@ -9,12 +9,12 @@ import Foundation
 
 extension Optional where Wrapped == Any {
     func nicType() -> NicType? {
-        switch self {
-        case is Int: return .integer
-        case is Double: return .double
-        case is Bool: return .boolean
-        case is String: return .string
-        default: return nil
+        return switch self {
+        case is Int: .integer
+        case is Double: .double
+        case is Bool: .boolean
+        case is String: .string
+        default: nil
         }
     }
 }
