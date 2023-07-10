@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E55531AA2A5C8D9A00033579 /* test.ll in Sources */ = {isa = PBXBuildFile; fileRef = E55531A92A5C8D9A00033579 /* test.ll */; };
+		E55531AA2A5C8D9A00033579 /* llvm-output.ll in Sources */ = {isa = PBXBuildFile; fileRef = E55531A92A5C8D9A00033579 /* llvm-output.ll */; };
 		E55A0FEC287B333700D0BA31 /* LLVM in Frameworks */ = {isa = PBXBuildFile; productRef = E55A0FEB287B333700D0BA31 /* LLVM */; };
 		E59D18C124862058002E88C7 /* CodeGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_11 /* CodeGenerator.swift */; };
 		E59D18C424862058002E88C7 /* Expr.swift in Sources */ = {isa = PBXBuildFile; fileRef = OBJ_15 /* Expr.swift */; };
@@ -60,13 +60,13 @@
 
 /* Begin PBXFileReference section */
 		E55531A82A5C7FE300033579 /* Nic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nic.entitlements; sourceTree = "<group>"; };
-		E55531A92A5C8D9A00033579 /* test.ll */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm.llvm; path = test.ll; sourceTree = "<group>"; };
+		E55531A92A5C8D9A00033579 /* llvm-output.ll */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm.llvm; path = "llvm-output.ll"; sourceTree = "<group>"; };
 		E5810C13287B3D5000E2EF2F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E59D18D7248621AC002E88C7 /* NicError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicError.swift; path = Nic/Error/NicError.swift; sourceTree = SOURCE_ROOT; };
 		E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicRuntimeError.swift; path = Nic/Error/NicRuntimeError.swift; sourceTree = SOURCE_ROOT; };
 		"Nic::Nic::Product" /* Nic */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; path = Nic; sourceTree = BUILT_PRODUCTS_DIR; };
 		"Nic::NicTests::Product" /* NicTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; path = NicTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		OBJ_10 /* test.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = test.txt; sourceTree = "<group>"; };
+		OBJ_10 /* input.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
 		OBJ_11 /* CodeGenerator.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = CodeGenerator.swift; sourceTree = "<group>"; };
 		OBJ_15 /* Expr.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Expr.swift; sourceTree = "<group>"; };
 		OBJ_17 /* Any+Extension.swift */ = {isa = PBXFileReference; explicitFileType = sourcecode.swift; path = "Any+Extension.swift"; sourceTree = "<group>"; };
@@ -204,8 +204,8 @@
 				E5810C10287B38E600E2EF2F /* Backend */,
 				OBJ_20 /* Nic.swift */,
 				OBJ_29 /* main.swift */,
-				OBJ_10 /* test.txt */,
-				E55531A92A5C8D9A00033579 /* test.ll */,
+				OBJ_10 /* input.txt */,
+				E55531A92A5C8D9A00033579 /* llvm-output.ll */,
 			);
 			path = Nic;
 			sourceTree = SOURCE_ROOT;
@@ -305,7 +305,7 @@
 				E59D18CB24862058002E88C7 /* Scanner.swift in Sources */,
 				E59D18DF248621EB002E88C7 /* Character+Ext.swift in Sources */,
 				E59D18CC24862058002E88C7 /* Stmt.swift in Sources */,
-				E55531AA2A5C8D9A00033579 /* test.ll in Sources */,
+				E55531AA2A5C8D9A00033579 /* llvm-output.ll in Sources */,
 				E59D18CD24862058002E88C7 /* Token.swift in Sources */,
 				E59D18CE24862058002E88C7 /* TokenType.swift in Sources */,
 				E59D18DA248621AC002E88C7 /* NicRuntimeError.swift in Sources */,

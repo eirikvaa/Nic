@@ -45,7 +45,7 @@ class Nic {
             try codeGenerator.generate(statements)
             try codeGenerator.verifyLLVMIR()
             codeGenerator.dumpLLVMIR()
-            codeGenerator.createLLVMIRFile(fileName: "test")
+            codeGenerator.createLLVMIRFile(fileName: "llvm-output")
         } catch {
             handleError(error)
         }

@@ -64,7 +64,7 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "/Users/eirik/Documents/Utvikling/macOS/Nic/Nic/test.txt"
+            argument = "/Users/eirik/Documents/Utvikling/macOS/Nic/Nic/input.txt"
             isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
