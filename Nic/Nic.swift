@@ -7,7 +7,7 @@
 //
 
 import Foundation
-// import LLVM
+ import LLVM
 
 class Nic {
     static var hadError = false
@@ -27,7 +27,7 @@ class Nic {
         guard let data = FileManager.default.contents(atPath: path) else { return }
         guard let source = String(data: data, encoding: .utf8) else { return }
         let scanner = Scanner(source: source)
-        // let codeGenerator = CodeGenerator()
+        let codeGenerator = CodeGenerator()
         let resolver = Resolver()
         let typeChecker = TypeChecker()
         
@@ -42,10 +42,10 @@ class Nic {
         do {
             try resolver.resolve(statements)
             try typeChecker.typecheck(statements)
-            // try codeGenerator.generate(statements)
-            // try codeGenerator.verifyLLVMIR()
-            // codeGenerator.dumpLLVMIR()
-            // codeGenerator.createLLVMIRFile(fileName: "test")
+            try codeGenerator.generate(statements)
+            try codeGenerator.verifyLLVMIR()
+            codeGenerator.dumpLLVMIR()
+            codeGenerator.createLLVMIRFile(fileName: "test")
         } catch {
             handleError(error)
         }
@@ -57,8 +57,8 @@ class Nic {
             handleRuntimeError(runtimeError)
         case let error as NicError:
             handleNicError(error)
-        // case let moduleError as LLVM.ModuleError:
-        //    print(moduleError)
+         case let moduleError as LLVM.ModuleError:
+            print(moduleError)
         default:
             print(error.localizedDescription)
         }
