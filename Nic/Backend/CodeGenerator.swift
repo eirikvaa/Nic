@@ -46,7 +46,7 @@ class CodeGenerator {
     
     func createLLVMIRFile(fileName: String) {
         do {
-            try builder.module.print(to: "/Users/eirik/Documents/Utvikling/macOS/Nic/Sources/Nic/\(fileName).ll")
+            try builder.module.print(to: "/Users/eirik/Documents/Utvikling/macOS/Nic/Nic/\(fileName).ll")
         } catch {
             print(error)
         }
