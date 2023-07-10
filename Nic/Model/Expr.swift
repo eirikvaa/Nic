@@ -8,7 +8,7 @@
 
 protocol ExprVisitor {
     associatedtype ExprVisitorReturn
-    
+
     func visitLiteralExpr(expr: Expr.Literal) throws -> ExprVisitorReturn
     func visitAssignExpr(expr: Expr.Assign) throws -> ExprVisitorReturn
     func visitBinaryExpr(expr: Expr.Binary) throws -> ExprVisitorReturn
@@ -22,104 +22,104 @@ protocol ExprVisitor {
 /// Together with `Stmt`, since it implements `StmtVisitor`, one can walk the entire abstract syntax tree.
 class Expr {
     var depth = 0
-    
-    func accept<V: ExprVisitor, R>(visitor: V) throws -> R where R == V.ExprVisitorReturn {
+
+    func accept<V: ExprVisitor, R>(visitor _: V) throws -> R where R == V.ExprVisitorReturn {
         fatalError("Don't call this directly, must be implemented.")
     }
-    
+
     class Literal: Expr {
         let value: Any?
         var type: NicType?
-        
+
         init(value: Any?) {
             self.value = value
         }
-        
+
         override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitLiteralExpr(expr: self)
         }
     }
-    
+
     class Assign: Expr {
         let name: Token
         let value: Expr
-        
+
         init(name: Token, value: Expr) {
             self.name = name
             self.value = value
         }
-        
+
         override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitAssignExpr(expr: self)
         }
     }
-    
+
     class Binary: Expr {
         let leftValue: Expr
         let `operator`: Token
         let rightValue: Expr
-        
+
         init(leftValue: Expr, operator: Token, rightValue: Expr) {
             self.leftValue = leftValue
             self.operator = `operator`
             self.rightValue = rightValue
         }
-        
+
         override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitBinaryExpr(expr: self)
         }
     }
-    
+
     class Variable: Expr {
         let name: Token?
         var type: NicType?
-        
+
         init(name: Token?) {
             self.name = name
         }
-        
+
         override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitVariableExpr(expr: self)
         }
     }
-    
+
     class Unary: Expr {
         let `operator`: Token
         let value: Expr
-        
+
         init(operator: Token, value: Expr) {
             self.operator = `operator`
             self.value = value
         }
-        
+
         override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitUnaryExpr(expr: self)
         }
     }
-    
+
     class Group: Expr {
         let value: Expr
-        
+
         init(value: Expr) {
             self.value = value
         }
-        
+
         override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitGroupExpr(expr: self)
         }
     }
-    
+
     class Logical: Expr {
         let left: Expr
         let op: Token
         let right: Expr
-        
+
         init(left: Expr, op: Token, right: Expr) {
             self.left = left
             self.op = op
             self.right = right
         }
-        
+
         override func accept<V, R>(visitor: V) throws -> R where V: ExprVisitor, R == V.ExprVisitorReturn {
             return try visitor.visitLogicalExpr(expr: self)
         }
@@ -127,10 +127,10 @@ class Expr {
 }
 
 extension Expr: Hashable {
-    static func ==(lhs: Expr, rhs: Expr) -> Bool {
+    static func == (lhs: Expr, rhs: Expr) -> Bool {
         return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
     }
-    
+
     func hash(into hasher: inout Hasher) {
         hasher.combine(ObjectIdentifier(self))
     }

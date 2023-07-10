@@ -18,7 +18,7 @@ class NicParserTests: XCTestCase {
             Token(type: .equal, lexeme: "=", literal: nil, line: 0),
             Token(type: .string, lexeme: "hello", literal: "hello", line: 0),
             Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0),
         ]
 
         XCTAssertTrue(try parseTokens(tokens, compareWithExpectedNumberOfStatements: 1), "Variable declaration was not parsed correctly.")
@@ -33,7 +33,7 @@ class NicParserTests: XCTestCase {
             Token(type: .integer, lexeme: "1", literal: "1", line: 0),
             Token(type: .rightParen, lexeme: ")", literal: nil, line: 0),
             Token(type: .semicolon, lexeme: ";", literal: nil, line: 0),
-            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0)
+            Token(type: .eof, lexeme: "EOF", literal: nil, line: 0),
         ]
 
         XCTAssertTrue(try parseTokens(tokens, compareWithExpectedNumberOfStatements: 1), "Grouped expression was not parsed correctly.")

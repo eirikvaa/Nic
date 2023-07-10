@@ -23,7 +23,7 @@ class Scanner {
         "if": .ifBranch,
         "else": .elseBranch,
         "or": .or,
-        "and": .and
+        "and": .and,
     ]
 
     init(source: String) {
@@ -31,15 +31,15 @@ class Scanner {
         startIndex = source.startIndex
         currentIndex = source.startIndex
     }
-    
+
     func scan() -> [Token] {
         while !isAtEnd() {
             startIndex = currentIndex
             scanToken()
         }
-        
+
         addToken(type: .eof)
-        
+
         return tokens
     }
 }
@@ -51,26 +51,26 @@ extension Scanner {
         while peek()?.isAlphaNumeric == true, !isAtEnd() {
             advance()
         }
-        
-        let identifier = String(source[startIndex..<currentIndex])
+
+        let identifier = String(source[startIndex ..< currentIndex])
         let type = keywords[identifier] ?? .identifier
         addToken(type: type)
     }
-    
+
     private func multiLineComment() {
         while peek() != "*", !isAtEnd() {
             if peek()?.isNewline == true {
                 line += 1
             }
-            
+
             advance()
         }
-        
+
         if isAtEnd() {
             Nic.error(line: line, message: "Undeterminated multi-line comment, missing '*'.")
             return
         }
-        
+
         advance() // advance beyond "*"
         if peek() == "/" {
             advance() // advance past last "/"
@@ -79,53 +79,53 @@ extension Scanner {
             return
         }
     }
-    
+
     private func singleLineComment() {
         while peek()?.isNewline == false, !isAtEnd() {
             advance()
         }
     }
-    
+
     private func string() {
         advance() // advance beyond first "
-        
+
         while peek() != #"""#, !isAtEnd() {
             if peek()?.isNewline == true {
                 line += 1
             }
-            
+
             advance()
         }
-        
+
         if isAtEnd() {
             Nic.error(line: line, message: "Unterminated string")
             return
         }
-        
+
         advance() // advance beyond last "
-        
+
         let _startIndex = source.index(after: startIndex)
         let endIndex = source.index(before: currentIndex)
-        
-        let string = String(source[_startIndex..<endIndex])
+
+        let string = String(source[_startIndex ..< endIndex])
         addToken(type: .string, literal: string)
     }
-    
+
     private func number() {
         while peek()?.isNumber == true, !isAtEnd() {
             advance()
         }
-        
+
         if match(".") {
             while peek()?.isNumber == true, !isAtEnd() {
                 advance()
             }
-            
-            let numberString = String(source[startIndex..<currentIndex])
+
+            let numberString = String(source[startIndex ..< currentIndex])
             let number = Double(numberString)
             addToken(type: .double, literal: number)
         } else {
-            let numberString = String(source[startIndex..<currentIndex])
+            let numberString = String(source[startIndex ..< currentIndex])
             let number = Int(numberString)
             addToken(type: .integer, literal: number)
             return
@@ -141,7 +141,7 @@ private extension Scanner {
         // the character `currentIndex` corresponds to. That way, we never index
         // into the string with an invalid index.
         let character = advance()
-        
+
         switch character {
         case "(": addToken(type: .leftParen)
         case ")": addToken(type: .rightParen)
@@ -175,43 +175,43 @@ private extension Scanner {
             }
         }
     }
-    
+
     func isAtEnd() -> Bool {
         let index = source.distance(from: source.startIndex, to: currentIndex)
         return index >= source.count
     }
-    
+
     func match(_ character: Character) -> Bool {
         guard isAtEnd() == false else {
             return false
         }
-        
+
         guard peek() == character else {
             return false
         }
-        
+
         advance()
         return true
     }
-    
+
     func peek() -> Character? {
         guard !isAtEnd() else {
             return nil
         }
-        
+
         return source[currentIndex]
     }
-    
+
     @discardableResult
     func advance(steps: Int = 1) -> Character {
         currentIndex = source.index(currentIndex, offsetBy: steps)
         return source[source.index(currentIndex, offsetBy: -steps)]
     }
-    
+
     func addToken(type: TokenType, literal: Any? = nil) {
         // The EOF token is the only token that should be included in the token list,
         // but which have an empty lexeme string, so handle that.
-        let lexeme = type == .eof ? "EOF" : String(source[startIndex..<currentIndex])
+        let lexeme = type == .eof ? "EOF" : String(source[startIndex ..< currentIndex])
         let token = Token(type: type, lexeme: lexeme, literal: literal, line: line)
         tokens.append(token)
     }

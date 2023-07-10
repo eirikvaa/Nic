@@ -40,7 +40,7 @@ extension Token: Hashable {
 }
 
 extension Token: Equatable {
-    static func ==(lhs: Token, rhs: Token) -> Bool {
+    static func == (lhs: Token, rhs: Token) -> Bool {
         switch (lhs.type, rhs.type) {
         case (.string, .string):
             return lhs.literal as? String == rhs.literal as? String

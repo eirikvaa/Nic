@@ -15,28 +15,28 @@ class Parser {
     private let tokens: [Token]
     private let symbolTable = SymbolTable.shared
     private var scopeDepth = 0
-    
+
     init(tokens: [Token]) {
         self.tokens = tokens
     }
-    
+
     private let types: [String: NicType] = [
         "Int": .integer,
         "Double": .double,
         "String": .string,
-        "Bool": .boolean
+        "Bool": .boolean,
     ]
-    
+
     func parse() -> [Stmt] {
         var statements: [Stmt] = []
-        
+
         while !isAtEnd() {
             // Only statements at top-level.
             if let declaration = try? declaration() {
                 statements.append(declaration)
             }
         }
-        
+
         return statements
     }
 }
@@ -49,14 +49,14 @@ private extension Parser {
             } else if match(types: .const) {
                 return try constDeclaration()
             }
-            
+
             return try statement()
         } catch {
             synchronize()
             return nil
         }
     }
-    
+
     func statement() throws -> Stmt {
         if match(types: .print) {
             return try printStatement()
@@ -65,10 +65,10 @@ private extension Parser {
         } else if match(types: .ifBranch) {
             return try ifStatement()
         }
-        
+
         return try expressionStatement()
     }
-    
+
     func printStatement() throws -> Stmt {
         var value: Expr?
         if match(types: .semicolon) {
@@ -77,53 +77,53 @@ private extension Parser {
             value = try expression()
             try consume(tokenType: .semicolon, errorMessage: "Expected semicolon after print statement.")
         }
-        
+
         let printStmt = Stmt.Print(value: value)
-        
+
         return printStmt
     }
-    
+
     func block() throws -> Stmt.Block {
         symbolTable.beginScope()
         scopeDepth += 1
-        
+
         var statements: [Stmt] = []
-        
+
         while !check(tokenType: .rightBrace), !isAtEnd() {
             if let declaration = try? declaration() {
                 statements.append(declaration)
             }
         }
-        
+
         try consume(tokenType: .rightBrace, errorMessage: "Expecting right brace to complete block.")
-        
+
         scopeDepth -= 1
-        
+
         return Stmt.Block(statements: statements)
     }
-    
+
     func ifStatement() throws -> Stmt {
         let condition = try expression()
         let ifBranch = try statement()
-        
+
         var elseBranch: Stmt?
         if match(types: .elseBranch) {
             elseBranch = try statement()
         }
-        
+
         return Stmt.If(condition: condition, ifBranch: ifBranch, elseBranch: elseBranch)
     }
-    
+
     func expressionStatement() throws -> Stmt {
         let expr = try expression()
         expr.depth = scopeDepth
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after expression statement.")
         return Stmt.Expression(expression: expr)
     }
-    
+
     func variableDeclaration() throws -> Stmt {
         let name = try consume(tokenType: .identifier, errorMessage: "Expect name for variable.")
-        
+
         var variableType: NicType?
         if match(types: .colon) {
             let type = try consume(tokenType: .identifier, errorMessage: "Expect a type after colon in variable declaration.")
@@ -133,52 +133,52 @@ private extension Parser {
                 error(token: previous(), message: "Unknown type '\(type.lexeme)' in type annotation.")
             }
         }
-        
+
         var initializer: Expr?
         if match(types: .equal) {
             initializer = try expression()
             initializer?.depth = scopeDepth
         }
-        
+
         let depth = initializer?.depth ?? 0
         symbolTable.set(element: nil, at: \.value, to: name, at: depth)
         symbolTable.set(element: true, at: \.isMutable, to: name, at: depth)
-        
+
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' after variable declaration.")
         return Stmt.Var(name: name, type: variableType, initializer: initializer)
     }
-    
+
     func constDeclaration() throws -> Stmt {
         let name = try consume(tokenType: .identifier, errorMessage: "Expect name for constant.")
-        
+
         var constantType: NicType?
         if match(types: .colon) {
             let type = try consume(tokenType: .identifier, errorMessage: "Expect a type after colon in constant declaration.")
             constantType = types[type.lexeme]
         }
-        
+
         try consume(tokenType: .equal, errorMessage: "Expect initializer for constant declaration.")
         let initializer = try expression()
         initializer.depth = scopeDepth
-        
+
         symbolTable.set(element: nil, at: \.value, to: name, at: initializer.depth)
         symbolTable.set(element: false, at: \.isMutable, to: name, at: initializer.depth)
-        
+
         try consume(tokenType: .semicolon, errorMessage: "Expected ';' in constant declaration.")
         return Stmt.Const(name: name, type: constantType, initializer: initializer)
     }
-    
+
     func expression() throws -> Expr {
         return try assignment()
     }
-    
+
     func assignment() throws -> Expr {
         let expr = try or()
-        
+
         if match(types: .equal) {
             let equals = previous()
             let value = try assignment()
-            
+
             if let variable = expr as? Expr.Variable,
                let name = variable.name
             {
@@ -186,89 +186,89 @@ private extension Parser {
                 assign.depth = scopeDepth
                 return assign
             }
-            
+
             error(token: equals, message: "Invalid assignment target")
         }
-        
+
         return expr
     }
-    
+
     func or() throws -> Expr {
         var expr = try and()
-        
+
         while match(types: .or) {
             let op = previous()
             let right = try and()
             expr = Expr.Logical(left: expr, op: op, right: right)
         }
-        
+
         return expr
     }
-    
+
     func and() throws -> Expr {
         var expr = try equality()
-        
+
         while match(types: .and) {
             let op = previous()
             let right = try equality()
             expr = Expr.Logical(left: expr, op: op, right: right)
         }
-        
+
         return expr
     }
-    
+
     func equality() throws -> Expr {
         var expr = try comparison()
-        
+
         while match(types: .bang_equal, .equal_equal) {
             let op = previous()
             let right = try comparison()
             expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
             expr.depth = scopeDepth
         }
-        
+
         return expr
     }
-    
+
     func comparison() throws -> Expr {
         var expr = try addition()
-        
+
         while match(types: .less, .less_equal, .greater_equal, .greater) {
             let op = previous()
             let right = try addition()
             expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
             expr.depth = scopeDepth
         }
-        
+
         return expr
     }
-    
+
     func addition() throws -> Expr {
         var expr = try multiplication()
-        
+
         while match(types: .plus, .minus) {
             let op = previous()
             let right = try multiplication()
             expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
             expr.depth = scopeDepth
         }
-        
+
         return expr
     }
-    
+
     func multiplication() throws -> Expr {
         var expr = try unary()
-        
+
         while match(types: .star, .slash) {
             let op = previous()
             let right = try unary()
             expr = Expr.Binary(leftValue: expr, operator: op, rightValue: right)
             expr.depth = scopeDepth
         }
-        
+
         return expr
     }
-    
+
     func unary() throws -> Expr {
         if match(types: .minus, .bang) {
             let op = previous()
@@ -277,10 +277,10 @@ private extension Parser {
             unary.depth = scopeDepth
             return unary
         }
-        
+
         return try primary()
     }
-    
+
     func primary() throws -> Expr {
         if match(types: .integer) {
             let expr = Expr.Literal(value: previous().literal)
@@ -288,74 +288,74 @@ private extension Parser {
             expr.depth = scopeDepth
             return expr
         }
-        
+
         if match(types: .double) {
             let expr = Expr.Literal(value: previous().literal)
             expr.type = .double
             expr.depth = scopeDepth
             return expr
         }
-        
+
         if match(types: .string) {
             let expr = Expr.Literal(value: previous().literal)
             expr.type = .string
             expr.depth = scopeDepth
             return expr
         }
-        
+
         if match(types: .true) {
             let expr = Expr.Literal(value: true)
             expr.type = .boolean
             expr.depth = scopeDepth
             return expr
         }
-        
+
         if match(types: .false) {
             let expr = Expr.Literal(value: false)
             expr.type = .boolean
             expr.depth = scopeDepth
             return expr
         }
-        
+
         if match(types: .identifier) {
             let variable = Expr.Variable(name: previous())
             variable.depth = scopeDepth
             return variable
         }
-        
+
         if match(types: .leftParen) {
             let expr = try expression()
-            
+
             try consume(tokenType: .rightParen, errorMessage: "Expecting ')' in parenthesized expression.")
-            
+
             let group = Expr.Group(value: expr)
             group.depth = scopeDepth
-            
+
             return group
         }
-        
+
         Nic.error(token: previous(), message: "Expect expression.")
         throw NicError.expectExpression(token: previous())
     }
-    
+
     @discardableResult
     func consume(tokenType: TokenType, errorMessage: String) throws -> Token {
         guard check(tokenType: tokenType) else {
             error(token: previous(), message: errorMessage)
             throw NicError.unexpectedToken(token: previous())
         }
-        
+
         return advance()
     }
-    
+
     func synchronize() {
         advance()
-        
+
         while !isAtEnd() {
             if previous().type == .semicolon {
                 return
             }
-            
+
             switch peek().type {
             case .var,
                  .const,
@@ -365,11 +365,11 @@ private extension Parser {
             default:
                 break
             }
-            
+
             advance()
         }
     }
-    
+
     @discardableResult
     func advance(steps: Int = 1) -> Token {
         if !isAtEnd() {
@@ -377,7 +377,7 @@ private extension Parser {
         }
         return tokens[currentIndex - steps]
     }
-    
+
     func match(types: TokenType...) -> Bool {
         for type in types {
             if check(tokenType: type) {
@@ -385,32 +385,32 @@ private extension Parser {
                 return true
             }
         }
-        
+
         return false
     }
-    
+
     func check(tokenType: TokenType) -> Bool {
         guard isAtEnd() == false else {
             return false
         }
-        
+
         return peek().type == tokenType
     }
-    
+
     // Returns the most recently consumed token
     func previous(steps: Int = 1) -> Token {
         return tokens[currentIndex - steps]
     }
-    
+
     // Returns the token we have _yet_ to consume
     func peek() -> Token {
         return tokens[currentIndex]
     }
-    
+
     func isAtEnd() -> Bool {
         return tokens[currentIndex].type == .eof
     }
-    
+
     func error(token: Token, message: String) {
         Nic.error(token: token, message: message)
     }
