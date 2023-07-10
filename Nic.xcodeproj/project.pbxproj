@@ -58,6 +58,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E55531A82A5C7FE300033579 /* Nic.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Nic.entitlements; sourceTree = "<group>"; };
 		E5810C13287B3D5000E2EF2F /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		E59D18D7248621AC002E88C7 /* NicError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicError.swift; path = Nic/Error/NicError.swift; sourceTree = SOURCE_ROOT; };
 		E59D18D8248621AC002E88C7 /* NicRuntimeError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NicRuntimeError.swift; path = Nic/Error/NicRuntimeError.swift; sourceTree = SOURCE_ROOT; };
@@ -192,6 +193,7 @@
 		OBJ_7 /* Nic */ = {
 			isa = PBXGroup;
 			children = (
+				E55531A82A5C7FE300033579 /* Nic.entitlements */,
 				E59D18F6248629B3002E88C7 /* Error */,
 				E59D18F5248629AE002E88C7 /* Helpers */,
 				E5810C11287B38FD00E2EF2F /* Model */,
@@ -486,8 +488,9 @@
 		OBJ_42 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = Nic/Nic.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = N37KDKBFXC;
@@ -520,8 +523,9 @@
 		OBJ_43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "";
+				CODE_SIGN_ENTITLEMENTS = Nic/Nic.entitlements;
 				CODE_SIGN_IDENTITY = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = N37KDKBFXC;
